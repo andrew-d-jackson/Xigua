@@ -90,6 +90,7 @@ public:
 	}
 
 	Enviroment() : parent_eviroment(nullptr){}
+	Enviroment(Enviroment * parent) : parent_eviroment(parent){}
 };
 
 
@@ -97,7 +98,13 @@ DataType eval(DataType data, Enviroment* enviroment)
 {
 	if (data.type == Symbol)
 	{
-		return *enviroment->find(data.string);
+		DataType* symbol_value = enviroment->find(data.string);
+		if (symbol_value == nullptr)
+		{
+			std::cout << "Cannot Find Symbol: " << data.string << std::endl;
+			exit(1);
+		}
+		return *symbol_value;
 	}
 	else if (data.type == Number)
 	{
@@ -314,6 +321,26 @@ DataType func_define(std::vector<DataType> inputs, Enviroment* enviroment)
 	return DataType(None);
 }
 
+DataType func_lambda(std::vector<DataType> inputs, Enviroment* enviroment)
+{
+	Enviroment nenv(enviroment);
+	DataType return_data(Function);
+
+	kiwi_func fn = [nenv, inputs](std::vector<DataType> fn_inputs, Enviroment* fn_enviroment)mutable->DataType
+	{
+		for (unsigned int i(0); i < fn_inputs.size(); i++)
+		{
+			nenv.set(inputs.at(0).list.at(i).string, fn_inputs.at(i));
+		}
+
+		return eval(inputs.at(1), &nenv);
+	};
+
+	return_data.set_function(fn, inputs.at(0).list.size(), 0, true);
+
+	return return_data;
+}
+
 Enviroment get_global_enviroment()
 {
 	Enviroment enviroment;
@@ -344,6 +371,9 @@ Enviroment get_global_enviroment()
 
 	enviroment.defined_variables["="] = DataType(Function);
 	enviroment.defined_variables["="].set_function(&func_define, 2, 0, false);
+
+	enviroment.defined_variables["fn"] = DataType(Function);
+	enviroment.defined_variables["fn"].set_function(&func_lambda, 2, 0, false);
 
 	return enviroment;
 
@@ -536,7 +566,9 @@ int main()
 {
 	//auto l = parse_to_data_types(parse_to_string("[println \"Starting \n\"][println \"Starting \n\"][if [== [+ 2 2] [- 8 4]] [println [conc \"Hello, \" \"World!\"]] [println \"Goodbye, Universe\"]]"));
 
-	auto l = parse_to_data_types(parse_to_string("[= x [+ 2 22]][println x]"));
+	//auto l = parse_to_data_types(parse_to_string("[= x [+ 2 22]][println x]"));
+	
+	auto l = parse_to_data_types(parse_to_string("[= print-and-add [fn {a b} [println [+ a b]]]] [print-and-add 2 3]"));
 
 	//print_data(l);
 
