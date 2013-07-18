@@ -7,4 +7,4 @@ run-mac: compile
 	./xigua examples/hello_world.xi
 
 run-win: compile
-	./xigua.exe examples/hello_world.xi
+	xigua.exe examples/hello_world.xi
