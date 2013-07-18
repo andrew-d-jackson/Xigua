@@ -321,6 +321,13 @@ DataType func_define(std::vector<DataType> inputs, Enviroment* enviroment)
 	return DataType(None);
 }
 
+DataType func_wait_for_input(std::vector<DataType> inputs, Enviroment* enviroment)
+{
+	char i;
+	std::cin >> i;
+	return DataType(None);
+}
+
 DataType func_lambda(std::vector<DataType> inputs, Enviroment* enviroment)
 {
 	Enviroment nenv(enviroment);
@@ -351,12 +358,18 @@ Enviroment get_global_enviroment()
 	enviroment.defined_variables["-"] = DataType(Function);
 	enviroment.defined_variables["-"].set_function(&func_minus, 2, 0, true);
 
-	//	enviroment.defined_variables["-"] = lambda_generator(&func_minus, { Number, Number });
-	//	enviroment.defined_variables["*"] = lambda_generator(&func_multiply, { Number, Number });
-	//	enviroment.defined_variables["/"] = lambda_generator(&func_divide, { Number, Number });
-	//	enviroment.defined_variables["<"] = lambda_generator(&func_less_than, { Number, Number });
-	//	enviroment.defined_variables[">"] = lambda_generator(&func_greater_than, { Number, Number });
+	enviroment.defined_variables["*"] = DataType(Function);
+	enviroment.defined_variables["*"].set_function(&func_multiply, 2, 0, true);
+	
+	enviroment.defined_variables["/"] = DataType(Function);
+	enviroment.defined_variables["/"].set_function(&func_divide, 2, 0, true);
 
+	enviroment.defined_variables["<"] = DataType(Function);
+	enviroment.defined_variables["<"].set_function(&func_less_than, 2, 0, true);
+
+	enviroment.defined_variables[">"] = DataType(Function);
+	enviroment.defined_variables[">"].set_function(&func_greater_than, 2, 0, true);
+	
 	enviroment.defined_variables["=="] = DataType(Function);
 	enviroment.defined_variables["=="].set_function(&func_equals, 2, 0, true);
 
@@ -374,6 +387,9 @@ Enviroment get_global_enviroment()
 
 	enviroment.defined_variables["fn"] = DataType(Function);
 	enviroment.defined_variables["fn"].set_function(&func_lambda, 2, 0, false);
+
+	enviroment.defined_variables["wait-for-input"] = DataType(Function);
+	enviroment.defined_variables["wait-for-input"].set_function(&func_wait_for_input, 0, 0, false);
 
 	return enviroment;
 
@@ -572,26 +588,9 @@ std::string read_file(std::string filename)
 
 int main(int argc, char *argv[])
 {
-	//auto l = parse_to_data_types(parse_to_string("[println \"Starting \n\"][println \"Starting \n\"][if [== [+ 2 2] [- 8 4]] [println [conc \"Hello, \" \"World!\"]] [println \"Goodbye, Universe\"]]"));
-
-	//auto l = parse_to_data_types(parse_to_string("[= x [+ 2 22]][println x]"));
-	
-	//auto l = parse_to_data_types(parse_to_string("[= print-and-add [fn {a b} [println [+ a b]]]] [print-and-add 2 3]"));
-
 	std::string file(argv[1]);
-	//std::cout << read_file(file);
-
 	auto l = parse_to_data_types(parse_to_string(read_file(file)));
-
-
-	//print_data(l);
 
 	Enviroment env = get_global_enviroment();
 	eval(l, &env);
-
-	//auto l = parse_to_data_types(parse_to_string("[fn {a} s [println a]]"));
-	//print_data(l);
-
-	char x;
-	std::cin >> x;
 }
