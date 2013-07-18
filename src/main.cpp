@@ -7,6 +7,7 @@
 #include <tuple>
 #include <limits>
 #include <regex>
+#include <fstream>
 
 enum DataTypes { None, Symbol, Bool, String, Number, Tuple, Proc, Function };
 
@@ -27,7 +28,6 @@ public:
 	bool boolean;
 	std::vector<DataType> list;
 	std::map < int, std::tuple<kiwi_func, int, bool> > func_map; // args : func, repeating, sould eval
-	//Enviroment enviroment;
 
 	DataType(DataTypes in_type)
 	{
@@ -561,14 +561,28 @@ void print_data(DataType data, int indentation)
 	}
 }
 
+std::string read_file(std::string filename)
+{
+	std::ifstream t(filename);
+	std::stringstream buffer;
+	buffer << t.rdbuf();
+	return buffer.str();	
+}
 
-int main()
+
+int main(int argc, char *argv[])
 {
 	//auto l = parse_to_data_types(parse_to_string("[println \"Starting \n\"][println \"Starting \n\"][if [== [+ 2 2] [- 8 4]] [println [conc \"Hello, \" \"World!\"]] [println \"Goodbye, Universe\"]]"));
 
 	//auto l = parse_to_data_types(parse_to_string("[= x [+ 2 22]][println x]"));
 	
-	auto l = parse_to_data_types(parse_to_string("[= print-and-add [fn {a b} [println [+ a b]]]] [print-and-add 2 3]"));
+	//auto l = parse_to_data_types(parse_to_string("[= print-and-add [fn {a b} [println [+ a b]]]] [print-and-add 2 3]"));
+
+	std::string file(argv[1]);
+	//std::cout << read_file(file);
+
+	auto l = parse_to_data_types(parse_to_string(read_file(file)));
+
 
 	//print_data(l);
 
