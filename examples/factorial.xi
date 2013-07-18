@@ -5,4 +5,4 @@
 
 [println [fac 5]]
 
-[wait-for-input]
+[get-input]

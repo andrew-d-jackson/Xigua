@@ -148,7 +148,7 @@ DataType func_less_than(std::vector<DataType> inputs, Enviroment* enviroment)
 	DataType return_data(Bool);
 	return_data.boolean = true;
 
-	long double previous_num = std::numeric_limits<long double>::max();
+	long double previous_num = std::numeric_limits<long double>::min();
 
 	for (const auto & input : inputs)
 	{
@@ -157,8 +157,8 @@ DataType func_less_than(std::vector<DataType> inputs, Enviroment* enviroment)
 			std::cout << "Not a Number";
 			exit(1);
 		}
-
-		if (input.number < previous_num)
+		
+		if (previous_num < input.number)
 		{
 			previous_num = input.number;
 		}
@@ -176,7 +176,7 @@ DataType func_greater_than(std::vector<DataType> inputs, Enviroment* enviroment)
 	DataType return_data(Bool);
 	return_data.boolean = true;
 
-	long double previous_num = std::numeric_limits<long double>::min();
+	long double previous_num = std::numeric_limits<long double>::max();
 
 	for (const auto & input : inputs)
 	{
@@ -186,7 +186,7 @@ DataType func_greater_than(std::vector<DataType> inputs, Enviroment* enviroment)
 			exit(1);
 		}
 
-		if (input.number > previous_num)
+		if (previous_num > input.number)
 		{
 			previous_num = input.number;
 		}
@@ -321,11 +321,14 @@ DataType func_define(std::vector<DataType> inputs, Enviroment* enviroment)
 	return DataType(None);
 }
 
-DataType func_wait_for_input(std::vector<DataType> inputs, Enviroment* enviroment)
+DataType func_get_input(std::vector<DataType> inputs, Enviroment* enviroment)
 {
-	char i;
+	std::string i;
 	std::cin >> i;
-	return DataType(None);
+
+	DataType return_data(String);
+	return_data.string = i;
+	return return_data;
 }
 
 DataType func_lambda(std::vector<DataType> inputs, Enviroment* enviroment)
@@ -388,8 +391,8 @@ Enviroment get_global_enviroment()
 	enviroment.defined_variables["fn"] = DataType(Function);
 	enviroment.defined_variables["fn"].set_function(&func_lambda, 2, 0, false);
 
-	enviroment.defined_variables["wait-for-input"] = DataType(Function);
-	enviroment.defined_variables["wait-for-input"].set_function(&func_wait_for_input, 0, 0, false);
+	enviroment.defined_variables["get-input"] = DataType(Function);
+	enviroment.defined_variables["get-input"].set_function(&func_get_input, 0, 0, true);
 
 	return enviroment;
 
