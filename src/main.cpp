@@ -399,7 +399,7 @@ std::vector<std::string> parse_to_string(std::string unparsed_string)
 			parsed_list.push_back(std::string(1, c));
 
 		}
-		else if (c == ' ') {
+		else if (c == ' ' || c == '\n') {
 
 			if (!is_reading_string) {
 				if (string_buffer_contains_data) {
