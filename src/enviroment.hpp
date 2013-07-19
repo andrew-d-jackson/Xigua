@@ -5,6 +5,7 @@
 
 #include "datatype.hpp"
 
+
 namespace Xigua
 {
 	class DataType;

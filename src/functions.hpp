@@ -9,6 +9,7 @@
 #include "datatype.hpp"
 #include "enviroment.hpp"
 
+
 namespace Xigua
 {
 	namespace Functions
@@ -169,10 +170,11 @@ namespace Xigua
 			else if (inputs.at(0).type == DataTypes::Number)
 				std::cout << inputs.at(0).number << std::endl;
 			else if (inputs.at(0).type == DataTypes::Bool)
-				if (inputs.at(0).boolean)
+				if (inputs.at(0).boolean) {
 					std::cout << "true" << std::endl;
-				else
+				} else {
 					std::cout << "false" << std::endl;
+				}
 
 
 			return DataType(DataTypes::None);

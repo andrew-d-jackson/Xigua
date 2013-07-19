@@ -9,8 +9,10 @@
 
 #include "enviroment.hpp"
 
+
 namespace Xigua
 {
+
 	enum class DataTypes { None, Symbol, Bool, String, Number, Tuple, Proc, Function };
 
 	class DataType;
@@ -40,4 +42,5 @@ namespace Xigua
 		DataType evaluate(Enviroment * enviroment);
 		void print(int indentation);
 	};
+
 }

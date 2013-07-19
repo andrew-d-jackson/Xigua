@@ -8,8 +8,10 @@
 #include "helpers.hpp"
 #include "datatype.hpp"
 
+
 namespace Xigua
 {
+
 	class Parser
 	{
 	private:
@@ -23,4 +25,5 @@ namespace Xigua
 		std::vector<std::string> as_string_list();
 		DataType as_data_type();
 	};
+
 }
