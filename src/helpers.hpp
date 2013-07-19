@@ -4,24 +4,5 @@
 #include <sstream>
 #include <fstream>
 
-inline bool is_number(std::string string)
-{
-	if (string.size() < 1)
-		return false;
-
-	for (char c : string)
-	{
-		if (!isdigit(c) && c != '.')
-			return false;
-	}
-
-	return true;
-}
-
-inline std::string read_file(std::string filename)
-{
-	std::ifstream t(filename.c_str());
-	std::stringstream buffer;
-	buffer << t.rdbuf();
-	return buffer.str();	
-}
+extern bool is_number(std::string string);
+extern std::string read_file(std::string filename);
