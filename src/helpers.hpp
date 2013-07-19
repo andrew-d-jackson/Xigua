@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 
-bool is_number(std::string string)
+inline bool is_number(std::string string)
 {
 	if (string.size() < 1)
 		return false;
@@ -18,7 +18,7 @@ bool is_number(std::string string)
 	return true;
 }
 
-std::string read_file(std::string filename)
+inline std::string read_file(std::string filename)
 {
 	std::ifstream t(filename.c_str());
 	std::stringstream buffer;

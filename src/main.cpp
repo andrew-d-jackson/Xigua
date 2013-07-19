@@ -1,12 +1,10 @@
 #include <iostream>
 
-#include "helpers.hpp"
-
 #include "datatype.hpp"
 #include "enviroment.hpp"
 #include "functions.hpp"
 #include "parser.hpp"
-
+#include "helpers.hpp"
 
 
 int main(int argc, char *argv [])
