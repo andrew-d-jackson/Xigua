@@ -1,5 +1,6 @@
 #include "parser.hpp"
 
+
 namespace Xigua
 {
 	DataType Parser::parse_to_data_types(std::vector<std::string> string_list, DataTypes list_type)
