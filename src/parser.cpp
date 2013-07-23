@@ -85,13 +85,18 @@ namespace Xigua
 		{
 			if (c == '[' || c == ']' || c == '{' || c == '}'){
 
-				if (string_buffer_contains_data) {
-					parsed_list.push_back(string_buffer.str());
-					string_buffer.str("");
-					string_buffer_contains_data = false;
-				}
+                if (!is_reading_string) {
+				    if (string_buffer_contains_data) {
+				    	parsed_list.push_back(string_buffer.str());
+				    	string_buffer.str("");
+				    	string_buffer_contains_data = false;
+				    }
+				    parsed_list.push_back(std::string(1, c));
+                } else {
+                    string_buffer << c;
+					string_buffer_contains_data = true;
+                }
 
-				parsed_list.push_back(std::string(1, c));
 
 			}
 			else if (c == ' ' || c == '\n' || c == '\t') {
