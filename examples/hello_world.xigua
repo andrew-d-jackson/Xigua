@@ -17,5 +17,5 @@
 [println "Is one less than 5 less than 9?"]
 [println [< 1 5 9]]
 
-[println "Is one less than 5 less than 2?"]
-[println [< 1 5 2]]
+[println "Not is one less than 5 less than 2?"]
+[println [not [< 1 5 2]]]

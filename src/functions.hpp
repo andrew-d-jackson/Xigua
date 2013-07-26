@@ -62,7 +62,7 @@ namespace Xigua
 	//boolean
 
 		enviroment.defined_variables["not"] = DataType(DataTypes::Function);
-		enviroment.defined_variables["not"].set_function(&Functions::Boolean::boolean_not, 2, 1, true);
+		enviroment.defined_variables["not"].set_function(&Functions::Boolean::boolean_not, 1, 0, true);
 
 
 		return enviroment;
