@@ -64,7 +64,7 @@ namespace Xigua
 		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
 		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment);
 		DataType evaluate(Enviroment * enviroment);
-		void print(int indentation);
+		void print(int indentation = 0);
 	};
 
 }

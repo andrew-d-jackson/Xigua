@@ -146,7 +146,11 @@ namespace Xigua
 
 			if (current_biggest_args_with_repeating == 0)
 			{
-				std::cout << "Wrong amount of args passed to function";
+				std::cout << "Wrong amount of args passed to function" << std::endl;
+				std::cout << " args passed:" << args.size() << std::endl;
+				for (auto i : args)
+					i.print();
+
 				exit(1);
 			}
 			else

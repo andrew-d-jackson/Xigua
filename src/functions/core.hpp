@@ -29,10 +29,10 @@ namespace Xigua
 
 				int repeating = 0;
 
-				for (auto item : inputs)
+				for (auto item : inputs.at(0).tuple())
 				{
 					if (item.type() != DataTypes::Symbol) {
-						std::cout << "non-symbol passed as function argument name";
+						std::cout << "non-symbol passed as function argument name" << std::endl;
 						exit(1);
 					} else if (item.symbol() == "&") {
 						repeating = 1;

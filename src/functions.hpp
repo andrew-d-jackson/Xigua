@@ -38,7 +38,7 @@ namespace Xigua
 		enviroment.defined_variables["+"].set_function(&Functions::Math::add, 2, 1, true);
 
 		enviroment.defined_variables["-"] = DataType(DataTypes::Function);
-		enviroment.defined_variables["+"].set_function(&Functions::Math::minus, 2, 1, true);
+		enviroment.defined_variables["-"].set_function(&Functions::Math::minus, 2, 1, true);
 
 		enviroment.defined_variables["*"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["*"].set_function(&Functions::Math::multiply, 2, 1, true);
