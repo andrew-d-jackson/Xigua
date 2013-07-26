@@ -6,6 +6,7 @@
 #include <functional>
 #include <map>
 #include <tuple>
+#include <utility>
 
 #include "enviroment.hpp"
 
@@ -28,7 +29,7 @@ namespace Xigua
 		long double d_number;
 		bool d_boolean;
 		std::vector<DataType> d_list;
-		std::map <int, std::tuple<xigua_lambda_t, int, bool>> d_func_map; // args : func, repeating, sould eval
+		std::map <std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> d_func_map; // args repeating : func, sould eval
 
 	public:
 		DataType(){}

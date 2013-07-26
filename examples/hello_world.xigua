@@ -12,3 +12,10 @@
 
 [println "Is one greater than than 5?"]
 [println [> 1 5]]
+
+
+[println "Is one less than 5 less than 9?"]
+[println [< 1 5 9]]
+
+[println "Is one less than 5 less than 2?"]
+[println [< 1 5 2]]

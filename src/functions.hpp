@@ -17,25 +17,38 @@ namespace Xigua
 
 		DataType func_less_than(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			bool return_data = true;
-
-			long double previous_num = std::numeric_limits<long double>::min();
-
-			for (const auto & input : inputs)
-			{
-				if (input.type() != DataTypes::Number)
-				{
-					std::cout << "Not a Number";
-					exit(1);
+			if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
+				std::cout << "Not a Number";
+				exit(1);
+			}
+			bool repeating_args = false;
+			if (inputs.size() > 2) {
+				repeating_args = true;
+				for (auto item : inputs.at(2).tuple()){
+					if (item.type() != DataTypes::Number){
+						std::cout << "Not a Number";
+						exit(1);
+					}
 				}
-				
-				if (previous_num < input.number())
-					previous_num = input.number();
-				else
-					return_data = false;
+
 			}
 
-			return DataType(DataTypes::Bool, return_data);
+			if (!(inputs.at(0).number() < inputs.at(1).number()))
+				return DataType(DataTypes::Bool, false);
+
+			if (repeating_args){
+				long double last_number = inputs.at(1).number();
+
+				for (const auto & input : inputs.at(2).tuple()) {	
+					if (last_number < input.number())
+						last_number = input.number();
+					else
+						return DataType(DataTypes::Bool, false);
+				}
+
+			}
+
+			return DataType(DataTypes::Bool, true);
 		}
 
 		DataType func_greater_than(std::vector<DataType> inputs, Enviroment* enviroment)
@@ -180,17 +193,30 @@ namespace Xigua
 			Enviroment nenv(enviroment);
 			DataType return_data(DataTypes::Function);
 
+			int repeating = 0;
+
+			for (auto item : inputs)
+			{
+				if (item.type() != DataTypes::Symbol) {
+					std::cout << "non-symbol passed as function argument name";
+					exit(1);
+				} else if (item.symbol() == "&") {
+					repeating = 1;
+				}
+			}
+
 			xigua_lambda_t fn = [nenv, inputs](std::vector<DataType> fn_inputs, Enviroment* fn_enviroment)mutable->DataType
 			{
 				for (unsigned int i(0); i < fn_inputs.size(); i++)
 				{
-					nenv.set(inputs.at(0).tuple().at(i).string(), fn_inputs.at(i));
+					if (inputs.at(i).symbol() != "&")
+						nenv.set(inputs.at(0).tuple().at(i).string(), fn_inputs.at(i));
 				}
 
 				return inputs.at(1).evaluate(&nenv);
 			};
 
-			return_data.set_function(fn, inputs.at(0).tuple().size(), 0, true);
+			return_data.set_function(fn, inputs.at(0).tuple().size(), repeating, true);
 
 			return return_data;
 		}
@@ -215,7 +241,7 @@ namespace Xigua
 		enviroment.defined_variables["/"].set_function(&Functions::func_divide, 2, 0, true);
 
 		enviroment.defined_variables["<"] = DataType(DataTypes::Function);
-		enviroment.defined_variables["<"].set_function(&Functions::func_less_than, 2, 0, true);
+		enviroment.defined_variables["<"].set_function(&Functions::func_less_than, 2, 1, true);
 
 		enviroment.defined_variables[">"] = DataType(DataTypes::Function);
 		enviroment.defined_variables[">"].set_function(&Functions::func_greater_than, 2, 0, true);

@@ -104,20 +104,61 @@ namespace Xigua
 
 	void DataType::set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval)
 	{
-		d_func_map[num_args] = std::make_tuple(func, repeating_args, should_eval);
+		d_func_map[std::make_pair(num_args, repeating_args)] = std::make_tuple(func, should_eval);
 	}
 
 	DataType DataType::call_function(std::vector<DataType> & args, Enviroment * enviroment)
 	{
-		auto finder = d_func_map.find(args.size());
+		auto function_to_call = d_func_map.find(std::make_pair(args.size(), 0));
 
-		if (finder == d_func_map.end())
+		if (function_to_call == d_func_map.end())
 		{
-			std::cout << "Wrong amount of args passed to function";
-			exit(1);
+			for (auto it = d_func_map.begin(); it != d_func_map.end(); it++)
+			{
+				if (it->first.first == args.size())
+					function_to_call = it;
+			}
 		}
 
-		if (std::get<2>(d_func_map[args.size()])) //should evaluate
+		if (function_to_call == d_func_map.end())
+		{
+			int current_biggest_args_with_repeating = 0;
+			int current_args_limit = args.size() - 1;
+
+			for (auto it = d_func_map.begin(); it != d_func_map.end(); it++)
+			{
+				if (it->first.second > 0)
+				{
+					if (it->first.first <= current_args_limit && it->first.first > current_biggest_args_with_repeating)
+					{
+						current_biggest_args_with_repeating = it->first.first;
+						function_to_call = it;
+					}
+				}
+			}
+
+			if (current_biggest_args_with_repeating == 0)
+			{
+				std::cout << "Wrong amount of args passed to function";
+				exit(1);
+			}
+			else
+			{
+				int args_size = function_to_call->first.first;
+				DataType repeating_data(DataTypes::Tuple);
+
+				for (int i(args_size); i < args.size(); i++)
+					repeating_data.proc_push_back(args.at(i));
+
+				for (int i(args_size); i < args.size(); i++)
+					args.pop_back();
+
+				args.push_back(repeating_data);
+			}
+
+		}
+
+		if (std::get<1>(function_to_call->second)) //should evaluate
 		{
 			for (auto & item : args)
 			{
@@ -126,7 +167,7 @@ namespace Xigua
 			}
 		}
 
-		return std::get<0>(d_func_map[args.size()])(args, enviroment);
+		return std::get<0>(function_to_call->second)(args, enviroment);
 	}
 
 	DataType DataType::evaluate(Enviroment * enviroment)
