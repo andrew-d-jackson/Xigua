@@ -19,3 +19,6 @@
 
 [println "Not is one less than 5 less than 2?"]
 [println [not [< 1 5 2]]]
+
+[println "Tuple Object"]
+[println [join 3 4 5]]

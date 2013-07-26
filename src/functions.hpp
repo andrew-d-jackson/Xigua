@@ -7,6 +7,7 @@
 #include "functions/math.hpp"
 #include "functions/boolean.hpp"
 #include "functions/string.hpp"
+#include "functions/tuple.hpp"
 
 namespace Xigua
 {
@@ -63,6 +64,12 @@ namespace Xigua
 
 		enviroment.defined_variables["not"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["not"].set_function(&Functions::Boolean::boolean_not, 1, 0, true);
+
+	//tuple
+
+		enviroment.defined_variables["join"] = DataType(DataTypes::Function);
+		enviroment.defined_variables["join"].set_function(&Functions::Tuple::join, 2, 1, true);
+
 
 
 		return enviroment;

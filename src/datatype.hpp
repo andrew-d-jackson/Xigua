@@ -37,6 +37,7 @@ namespace Xigua
 		DataType(DataTypes data_type, std::string string_data);
 		DataType(DataTypes data_type, long double number_data);
 		DataType(DataTypes data_type, bool boolean_data);
+		DataType(DataTypes data_type, std::vector<DataType> list_data);
 
 		DataTypes type() const;
 		void type(DataTypes in_type);

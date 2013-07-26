@@ -75,6 +75,10 @@ namespace Xigua
 					} else {
 						std::cout << "false" << std::endl;
 					}
+				else if (inputs.at(0).type() == DataTypes::Tuple)
+					std::cout << "<Tuple Size: " << inputs.at(0).tuple().size() << ">" << std::endl;
+				else if (inputs.at(0).type() == DataTypes::Function)
+					std::cout << "<Function>" << std::endl;
 
 				return DataType(DataTypes::None);
 			}

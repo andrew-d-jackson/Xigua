@@ -26,6 +26,13 @@ namespace Xigua
 		d_boolean = boolean_data;
 	}
 
+	DataType::DataType(DataTypes data_type, std::vector<DataType> list_data)
+	{
+		d_type = data_type;
+		d_list = list_data;
+	}
+
+
 	DataTypes DataType::type() const
 	{
 		return d_type;
