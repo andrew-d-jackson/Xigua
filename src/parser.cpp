@@ -5,10 +5,8 @@ namespace Xigua
 {
 	DataType Parser::parse_to_data_types(std::vector<std::string> string_list, DataTypes list_type)
 	{
-		DataType current_list;
-		current_list.type = list_type;
-		unsigned int current_item_index = 0;
-		for (; current_item_index < string_list.size(); ++current_item_index)
+		DataType current_list(list_type);
+		for (unsigned int current_item_index = 0; current_item_index < string_list.size(); ++current_item_index)
 		{
 			if (string_list.at(current_item_index) == "[" || string_list.at(current_item_index) == "{")
 			{
@@ -31,39 +29,34 @@ namespace Xigua
 					}
 					new_list.push_back(string_list.at(current_item_index));
 				}
-				current_list.list.push_back(parse_to_data_types(new_list, sub_list_type));
+				current_list.proc_push_back(parse_to_data_types(new_list, sub_list_type));
 			}
 			else if (is_number(string_list.at(current_item_index)))
 			{
-				DataType data;
-				data.type = DataTypes::Number;
-				data.number = atof(string_list.at(current_item_index).c_str());
-				current_list.list.push_back(data);
+				DataType data(DataTypes::Number, (long double)atof(string_list.at(current_item_index).c_str()));
+
+				current_list.proc_push_back(data);
 			}
 			else if (string_list.at(current_item_index)[0] == '"')
 			{
-				DataType data;
-				data.type = DataTypes::String;
-				data.string = string_list.at(current_item_index).substr(1, string_list.at(current_item_index).size() - 2);
-				current_list.list.push_back(data);
+				DataType data(DataTypes::String, string_list.at(current_item_index).substr(1, string_list.at(current_item_index).size() - 2));
+				
+				current_list.proc_push_back(data);
 			}
 			else if (string_list.at(current_item_index) == "true" || string_list.at(current_item_index) == "false")
 			{
-				DataType data;
-				data.type = DataTypes::Bool;
+				DataType data(DataTypes::Bool);
 				if (string_list.at(current_item_index) == "true")
-					data.boolean = true;
+					data.boolean(true);
 				else
-					data.boolean = false;
-				current_list.list.push_back(data);
+					data.boolean(false);
 
+				current_list.proc_push_back(data);
 			}
 			else
 			{
-				DataType data;
-				data.type = DataTypes::Symbol;
-				data.string = string_list.at(current_item_index);
-				current_list.list.push_back(data);
+				DataType data(DataTypes::Symbol, string_list.at(current_item_index));
+				current_list.proc_push_back(data);
 			}
 		}
 		return current_list;

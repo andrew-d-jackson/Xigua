@@ -22,20 +22,42 @@ namespace Xigua
 
 	class DataType
 	{
+	protected:
+		DataTypes d_type;
+		std::string d_string;
+		long double d_number;
+		bool d_boolean;
+		std::vector<DataType> d_list;
+		std::map <int, std::tuple<xigua_lambda_t, int, bool>> d_func_map; // args : func, repeating, sould eval
+
 	public:
-		DataTypes type;
-		std::string string;
-		long double number;
-		bool boolean;
-		std::vector<DataType> list;
-		std::map <int, std::tuple<xigua_lambda_t, int, bool>> func_map; // args : func, repeating, sould eval
-
-
 		DataType(){}
 		DataType(DataTypes data_type);
 		DataType(DataTypes data_type, std::string string_data);
 		DataType(DataTypes data_type, long double number_data);
 		DataType(DataTypes data_type, bool boolean_data);
+
+		DataTypes type() const;
+		void type(DataTypes in_type);
+
+		std::string string() const;
+		void string(std::string in_string);
+
+		std::string symbol() const;
+		void symbol(std::string symbol_name);
+
+		long double number() const;
+		void number(long double in_number);
+
+		std::vector<DataType> tuple() const;
+		void tuple(std::vector<DataType> in_tuple);
+
+		std::vector<DataType> proc() const;
+		void proc(std::vector<DataType> in_list);
+		void proc_push_back(DataType item);
+
+		bool boolean() const;
+		void boolean(bool boolean);
 
 		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
 		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment);

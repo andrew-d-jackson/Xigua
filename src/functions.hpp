@@ -17,172 +17,146 @@ namespace Xigua
 
 		DataType func_less_than(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Bool);
-			return_data.boolean = true;
+			bool return_data = true;
 
 			long double previous_num = std::numeric_limits<long double>::min();
 
 			for (const auto & input : inputs)
 			{
-				if (input.type != DataTypes::Number)
+				if (input.type() != DataTypes::Number)
 				{
 					std::cout << "Not a Number";
 					exit(1);
 				}
 				
-				if (previous_num < input.number)
-				{
-					previous_num = input.number;
-				}
+				if (previous_num < input.number())
+					previous_num = input.number();
 				else
-				{
-					return_data.boolean = false;
-				}
+					return_data = false;
 			}
 
-			return return_data;
+			return DataType(DataTypes::Bool, return_data);
 		}
 
 		DataType func_greater_than(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Bool);
-			return_data.boolean = true;
+			bool return_data = true;
 
 			long double previous_num = std::numeric_limits<long double>::max();
 
 			for (const auto & input : inputs)
 			{
-				if (input.type != DataTypes::Number)
+				if (input.type() != DataTypes::Number)
 				{
 					std::cout << "Not a Number";
 					exit(1);
 				}
 
-				if (previous_num > input.number)
-				{
-					previous_num = input.number;
-				}
+				if (previous_num > input.number())
+					previous_num = input.number();
 				else
-				{
-					return_data.boolean = false;
-				}
+					return_data = false;
 			}
 
-			return return_data;
+			return DataType(DataTypes::Bool, return_data);
 		}
 
 		DataType func_equals(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Bool);
-			return_data.boolean = true;
+			bool return_data = true;
 
-			long double previous_num = inputs.at(0).number;
+			long double previous_num = inputs.at(0).number();
 
 			for (const auto & input : inputs)
 			{
-				if (input.type != DataTypes::Number)
+				if (input.type() != DataTypes::Number)
 				{
 					std::cout << "Not a Number";
 					exit(1);
 				}
 
-				if (input.number == previous_num)
-				{
-					previous_num = input.number;
-				}
+				if (input.number() == previous_num)
+					previous_num = input.number();
 				else
-				{
-					return_data.boolean = false;
-				}
+					return_data = false;
 			}
 
-			return return_data;
+			return DataType(DataTypes::Bool, return_data);
 		}
 
 		DataType func_add(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Number);
-			return_data.number = 0;
+			long double	return_data = 0;
 
 			for (const auto & input : inputs)
 			{
-				if (input.type != DataTypes::Number)
+				if (input.type() != DataTypes::Number)
 				{
 					std::cout << "Not a Number";
 					exit(1);
 				}
-				return_data.number = return_data.number + input.number;
+				return_data = return_data + input.number();
 			}
 
-			return return_data;
+			return DataType(DataTypes::Number, return_data);
 		}
 
 		DataType func_minus(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Number);
-			return_data.number = inputs.at(0).number * 2;
+			long double return_data = inputs.at(0).number() * 2;
 
 			for (const auto & input : inputs)
 			{
-				if (input.type != DataTypes::Number)
+				if (input.type() != DataTypes::Number)
 				{
 					std::cout << "Not a Number";
 					exit(1);
 				}
-				return_data.number = return_data.number - input.number;
+				return_data = return_data - input.number();
 			}
 
-			return return_data;
+			return DataType(DataTypes::Number, return_data);
 		}
 
 		DataType func_multiply(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Number);
-			return_data.number = inputs.at(0).number * inputs.at(1).number;
-			return return_data;
+			return DataType(DataTypes::Number, (inputs.at(0).number() * inputs.at(1).number()));
 		}
 
 		DataType func_divide(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::Number);
-			return_data.number = inputs.at(0).number / inputs.at(1).number;
-			return return_data;
+			return DataType(DataTypes::Number, (inputs.at(0).number() / inputs.at(1).number()));
 		}
 
 		DataType func_concatinate_strings(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::String);
-			return_data.string = inputs.at(0).string + inputs.at(1).string;
-			return return_data;
+			return DataType(DataTypes::String, (inputs.at(0).string() + inputs.at(1).string()));
 		}
 
 		DataType func_uppercase_string(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			DataType return_data(DataTypes::String);
-			return_data.string = inputs.at(0).string;
-			return return_data;
+			return DataType(DataTypes::String, (inputs.at(0).string()));
 		}
 
 		DataType func_print_line(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			if (inputs.at(0).type == DataTypes::String)
-				std::cout << inputs.at(0).string << std::endl;
-			else if (inputs.at(0).type == DataTypes::Number)
-				std::cout << inputs.at(0).number << std::endl;
-			else if (inputs.at(0).type == DataTypes::Bool)
-				if (inputs.at(0).boolean) {
+			if (inputs.at(0).type() == DataTypes::String)
+				std::cout << inputs.at(0).string() << std::endl;
+			else if (inputs.at(0).type() == DataTypes::Number)
+				std::cout << inputs.at(0).number() << std::endl;
+			else if (inputs.at(0).type() == DataTypes::Bool)
+				if (inputs.at(0).boolean()) {
 					std::cout << "true" << std::endl;
 				} else {
 					std::cout << "false" << std::endl;
 				}
-
 
 			return DataType(DataTypes::None);
 		}
 
 		DataType func_if(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			if (inputs.at(0).evaluate(enviroment).boolean)
+			if (inputs.at(0).evaluate(enviroment).boolean())
 				return inputs.at(1).evaluate(enviroment);
 			else
 				return inputs.at(2).evaluate(enviroment);
@@ -190,18 +164,15 @@ namespace Xigua
 
 		DataType func_define(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			enviroment->set(inputs.at(0).string, inputs.at(1).evaluate(enviroment));
+			enviroment->set(inputs.at(0).string(), inputs.at(1).evaluate(enviroment));
 			return DataType(DataTypes::None);
 		}
 
 		DataType func_get_input(std::vector<DataType> inputs, Enviroment* enviroment)
 		{
-			std::string i;
-			std::cin >> i;
-
-			DataType return_data(DataTypes::String);
-			return_data.string = i;
-			return return_data;
+			std::string str;
+			std::cin >> str;
+			return DataType(DataTypes::String, str);
 		}
 
 		DataType func_lambda(std::vector<DataType> inputs, Enviroment* enviroment)
@@ -213,13 +184,13 @@ namespace Xigua
 			{
 				for (unsigned int i(0); i < fn_inputs.size(); i++)
 				{
-					nenv.set(inputs.at(0).list.at(i).string, fn_inputs.at(i));
+					nenv.set(inputs.at(0).tuple().at(i).string(), fn_inputs.at(i));
 				}
 
 				return inputs.at(1).evaluate(&nenv);
 			};
 
-			return_data.set_function(fn, inputs.at(0).list.size(), 0, true);
+			return_data.set_function(fn, inputs.at(0).tuple().size(), 0, true);
 
 			return return_data;
 		}
