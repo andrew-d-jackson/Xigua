@@ -58,10 +58,7 @@ namespace Xigua
 	//string
 
 		enviroment.defined_variables["string"] = DataType(DataTypes::Function);
-		enviroment.defined_variables["string"].set_function(&Functions::String::to_string, 1, 0, true);
-
-		enviroment.defined_variables["conc"] = DataType(DataTypes::Function);
-		enviroment.defined_variables["conc"].set_function(&Functions::String::concatinate, 2, 1, true);
+		enviroment.defined_variables["string"].set_function(&Functions::String::concatinate, 1, 1, true);
 
 	//boolean
 

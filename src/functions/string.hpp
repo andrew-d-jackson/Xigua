@@ -17,58 +17,47 @@ namespace Xigua
 		namespace String
 		{
 
-
-			DataType to_string(std::vector<DataType> inputs, Enviroment* enviroment)
+			std::string as_string(DataType input)
 			{
-				if (inputs.at(0).type() == DataTypes::String)
-					return inputs.at(0);
+				if (input.type() == DataTypes::String)
+					return input.string();
 
-				if (inputs.at(0).type() == DataTypes::Bool){
-					if (inputs.at(0).boolean())
-						return DataType(DataTypes::String, "true");
+				if (input.type() == DataTypes::Bool){
+					if (input.boolean())
+						return "true";
 					else
-						return DataType(DataTypes::String, "false");
+						return "false";
 				}
 
-				if (inputs.at(0).type() == DataTypes::Number){
+				if (input.type() == DataTypes::Number){
 					std::stringstream ss;
-					ss << inputs.at(0).number();
-					return DataType(DataTypes::String, ss.str());
+					ss << input.number();
+					return ss.str();
 				}
-			
-				std::cout << "Incompatible Type in to string";
-				exit(1);
+
+				return "";
 			}
 
 
 			DataType concatinate(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::String || inputs.at(1).type() != DataTypes::String) {
-					std::cout << "Not a String";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::String){
-							std::cout << "Not a String";
-							exit(1);
+				std::vector<DataType> arguments;
+				for (auto input : inputs) {
+					if(input.type() == DataTypes::Tuple) {
+						for (auto i : input.tuple()) {
+							arguments.push_back(i);
 						}
-					}
-
-				}
-
-				std::string result = inputs.at(0).string();
-				result += inputs.at(1).string();
-
-				if (repeating_args){
-					for (const auto & input : inputs.at(2).tuple()) {	
-						result += input.string();
+					} else {
+						arguments.push_back(input);
 					}
 				}
 
-				return DataType(DataTypes::String, result);
+				std::string return_string = "";
+				for (auto argument : arguments) {
+					return_string += as_string(argument);
+				}
+
+				return DataType(DataTypes::String, return_string);
 			}
 
 		}

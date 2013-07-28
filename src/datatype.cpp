@@ -173,8 +173,9 @@ namespace Xigua
 		{
 			for (auto & item : args)
 			{
-				if (item.d_type == DataTypes::Proc || item.d_type == DataTypes::Symbol)
+				if (item.d_type == DataTypes::Proc || item.d_type == DataTypes::Symbol || item.d_type == DataTypes::Tuple)
 					item = item.evaluate(enviroment);
+
 			}
 		}
 
@@ -228,6 +229,15 @@ namespace Xigua
 				for (DataType item : d_list)
 					item.evaluate(enviroment);
 			}
+		}
+		else if (d_type == DataTypes::Tuple)
+		{
+			DataType new_tuple(DataTypes::Tuple);
+			for (auto data : d_list)
+			{
+				new_tuple.proc_push_back(data.evaluate(enviroment));
+			}
+			return new_tuple;
 		}
 
 		return DataType(DataTypes::None);

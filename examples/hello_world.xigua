@@ -2,7 +2,7 @@
 
 [println "What is your name?"]
 
-[println [conc "Hello, " [get-input]]]
+[println [string "Hello, " [get-input]]]
 
 [println "2+2 is "]
 [println [+ 2 2]]
@@ -24,8 +24,8 @@
 [println [join 3 4 5]]
 
 [= x 20.001]
-[println [conc "x is " [string x]]]
+[println [string "x is " x]]
 
-[= some-function [fn {s} [println [conc "This is a function " s]]]]
+[= some-function [fn {s} [println [string "This is a function " s]]]]
 [println [some-function "that says this"]]
 
