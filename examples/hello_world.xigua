@@ -22,3 +22,10 @@
 
 [println "Tuple Object"]
 [println [join 3 4 5]]
+
+[= x 20.001]
+[println [conc "x is " [string x]]]
+
+[= some-function [fn {s} [println [conc "This is a function " s]]]]
+[println [some-function "that says this"]]
+
