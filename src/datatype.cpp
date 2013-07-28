@@ -253,8 +253,10 @@ namespace Xigua
 			}
 			else
 			{
+				DataType return_value = DataType(DataTypes::None);
 				for (DataType item : d_list)
-					item.evaluate(enviroment);
+					return_value = item.evaluate(enviroment);
+				return return_value;
 			}
 		}
 		else if (d_type == DataTypes::Tuple)
