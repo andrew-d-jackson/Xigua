@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <functional>
 #include <map>
@@ -44,6 +45,7 @@ namespace Xigua
 
 		std::string string() const;
 		void string(std::string in_string);
+		std::string as_string() const;
 
 		std::string symbol() const;
 		void symbol(std::string symbol_name);

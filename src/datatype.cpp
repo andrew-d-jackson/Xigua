@@ -53,6 +53,33 @@ namespace Xigua
 		d_string = in_string;
 	}
 
+	std::string DataType::as_string() const
+	{
+		std::string return_value = "";
+		if (d_type == DataTypes::String) {
+			return_value += d_string;
+		} else if (d_type == DataTypes::Bool){
+			if (d_boolean) {
+				return_value += "true";
+			} else {
+				return_value += "false";
+			}
+		} else if (d_type == DataTypes::Number){
+			std::stringstream ss;
+			ss << d_number;
+			return_value += ss.str();
+		} else if (d_type == DataTypes::Tuple){
+			return_value += "{ ";
+			for (auto element : d_list) {
+				return_value += element.as_string();
+				return_value += " ";
+			}
+			return_value += "}";
+		}
+		return return_value;
+	}
+
+
 	std::string DataType::symbol() const
 	{
 		return d_string;

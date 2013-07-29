@@ -65,21 +65,7 @@ namespace Xigua
 
 			DataType print_line(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() == DataTypes::String)
-					std::cout << inputs.at(0).string() << std::endl;
-				else if (inputs.at(0).type() == DataTypes::Number)
-					std::cout << inputs.at(0).number() << std::endl;
-				else if (inputs.at(0).type() == DataTypes::Bool)
-					if (inputs.at(0).boolean()) {
-						std::cout << "true" << std::endl;
-					} else {
-						std::cout << "false" << std::endl;
-					}
-				else if (inputs.at(0).type() == DataTypes::Tuple)
-					std::cout << "<Tuple Size: " << inputs.at(0).tuple().size() << ">" << std::endl;
-				else if (inputs.at(0).type() == DataTypes::Function)
-					std::cout << "<Function>" << std::endl;
-
+				std::cout << inputs.at(0).as_string() << std::endl;
 				return DataType(DataTypes::None);
 			}
 
