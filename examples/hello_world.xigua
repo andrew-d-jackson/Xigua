@@ -21,7 +21,7 @@
 [println [not [< 1 5 2]]]
 
 [println "Tuple Object"]
-[println [join 3 4 5]]
+[println [join 3 4 5 {2 3}]]
 
 [= x 20.001]
 [println [string "x is " x]]

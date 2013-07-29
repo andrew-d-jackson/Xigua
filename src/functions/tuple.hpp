@@ -7,6 +7,7 @@
 
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
+#include "../functionutils.hpp"
 
 
 namespace Xigua
@@ -18,33 +19,20 @@ namespace Xigua
 
 			DataType join(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				bool repeating_args = false;
-				if (inputs.size() > 2)
-					repeating_args = true;
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
 
-				DataType result(DataTypes::Tuple);
-
-				if (inputs.at(0).type() == DataTypes::Tuple) {
-					for (auto i : inputs.at(0).tuple())
-						result.proc_push_back(i);
-				} else { 
-					result.proc_push_back(inputs.at(0));
-				}
-
-				if (inputs.at(1).type() == DataTypes::Tuple) {
-					for (auto i : inputs.at(0).tuple())
-						result.proc_push_back(i);
-				} else { 
-					result.proc_push_back(inputs.at(0));
-				}
-
-				if (repeating_args){
-					for (const auto & input : inputs.at(2).tuple()) {
-						result.proc_push_back(input);
+				std::vector<DataType> return_value;
+				for (auto argument : arguments)
+				{
+					if (argument.type() == DataTypes::Tuple) {
+						for (auto element : argument.tuple())
+							return_value.push_back(element);
+					} else {
+						return_value.push_back(argument);
 					}
 				}
 
-				return result;
+				return DataType(DataTypes::Tuple, return_value);
 			}
 
 		}
