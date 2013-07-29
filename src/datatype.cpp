@@ -149,8 +149,11 @@ namespace Xigua
 		{
 			for (auto it = d_func_map.begin(); it != d_func_map.end(); it++)
 			{
-				if (it->first.first == args.size())
+				if (it->first.first == args.size()){
 					function_to_call = it;
+					for (int i(0); i < it->first.second; i++)
+						args.push_back(DataType(DataTypes::Tuple));
+				}
 			}
 		}
 

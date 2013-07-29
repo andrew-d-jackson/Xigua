@@ -38,3 +38,7 @@
 
 [= greet [fn {name} [println [string "Hello, " name]]]]
 [greet "Peter"] ~ Hello Peter
+
+[[fn {& n} [println "Hello World!"]]]
+
+[apply {1} [fn {n & f} [[println n][println f]]]]
