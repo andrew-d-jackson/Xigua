@@ -38,5 +38,14 @@ namespace Xigua
 			exit(1);
 		}
 
+		void assert_all_types_are(std::string function_name, std::vector<DataType> arguments, DataTypes expected)
+		{
+			for (auto argument : arguments)
+			{
+				if (argument.type() != expected)
+					wrong_type_error(function_name);
+			}
+		}
+
 	}
 }

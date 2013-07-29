@@ -6,6 +6,7 @@
 
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
+#include "../functionutils.hpp"
 
 
 namespace Xigua
@@ -17,35 +18,17 @@ namespace Xigua
 
 			DataType less_than(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("less than", arguments, DataTypes::Number);
+
+				long double previous_number = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					if (previous_number < arguments.at(i).number()){
+						previous_number = arguments.at(i).number();
+					} else {
+						return DataType(DataTypes::Bool, false); 
 					}
-
-				}
-
-				if (!(inputs.at(0).number() < inputs.at(1).number()))
-					return DataType(DataTypes::Bool, false);
-
-				if (repeating_args){
-					long double last_number = inputs.at(1).number();
-
-					for (const auto & input : inputs.at(2).tuple()) {	
-						if (last_number < input.number())
-							last_number = input.number();
-						else
-							return DataType(DataTypes::Bool, false);
-					}
-
 				}
 
 				return DataType(DataTypes::Bool, true);
