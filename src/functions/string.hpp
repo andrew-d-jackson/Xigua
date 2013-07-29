@@ -24,21 +24,7 @@ namespace Xigua
 
 				std::string return_string = "";
 				for (auto argument : arguments) {
-					if (argument.type() == DataTypes::String) {
-						return_string += argument.string();
-					} else if (argument.type() == DataTypes::Bool){
-						if (argument.boolean()) {
-							return_string += "true";
-						} else {
-							return_string += "false";
-						}
-					} else if (argument.type() == DataTypes::Number){
-						std::stringstream ss;
-						ss << argument.number();
-						return_string += ss.str();
-					} else {
-						Xigua::FunctionUtils::wrong_type_error("string");
-					}
+					return_string += argument.as_string();
 				}
 
 				return DataType(DataTypes::String, return_string);
