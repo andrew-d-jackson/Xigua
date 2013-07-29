@@ -7,6 +7,7 @@
 
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
+#include "../functionutils.hpp"
 
 
 namespace Xigua
@@ -78,6 +79,37 @@ namespace Xigua
 				std::string str;
 				std::cin >> str;
 				return DataType(DataTypes::String, str);
+			}
+
+		/*	DataType map(std::vector<DataType> inputs, Enviroment* enviroment)
+			{
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+
+				for (int i(0); i < arguments.at(1).tuple().size(); i++)
+				{
+					std::vector<DataType> temp_proc = { arguments.at(0) };
+					for (int j(1); j < arguments.size(); j++)
+						temp_proc.push_back(arguments.at(j).tuple().at(i))
+
+					DataType temp_function(DataTypes::Proc, temp_proc);
+					temp_function.evaluate();
+				}
+
+				return DataType(DataTypes::None);
+			}
+*/
+			DataType apply(std::vector<DataType> inputs, Enviroment* enviroment)
+			{
+				if (inputs.at(0).type() != DataTypes::Function || inputs.at(1).type() != DataTypes::Tuple)
+					Xigua::FunctionUtils::wrong_type_error("apply");
+
+				std::vector<DataType> temp_proc = { inputs.at(0) };
+
+				for (auto data : inputs.at(1).tuple())
+					temp_proc.push_back(data);
+
+				DataType temp_function(DataTypes::Proc, temp_proc);
+				return temp_function.evaluate(enviroment);
 			}
 
 		}

@@ -240,17 +240,22 @@ namespace Xigua
 		}
 		else if (d_type == DataTypes::Proc)
 		{
+			if (d_list.at(0).d_type == DataTypes::Proc || d_list.at(0).d_type == DataTypes::Symbol)
+			{
+				d_list.at(0) = d_list.at(0).evaluate(enviroment);
+			}
+
 			if (d_list.size() == 0)
 			{
 				return DataType(DataTypes::None);
 			}
-			else if (d_list.at(0).d_type == DataTypes::Symbol)
+			else if (d_list.at(0).d_type == DataTypes::Function)
 			{
 				auto firstElement = d_list.begin() + 1;
 				auto lastElement = d_list.end();
 				std::vector<DataType> functionArgs(firstElement, lastElement);
 
-				return d_list.at(0).evaluate(enviroment).call_function(functionArgs, enviroment);
+				return d_list.at(0).call_function(functionArgs, enviroment);
 			}
 			else
 			{
