@@ -36,35 +36,17 @@ namespace Xigua
 
 			DataType greater_than(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("greater than", arguments, DataTypes::Number);
+
+				long double previous_number = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					if (previous_number > arguments.at(i).number()){
+						previous_number = arguments.at(i).number();
+					} else {
+						return DataType(DataTypes::Bool, false); 
 					}
-
-				}
-
-				if (!(inputs.at(0).number() > inputs.at(1).number()))
-					return DataType(DataTypes::Bool, false);
-
-				if (repeating_args){
-					long double last_number = inputs.at(1).number();
-
-					for (const auto & input : inputs.at(2).tuple()) {	
-						if (last_number > input.number())
-							last_number = input.number();
-						else
-							return DataType(DataTypes::Bool, false);
-					}
-
 				}
 
 				return DataType(DataTypes::Bool, true);
@@ -72,35 +54,15 @@ namespace Xigua
 
 			DataType equal_to(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("equal to", arguments, DataTypes::Number);
+
+				long double previous_number = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					if (previous_number != arguments.at(i).number()){
+						return DataType(DataTypes::Bool, false); 
 					}
-
-				}
-
-				if (!(inputs.at(0).number() == inputs.at(1).number()))
-					return DataType(DataTypes::Bool, false);
-
-				if (repeating_args){
-					long double last_number = inputs.at(1).number();
-
-					for (const auto & input : inputs.at(2).tuple()) {	
-						if (last_number == input.number())
-							last_number = input.number();
-						else
-							return DataType(DataTypes::Bool, false);
-					}
-
 				}
 
 				return DataType(DataTypes::Bool, true);
@@ -108,122 +70,58 @@ namespace Xigua
 
 			DataType add(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
-					}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("add", arguments, DataTypes::Number);
 
+				long double return_value = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					return_value += arguments.at(i).number();
 				}
 
-				long double result = inputs.at(0).number();
-				result += inputs.at(1).number();
-
-				if (repeating_args){
-					for (const auto & input : inputs.at(2).tuple()) {	
-						result += input.number();
-					}
-				}
-
-				return DataType(DataTypes::Number, result);
+				return DataType(DataTypes::Number, return_value);
 			}
 
 			DataType minus(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
-					}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("minus", arguments, DataTypes::Number);
 
+				long double return_value = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					return_value -= arguments.at(i).number();
 				}
 
-				long double result = inputs.at(0).number();
-				result -= inputs.at(1).number();
-
-				if (repeating_args){
-					for (const auto & input : inputs.at(2).tuple()) {	
-						result -= input.number();
-					}
-				}
-
-				return DataType(DataTypes::Number, result);
+				return DataType(DataTypes::Number, return_value);
 			}
 
 			DataType multiply(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
-					}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("multiply", arguments, DataTypes::Number);
 
+				long double return_value = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					return_value *= arguments.at(i).number();
 				}
 
-				long double result = inputs.at(0).number();
-				result *= inputs.at(1).number();
-
-				if (repeating_args){
-					for (const auto & input : inputs.at(2).tuple()) {	
-						result *= input.number();
-					}
-				}
-
-				return DataType(DataTypes::Number, result);
+				return DataType(DataTypes::Number, return_value);
 			}
 
 			DataType divide(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Number) {
-					std::cout << "Not a Number";
-					exit(1);
-				}
-				bool repeating_args = false;
-				if (inputs.size() > 2) {
-					repeating_args = true;
-					for (auto item : inputs.at(2).tuple()){
-						if (item.type() != DataTypes::Number){
-							std::cout << "Not a Number";
-							exit(1);
-						}
-					}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				Xigua::FunctionUtils::assert_all_types_are("divide", arguments, DataTypes::Number);
 
+				long double return_value = arguments.at(0).number();
+				for (int i(1); i < arguments.size(); i++)
+				{
+					return_value /= arguments.at(i).number();
 				}
 
-				long double result = inputs.at(0).number();
-				result /= inputs.at(1).number();
-
-				if (repeating_args){
-					for (const auto & input : inputs.at(2).tuple()) {	
-						result /= input.number();
-					}
-				}
-
-				return DataType(DataTypes::Number, result);
+				return DataType(DataTypes::Number, return_value);
 			}
 
 		}
