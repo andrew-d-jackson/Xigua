@@ -8,6 +8,7 @@
 
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
+#include "../functionutils.hpp"
 
 
 namespace Xigua
@@ -17,44 +18,27 @@ namespace Xigua
 		namespace String
 		{
 
-			std::string as_string(DataType input)
-			{
-				if (input.type() == DataTypes::String)
-					return input.string();
-
-				if (input.type() == DataTypes::Bool){
-					if (input.boolean())
-						return "true";
-					else
-						return "false";
-				}
-
-				if (input.type() == DataTypes::Number){
-					std::stringstream ss;
-					ss << input.number();
-					return ss.str();
-				}
-
-				return "";
-			}
-
-
 			DataType concatinate(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				std::vector<DataType> arguments;
-				for (auto input : inputs) {
-					if(input.type() == DataTypes::Tuple) {
-						for (auto i : input.tuple()) {
-							arguments.push_back(i);
-						}
-					} else {
-						arguments.push_back(input);
-					}
-				}
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 1);
 
 				std::string return_string = "";
 				for (auto argument : arguments) {
-					return_string += as_string(argument);
+					if (argument.type() == DataTypes::String) {
+						return_string += argument.string();
+					} else if (argument.type() == DataTypes::Bool){
+						if (argument.boolean()) {
+							return_string += "true";
+						} else {
+							return_string += "false";
+						}
+					} else if (argument.type() == DataTypes::Number){
+						std::stringstream ss;
+						ss << argument.number();
+						return_string += ss.str();
+					} else {
+						Xigua::FunctionUtils::wrong_type_error("string");
+					}
 				}
 
 				return DataType(DataTypes::String, return_string);
