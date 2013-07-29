@@ -1,32 +1,40 @@
-~ This is a comment
+~ Welcome to Xigua
+~ Xigua is a lisp, but it uses square brackets
+~ Hello world in it looks something like this
 
-[println "Hello, World! ~[._.]~"] ~ So is this [println "This dosen't happen"]
+[println "Hello, World! ~[._.]~"] ~ Hello, World! ~[._.]~
 
-[println "What is your name?"]
+~ As you probably noticed you can comment code with ~
+~ Like most lisps, basic math looks something like this
 
-[println [string "Hello, " [get-input]]]
+[println [+ 2 2]] ~ 4
+[println [- 12 2 5]] ~ 5
 
-[println "2+2 is "]
-[println [+ 2 2]]
+~ Same goes for * and /
 
-[println "Is one less than 5?"]
-[println [< 1 5]]
+~ If statments looks like this
 
-[println "Is one greater than than 5?"]
-[println [> 1 5]]
+[if [== [- 6 2] [+ 2 2]]
+	[println "4 equals 4, who would have thought?"]
+	[println "Well this is wierd, 4 does not equal 4"]] ~ 4 equals 4, who would have thought?
 
+~ Xigua uses a very unlisp like == to check for equality
+~ That's because = is reserved for defining variables
 
-[println "Is one less than 5 less than 9?"]
-[println [< 1 5 9]]
+[= x 42]
+[println "x is"] ~ x is
+[println x] ~ 42
 
-[println "Not is one less than 5 less than 2?"]
-[println [not [< 1 5 2]]]
+~ You can use the string function to build strings
 
-[println "Tuple Object"]
-[println [join 3 4 5 {2 3}]]
+[println [string "x is still " x]] ~ x is still 42
 
-[= x 20.001]
-[println [string "x is " x]]
+~ Xigua has lists, or more accuratley Tuples
+~ use { } to make them
 
-[= some-function [fn {s} [println [string "This is a function " s]]]]
-[println [some-function "that says this"]]
+[= my-tuple {1 2 3 4}]
+
+~ Lambdas are created by using fn like this:
+
+[= greet [fn {name} [println [string "Hello, " name]]]]
+[greet "Peter"] ~ Hello Peter
