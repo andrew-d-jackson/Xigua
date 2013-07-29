@@ -183,12 +183,13 @@ namespace Xigua
 			else
 			{
 				int args_size = function_to_call->first.first;
+				int prev_args_size = args.size();
 				DataType repeating_data(DataTypes::Tuple);
 
-				for (int i(args_size); i < args.size(); i++)
+				for (int i(args_size); i < prev_args_size; i++)
 					repeating_data.proc_push_back(args.at(i));
 
-				for (int i(args_size); i < args.size(); i++)
+				for (int i(args_size); i < prev_args_size; i++)
 					args.pop_back();
 
 				args.push_back(repeating_data);

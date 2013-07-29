@@ -28,4 +28,3 @@
 
 [= some-function [fn {s} [println [string "This is a function " s]]]]
 [println [some-function "that says this"]]
-

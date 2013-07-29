@@ -41,16 +41,20 @@ namespace Xigua
 
 				xigua_lambda_t fn = [nenv, inputs](std::vector<DataType> fn_inputs, Enviroment* fn_enviroment)mutable->DataType
 				{
-					for (unsigned int i(0); i < fn_inputs.size(); i++)
+					short missing = 0;
+					for (unsigned int i(0); i < inputs.at(0).tuple().size(); ++i)
 					{
-						if (inputs.at(i).symbol() != "&")
-							nenv.set(inputs.at(0).tuple().at(i).string(), fn_inputs.at(i));
+						if (inputs.at(0).tuple().at(i).symbol() != "&") {
+							nenv.set(inputs.at(0).tuple().at(i).symbol(), fn_inputs.at(i-missing));
+						} else {
+							missing = 1;
+						}
 					}
 
 					return inputs.at(1).evaluate(&nenv);
 				};
 
-				return_data.set_function(fn, inputs.at(0).tuple().size(), repeating, true);
+				return_data.set_function(fn, inputs.at(0).tuple().size()-(repeating*2), repeating, true);
 
 				return return_data;
 			}
