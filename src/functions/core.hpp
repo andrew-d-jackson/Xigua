@@ -81,31 +81,41 @@ namespace Xigua
 				return DataType(DataTypes::String, str);
 			}
 
-		/*	DataType map(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType map(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
 
-				for (int i(0); i < arguments.at(1).tuple().size(); i++)
-				{
-					std::vector<DataType> temp_proc = { arguments.at(0) };
-					for (int j(1); j < arguments.size(); j++)
-						temp_proc.push_back(arguments.at(j).tuple().at(i))
-
-					DataType temp_function(DataTypes::Proc, temp_proc);
-					temp_function.evaluate();
+				if (arguments.size() > 2) {
+					int tuple_sizes = arguments.at(0).tuple().size();
+					for (int i(1); i < arguments.size()-1; i++)	{
+						if (arguments.at(i).tuple().size() != tuple_sizes)
+							Xigua::FunctionUtils::misc_error("map", "tuple lengths don't match");
+					}
 				}
 
-				return DataType(DataTypes::None);
+				std::vector<DataType> return_values;
+
+				for (int i(0); i < arguments.at(1).tuple().size(); i++)
+				{
+					std::vector<DataType> temp_proc = { arguments.at(arguments.size()-1) };
+					for (int j(0); j < arguments.size()-1; j++)
+						temp_proc.push_back(arguments.at(j).tuple().at(i));
+
+					DataType temp_function(DataTypes::Proc, temp_proc);
+					return_values.push_back(temp_function.evaluate(enviroment));
+				}
+
+				return DataType(DataTypes::Tuple, return_values);
 			}
-*/
+
 			DataType apply(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				if (inputs.at(0).type() != DataTypes::Function || inputs.at(1).type() != DataTypes::Tuple)
+				if (inputs.at(0).type() != DataTypes::Tuple || inputs.at(1).type() != DataTypes::Function)
 					Xigua::FunctionUtils::wrong_type_error("apply");
 
-				std::vector<DataType> temp_proc = { inputs.at(0) };
+				std::vector<DataType> temp_proc = { inputs.at(1) };
 
-				for (auto data : inputs.at(1).tuple())
+				for (auto data : inputs.at(0).tuple())
 					temp_proc.push_back(data);
 
 				DataType temp_function(DataTypes::Proc, temp_proc);

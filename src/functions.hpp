@@ -35,6 +35,9 @@ namespace Xigua
 		enviroment.defined_variables["apply"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["apply"].set_function(&Functions::Core::apply, 2, 0, true);
 
+		enviroment.defined_variables["map"] = DataType(DataTypes::Function);
+		enviroment.defined_variables["map"].set_function(&Functions::Core::map, 2, 1, true);
+
 	// math
 
 		enviroment.defined_variables["+"] = DataType(DataTypes::Function);

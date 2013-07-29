@@ -38,6 +38,14 @@ namespace Xigua
 			exit(1);
 		}
 
+		void misc_error(std::string function_name, std::string description)
+		{
+			std::cout << "----------------------" << std::endl;
+			std::cout << "Error:" << std::endl;
+			std::cout << description  << " In Function " << function_name << std::endl;
+			exit(1);
+		}
+
 		void assert_all_types_are(std::string function_name, std::vector<DataType> arguments, DataTypes expected)
 		{
 			for (auto argument : arguments)
