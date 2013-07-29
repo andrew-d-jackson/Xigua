@@ -72,59 +72,72 @@ namespace Xigua
 		std::vector<std::string> parsed_list;
 
 		bool is_reading_string = false;
+		bool is_commenting = false;
 		std::stringstream string_buffer;
 		bool string_buffer_contains_data = false;
 		for (char c : raw_string)
 		{
-			if (c == '[' || c == ']' || c == '{' || c == '}'){
-
-                if (!is_reading_string) {
-				    if (string_buffer_contains_data) {
-				    	parsed_list.push_back(string_buffer.str());
-				    	string_buffer.str("");
-				    	string_buffer_contains_data = false;
-				    }
-				    parsed_list.push_back(std::string(1, c));
-                } else {
-                    string_buffer << c;
-					string_buffer_contains_data = true;
-                }
-
-
+			if (is_commenting)
+			{
+				if (c == '\n')
+					is_commenting = false;
 			}
-			else if (c == ' ' || c == '\n' || c == '\t') {
+			else
+			{
+				if (c == '~' && !is_reading_string)
+				{
+					is_commenting = true;
+				}
+				else if (c == '[' || c == ']' || c == '{' || c == '}'){
 
-				if (!is_reading_string) {
-					if (string_buffer_contains_data) {
+	                if (!is_reading_string) {
+					    if (string_buffer_contains_data) {
+					    	parsed_list.push_back(string_buffer.str());
+					    	string_buffer.str("");
+					    	string_buffer_contains_data = false;
+					    }
+					    parsed_list.push_back(std::string(1, c));
+	                } else {
+	                    string_buffer << c;
+						string_buffer_contains_data = true;
+	                }
+
+
+				}
+				else if (c == ' ' || c == '\n' || c == '\t') {
+
+					if (!is_reading_string) {
+						if (string_buffer_contains_data) {
+							parsed_list.push_back(string_buffer.str());
+							string_buffer.str("");
+							string_buffer_contains_data = false;
+						}
+					}
+					else {
+						string_buffer << c;
+						string_buffer_contains_data = true;
+					}
+
+				}
+				else if (c == '"') {
+					string_buffer << '"';
+					if (is_reading_string) {
+						is_reading_string = false;
 						parsed_list.push_back(string_buffer.str());
 						string_buffer.str("");
 						string_buffer_contains_data = false;
 					}
+					else {
+						is_reading_string = true;
+					}
+
 				}
 				else {
+
 					string_buffer << c;
 					string_buffer_contains_data = true;
+
 				}
-
-			}
-			else if (c == '"') {
-				string_buffer << '"';
-				if (is_reading_string) {
-					is_reading_string = false;
-					parsed_list.push_back(string_buffer.str());
-					string_buffer.str("");
-					string_buffer_contains_data = false;
-				}
-				else {
-					is_reading_string = true;
-				}
-
-			}
-			else {
-
-				string_buffer << c;
-				string_buffer_contains_data = true;
-
 			}
 		}
 

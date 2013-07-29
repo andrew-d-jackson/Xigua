@@ -1,4 +1,6 @@
-[println "Hello, World!"]
+~ This is a comment
+
+[println "Hello, World! ~[._.]~"] ~ So is this [println "This dosen't happen"]
 
 [println "What is your name?"]
 
