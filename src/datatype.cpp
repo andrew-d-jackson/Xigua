@@ -156,7 +156,7 @@ namespace Xigua
 
 		if (function_to_call == d_func_map.end())
 		{
-			int current_biggest_args_with_repeating = 0;
+			int current_biggest_args_with_repeating = -1;
 			int current_args_limit = args.size() - 1;
 
 			for (auto it = d_func_map.begin(); it != d_func_map.end(); it++)
@@ -171,7 +171,7 @@ namespace Xigua
 				}
 			}
 
-			if (current_biggest_args_with_repeating == 0)
+			if (current_biggest_args_with_repeating == -1)
 			{
 				std::cout << "Wrong amount of args passed to function" << std::endl;
 				std::cout << " args passed:" << args.size() << std::endl;
