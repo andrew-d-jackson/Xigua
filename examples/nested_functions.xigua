@@ -1,0 +1,4 @@
+[= part-print [fn {a}
+				  [fn {b} [println [string a b]]]]]
+
+[[part-print "a "] "b"]
