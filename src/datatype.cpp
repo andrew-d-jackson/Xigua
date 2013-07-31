@@ -66,8 +66,19 @@ namespace Xigua
 			}
 		} else if (d_type == DataTypes::Number){
 			std::stringstream ss;
+			ss << std::fixed;
 			ss << d_number;
-			return_value += ss.str();
+			std::string str = ss.str();
+			int s;
+		    for (s = str.length()-1; s > 0; s--) {
+		        if(str[s] == '0')
+		        	str.erase(s,1);
+		        else
+		        	break;
+		    }
+		    if (str[s] == '.')
+		    	str.erase(s,1);
+		    return_value += str;
 		} else if (d_type == DataTypes::Tuple){
 			return_value += "{ ";
 			for (auto element : d_list) {
