@@ -39,6 +39,11 @@
 [= greet [fn {name} [println [string "Hello, " name]]]]
 [greet "Peter"] ~ Hello Peter
 
-[[fn {& n} [println "Hello World!"]]]
 
-[apply {1} [fn {n & f} [[println n][println f]]]]
+[println "Tuple"]
+
+[println [first {1 2 3 4}]]
+[println [at 2 {1 2 3 4}]]
+[println [last {1 2 3 4}]]
+[println [size {1 2 3 4}]]
+
