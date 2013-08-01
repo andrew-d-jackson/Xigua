@@ -40,6 +40,9 @@ namespace Xigua
 		DataType(DataTypes data_type, bool boolean_data);
 		DataType(DataTypes data_type, std::vector<DataType> list_data);
 
+		bool operator==(const DataType & other) const;
+		bool operator!=(const DataType & other) const;
+
 		DataTypes type() const;
 		void type(DataTypes in_type);
 

@@ -47,3 +47,18 @@
 [println [last {1 2 3 4}]]
 [println [size {1 2 3 4}]]
 
+
+[println "True"]
+
+[println [== "ss" "ss"]]
+[println [== {1 2} {1 2}]]
+[println [== 1 1]]
+[println [== true true]]
+
+[println "False"]
+
+[println [== "ss" "saass"]]
+[println [== {1 2} {1 2 2}]]
+[println [== 1 41]]
+[println [== true false]]
+

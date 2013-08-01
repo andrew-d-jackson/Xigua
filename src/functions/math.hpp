@@ -55,12 +55,10 @@ namespace Xigua
 			DataType equal_to(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("equal to", arguments, DataTypes::Number);
 
-				long double previous_number = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)
 				{
-					if (previous_number != arguments.at(i).number()){
+					if (arguments.at(0) != arguments.at(i)){
 						return DataType(DataTypes::Bool, false); 
 					}
 				}

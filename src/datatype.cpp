@@ -32,6 +32,42 @@ namespace Xigua
 		d_list = list_data;
 	}
 
+	bool DataType::operator==(const DataType & other) const
+	{
+		if (other.type() != type())
+			return false;
+
+		if (type() == DataTypes::None)
+			return true;
+
+		if (type() == DataTypes::Symbol)
+			return false;
+		
+		if (type() == DataTypes::Bool)
+			return (boolean() == other.boolean());
+
+		if (type() == DataTypes::String)
+			return (string() == other.string());
+
+		if (type() == DataTypes::Number)
+			return (number() == other.number());
+
+		if (type() == DataTypes::Tuple)
+			return (tuple() == other.tuple());
+
+		if (type() == DataTypes::Proc)
+			return false;
+
+		if (type() == DataTypes::Function)
+			return false;
+
+		return false;
+	}
+
+	bool DataType::operator!=(const DataType & other) const
+	{
+		return !(*this == other);
+	}
 
 	DataTypes DataType::type() const
 	{
