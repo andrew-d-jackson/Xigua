@@ -9,16 +9,18 @@
 namespace Xigua
 {
 	class DataType;
+
+	enum class EnvTypes { Namespace, Function, Macro, Let };
+
 	class Enviroment
 	{
 	public:
 		std::map<std::string, DataType> defined_variables;
-		Enviroment * parent_eviroment;
-		bool is_function_enviroment;
+		Enviroment * parent;
+		EnvTypes type;
 
-		Enviroment() : parent_eviroment(nullptr), is_function_enviroment(false){}
-		Enviroment(Enviroment * parent) : parent_eviroment(parent), is_function_enviroment(false){}
-		Enviroment(Enviroment * parent, bool function_argument);
+		Enviroment(EnvTypes type);
+		Enviroment(EnvTypes type, Enviroment * parent);
 		
 
 		DataType* find(std::string variable_name);

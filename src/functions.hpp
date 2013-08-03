@@ -13,7 +13,7 @@ namespace Xigua
 {
 	Enviroment get_global_enviroment()
 	{
-		Enviroment enviroment;
+		Enviroment enviroment(EnvTypes::Namespace);
 
 	// core
 

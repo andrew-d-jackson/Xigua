@@ -25,7 +25,7 @@ namespace Xigua
 
 			DataType create_lambda(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
-				Enviroment nenv(enviroment, true);
+				Enviroment nenv(EnvTypes::Function, enviroment);
 				DataType return_data(DataTypes::Function);
 
 				int repeating = 0;

@@ -1,29 +1,42 @@
 #include "enviroment.hpp"
 
-
 namespace Xigua
 {
 
-	Enviroment::Enviroment(Enviroment * parent, bool function_argument)
+	Enviroment::Enviroment(EnvTypes enviroment_type)
 	{
-		is_function_enviroment = function_argument;
-
-		if (parent->is_function_enviroment)	{
-			defined_variables = (*parent).defined_variables;
-			parent_eviroment = parent->parent_eviroment;
-		} else {
-			parent_eviroment = parent;
-		}
+		type = enviroment_type;
 	}
 
+	Enviroment::Enviroment(EnvTypes enviroment_type, Enviroment * parent_enviroment)
+	{
+		type = enviroment_type;
+
+		if (enviroment_type != EnvTypes::Namespace)
+		{
+			if (parent_enviroment->type != EnvTypes::Namespace)
+			{
+				defined_variables = (*parent_enviroment).defined_variables;
+				parent = parent_enviroment->parent;
+			}
+			else
+			{
+				parent = parent_enviroment;
+			}
+		}
+		else
+		{
+			parent = parent_enviroment;
+		}
+	}
 
 	DataType* Enviroment::find(std::string variable_name) {
 		if (defined_variables.find(variable_name) != defined_variables.end())
 			return &defined_variables[variable_name];
 
-		if (parent_eviroment != nullptr)
+		if (parent != nullptr)
 		{
-			auto data = parent_eviroment->find(variable_name);
+			auto data = parent->find(variable_name);
 			return data;
 		}
 
