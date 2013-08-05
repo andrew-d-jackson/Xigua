@@ -5,62 +5,72 @@ namespace Xigua
 {
 	DataType Parser::parse_to_data_types(std::vector<std::string> string_list, DataTypes list_type)
 	{
-		DataType current_list(list_type);
-		for (unsigned int current_item_index = 0; current_item_index < string_list.size(); ++current_item_index)
+		std::vector<DataType> data;
+		for (unsigned int index = 0; index < string_list.size(); ++index)
 		{
-			if (string_list.at(current_item_index) == "[" || string_list.at(current_item_index) == "{")
+			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{")
 			{
 				DataTypes sub_list_type = DataTypes::Proc;
-				if (string_list.at(current_item_index) == "{")
+				if (string_list.at(index) == "{"){
 					sub_list_type = DataTypes::Tuple;
+				} else if (string_list.at(index) == "#{"){
+					sub_list_type = DataTypes::HashMap;
+				}
 
-				std::vector<std::string> new_list;
+				std::vector<std::string> sub_list;
 				int internal_lists = 1;
 				while (true) {
-					current_item_index++;
-					if (string_list.at(current_item_index) == "[" || string_list.at(current_item_index) == "{") {
+					index++;
+					if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{") {
 						internal_lists++;
 					}
-					else if (string_list.at(current_item_index) == "]" || string_list.at(current_item_index) == "}") {
+					else if (string_list.at(index) == "]" || string_list.at(index) == "}") {
 						internal_lists--;
 						if (internal_lists == 0) {
 							break;
 						}
 					}
-					new_list.push_back(string_list.at(current_item_index));
+					sub_list.push_back(string_list.at(index));
 				}
-				current_list.proc_push_back(parse_to_data_types(new_list, sub_list_type));
-			}
-			else if (is_number(string_list.at(current_item_index)))
-			{
-				DataType data(DataTypes::Number, (long double)atof(string_list.at(current_item_index).c_str()));
-
-				current_list.proc_push_back(data);
-			}
-			else if (string_list.at(current_item_index)[0] == '"')
-			{
-				DataType data(DataTypes::String, string_list.at(current_item_index).substr(1, string_list.at(current_item_index).size() - 2));
-				
-				current_list.proc_push_back(data);
-			}
-			else if (string_list.at(current_item_index) == "true" || string_list.at(current_item_index) == "false")
-			{
-				DataType data(DataTypes::Bool);
-				if (string_list.at(current_item_index) == "true")
-					data.boolean(true);
-				else
-					data.boolean(false);
-
-				current_list.proc_push_back(data);
+				data.push_back(parse_to_data_types(sub_list, sub_list_type));
 			}
 			else
 			{
-				DataType data(DataTypes::Symbol, string_list.at(current_item_index));
-				current_list.proc_push_back(data);
+				data.push_back(string_to_data(string_list.at(index)));
 			}
 		}
-		return current_list;
+		return DataType(list_type, data);
 	}
+
+	DataType Parser::string_to_data(std::string input_string)
+	{
+		if (is_number(input_string))
+		{
+			DataType data(DataTypes::Number, (long double)atof(input_string.c_str()));
+			return data;
+		}
+		else if (input_string[0] == '"')
+		{
+			DataType data(DataTypes::String, input_string.substr(1, input_string.size() - 2));
+			return data;
+		}
+		else if (input_string == "true" || input_string == "false")
+		{
+			DataType data(DataTypes::Bool);
+			if (input_string == "true")
+				data.boolean(true);
+			else
+				data.boolean(false);
+
+			return data;
+		}
+		else
+		{
+			DataType data(DataTypes::Symbol, input_string);
+			return data;
+		}
+	}
+
 
 	Parser::Parser(std::string program_string)
 	{
@@ -75,8 +85,9 @@ namespace Xigua
 		bool is_commenting = false;
 		std::stringstream string_buffer;
 		bool string_buffer_contains_data = false;
-		for (char c : raw_string)
+		for (unsigned int index(0); index < raw_string.size(); index++)
 		{
+			char c = raw_string.at(index);
 			if (is_commenting)
 			{
 				if (c == '\n')
@@ -88,7 +99,23 @@ namespace Xigua
 				{
 					is_commenting = true;
 				}
-				else if (c == '[' || c == ']' || c == '{' || c == '}'){
+				else if (c == '#' && raw_string.at(index+1) == '{')
+				{
+					if (!is_reading_string) {
+					    if (string_buffer_contains_data) {
+					    	parsed_list.push_back(string_buffer.str());
+					    	string_buffer.str("");
+					    	string_buffer_contains_data = false;
+					    }
+					    parsed_list.push_back(std::string("#{"));
+	                } else {
+	                    string_buffer << c;
+						string_buffer_contains_data = true;
+	                }
+	                index++;
+				}
+				else if (c == '[' || c == ']' || c == '{' || c == '}')
+				{
 
 	                if (!is_reading_string) {
 					    if (string_buffer_contains_data) {
@@ -101,8 +128,6 @@ namespace Xigua
 	                    string_buffer << c;
 						string_buffer_contains_data = true;
 	                }
-
-
 				}
 				else if (c == ' ' || c == '\n' || c == '\t') {
 

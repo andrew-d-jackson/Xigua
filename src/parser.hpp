@@ -23,6 +23,7 @@ namespace Xigua
 		Parser(std::string program_string);
 
 		std::vector<std::string> as_string_list();
+		DataType string_to_data(std::string input_string);
 		DataType as_data_type();
 	};
 

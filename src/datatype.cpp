@@ -29,8 +29,26 @@ namespace Xigua
 	DataType::DataType(DataTypes data_type, std::vector<DataType> list_data)
 	{
 		d_type = data_type;
-		d_list = list_data;
+		if (data_type == DataTypes::Tuple || data_type == DataTypes::Proc){
+			d_list = list_data;
+		} else if (data_type == DataTypes::HashMap) {
+			for (int i(0); i < list_data.size(); i+=2)
+			{
+				std::cout << list_data.at(i).as_string() << "=>" << list_data.at(i+1).as_string() << std::endl; 
+				d_hashmap[list_data.at(i)] = list_data.at(i+1);
+			}
+		} else {
+			std::cout << "Not a valid list";
+			exit(1);
+		}
 	}
+
+	DataType::DataType(DataTypes data_type, std::map<DataType, DataType> map_data)
+	{
+		d_type = data_type;
+		d_hashmap = map_data;
+	}
+
 
 	bool DataType::operator==(const DataType & other) const
 	{
@@ -68,6 +86,39 @@ namespace Xigua
 	{
 		return !(*this == other);
 	}
+
+	bool DataType::operator<(const DataType & other) const
+	{
+		if (type() != other.type())
+			return (type() < other.type());
+
+		if (type() == DataTypes::None)
+			return false;
+
+		if (type() == DataTypes::Symbol)
+			return (symbol() < other.symbol());
+		
+		if (type() == DataTypes::Bool)
+			return (boolean() < other.boolean());
+
+		if (type() == DataTypes::String)
+			return (string() < other.string());
+
+		if (type() == DataTypes::Number)
+			return (number() < other.number());
+
+		if (type() == DataTypes::Tuple)
+			return (tuple() < other.tuple());
+
+		if (type() == DataTypes::Proc)
+			return false;
+
+		if (type() == DataTypes::Function)
+			return false;
+
+		return false;
+	}
+
 
 	DataTypes DataType::type() const
 	{
@@ -122,6 +173,15 @@ namespace Xigua
 				return_value += " ";
 			}
 			return_value += "}";
+		} else if (d_type == DataTypes::HashMap){
+			return_value += "#{ ";
+			for (auto & element : d_hashmap) {
+				return_value += element.first.as_string();
+				return_value += " => ";
+				return_value += element.second.as_string();
+				return_value += ", ";
+			}
+			return_value += "}";
 		}
 		return return_value;
 	}
@@ -156,6 +216,17 @@ namespace Xigua
 	{
 		d_list = tuple;
 	}
+
+	std::map<DataType, DataType> DataType::hash_map() const
+	{
+		return d_hashmap;
+	}
+	
+	void DataType::hash_map(std::map<DataType, DataType> in_map)
+	{
+		d_hashmap = in_map;
+	}
+
 
 	std::vector<DataType> DataType::proc() const
 	{

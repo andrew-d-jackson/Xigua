@@ -15,7 +15,7 @@
 namespace Xigua
 {
 
-	enum class DataTypes { None, Symbol, Bool, String, Number, Tuple, Proc, Function };
+	enum class DataTypes { None, Symbol, Bool, String, Number, Tuple, HashMap, Proc, Function };
 
 	class DataType;
 	class Enviroment;
@@ -30,6 +30,7 @@ namespace Xigua
 		long double d_number;
 		bool d_boolean;
 		std::vector<DataType> d_list;
+		std::map<DataType, DataType> d_hashmap;
 		std::map <std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> d_func_map; // args repeating : func, sould eval
 
 	public:
@@ -39,9 +40,11 @@ namespace Xigua
 		DataType(DataTypes data_type, long double number_data);
 		DataType(DataTypes data_type, bool boolean_data);
 		DataType(DataTypes data_type, std::vector<DataType> list_data);
+		DataType(DataTypes data_type, std::map<DataType, DataType> map_data);
 
 		bool operator==(const DataType & other) const;
 		bool operator!=(const DataType & other) const;
+		bool operator<(const DataType & other) const;
 
 		DataTypes type() const;
 		void type(DataTypes in_type);
@@ -58,6 +61,9 @@ namespace Xigua
 
 		std::vector<DataType> tuple() const;
 		void tuple(std::vector<DataType> in_tuple);
+
+		std::map<DataType, DataType> hash_map() const;
+		void hash_map(std::map<DataType, DataType> in_map);
 
 		std::vector<DataType> proc() const;
 		void proc(std::vector<DataType> in_list);
