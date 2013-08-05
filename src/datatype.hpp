@@ -31,7 +31,9 @@ namespace Xigua
 		bool d_boolean;
 		std::vector<DataType> d_list;
 		std::map<DataType, DataType> d_hashmap;
-		std::map <std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> d_func_map; // args repeating : func, sould eval
+		typedef std::map<std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> function_map_t;
+
+		function_map_t d_func_map; // args repeating : func, sould eval
 
 	public:
 		DataType(){}
@@ -64,12 +66,16 @@ namespace Xigua
 
 		std::map<DataType, DataType> hash_map() const;
 		void hash_map(std::map<DataType, DataType> in_map);
+		void hash_map(std::vector<DataType> in_list);
 
 		std::vector<DataType> proc() const;
 		void proc(std::vector<DataType> in_list);
 
 		bool boolean() const;
 		void boolean(bool boolean);
+
+		function_map_t function_map() const;
+		void function_map(function_map_t in_fmap);
 
 		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
 		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment);

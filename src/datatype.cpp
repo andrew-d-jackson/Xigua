@@ -34,11 +34,7 @@ namespace Xigua
 		} else if (data_type == DataTypes::Proc){
 			proc(list_data);
 		} else if (data_type == DataTypes::HashMap) {
-			for (int i(0); i < list_data.size(); i+=2)
-			{
-				std::cout << list_data.at(i).as_string() << "=>" << list_data.at(i+1).as_string() << std::endl; 
-				d_hashmap[list_data.at(i)] = list_data.at(i+1);
-			}
+			hash_map(list_data);
 		} else {
 			std::cout << "Not a valid list";
 			exit(1);
@@ -229,6 +225,14 @@ namespace Xigua
 		d_hashmap = in_map;
 	}
 
+	void DataType::hash_map(std::vector<DataType> in_list)
+	{
+		for (int i(0); i+1 < in_list.size(); i+=2)
+		{
+			std::cout << in_list.at(i).as_string() << "=>" << in_list.at(i+1).as_string() << std::endl; 
+			d_hashmap[in_list.at(i)] = in_list.at(i+1);
+		}
+	}
 
 	std::vector<DataType> DataType::proc() const
 	{
@@ -250,19 +254,32 @@ namespace Xigua
 		d_boolean = in_boolean;
 	}
 
+	DataType::function_map_t DataType::function_map() const
+	{
+		return d_func_map;
+	}
+
+	void DataType::function_map(function_map_t in_fmap)
+	{
+		d_func_map = in_fmap;
+	}
+
 
 	void DataType::set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval)
 	{
-		d_func_map[std::make_pair(num_args, repeating_args)] = std::make_tuple(func, should_eval);
+		auto function_map_copy = function_map();
+		function_map_copy[std::make_pair(num_args, repeating_args)] = std::make_tuple(func, should_eval);
+		function_map(function_map_copy);
 	}
 
 	DataType DataType::call_function(std::vector<DataType> & args, Enviroment * enviroment)
 	{
-		auto function_to_call = d_func_map.find(std::make_pair(args.size(), 0));
+		auto function_map_copy = function_map();
+		auto function_to_call = function_map_copy.find(std::make_pair(args.size(), 0));
 
-		if (function_to_call == d_func_map.end())
+		if (function_to_call == function_map_copy.end())
 		{
-			for (auto it = d_func_map.begin(); it != d_func_map.end(); it++)
+			for (auto it = function_map_copy.begin(); it != function_map_copy.end(); it++)
 			{
 				if (it->first.first == args.size()){
 					function_to_call = it;
@@ -272,12 +289,12 @@ namespace Xigua
 			}
 		}
 
-		if (function_to_call == d_func_map.end())
+		if (function_to_call == function_map_copy.end())
 		{
 			int current_biggest_args_with_repeating = -1;
 			int current_args_limit = args.size() - 1;
 
-			for (auto it = d_func_map.begin(); it != d_func_map.end(); it++)
+			for (auto it = function_map_copy.begin(); it != function_map_copy.end(); it++)
 			{
 				if (it->first.second > 0)
 				{
@@ -319,7 +336,7 @@ namespace Xigua
 		{
 			for (auto & item : args)
 			{
-				if (item.d_type == DataTypes::Proc || item.d_type == DataTypes::Symbol || item.d_type == DataTypes::Tuple)
+				if (item.type() == DataTypes::Proc || item.type() == DataTypes::Symbol || item.type() == DataTypes::Tuple)
 					item = item.evaluate(enviroment);
 
 			}
@@ -330,63 +347,66 @@ namespace Xigua
 
 	DataType DataType::evaluate(Enviroment * enviroment)
 	{
-		if (d_type == DataTypes::Symbol)
+		if (type() == DataTypes::Symbol)
 		{
-			DataType* symbol_value = enviroment->find(d_string);
+			DataType* symbol_value = enviroment->find(symbol());
 			if (symbol_value == nullptr)
 			{
-				std::cout << "Cannot Find Symbol: " << d_string << std::endl;
+				std::cout << "Cannot Find Symbol: " << symbol() << std::endl;
 				exit(1);
 			}
 			return *symbol_value;
 		}
-		else if (d_type == DataTypes::Number)
+		else if (type() == DataTypes::Number)
 		{
 			return *this;
 		}
-		else if (d_type == DataTypes::Function)
+		else if (type() == DataTypes::Function)
 		{
 			return *this;
 		}
-		else if (d_type == DataTypes::String)
+		else if (type() == DataTypes::String)
 		{
 			return *this;
 		}
-		else if (d_type == DataTypes::Bool)
+		else if (type() == DataTypes::Bool)
 		{
 			return *this;
 		}
-		else if (d_type == DataTypes::Proc)
+		else if (type() == DataTypes::Proc)
 		{
-			if (d_list.at(0).d_type == DataTypes::Proc || d_list.at(0).d_type == DataTypes::Symbol)
+			if (proc().at(0).type() == DataTypes::Proc || proc().at(0).type() == DataTypes::Symbol)
 			{
-				d_list.at(0) = d_list.at(0).evaluate(enviroment);
+				std::vector<DataType> new_proc_data = proc();
+				new_proc_data.at(0) = proc().at(0).evaluate(enviroment);
+				proc(new_proc_data);
 			}
 
-			if (d_list.size() == 0)
+			if (proc().size() == 0)
 			{
 				return DataType(DataTypes::None);
 			}
-			else if (d_list.at(0).d_type == DataTypes::Function)
+			else if (proc().at(0).type() == DataTypes::Function)
 			{
-				auto firstElement = d_list.begin() + 1;
-				auto lastElement = d_list.end();
+				auto process_copy = proc();
+				auto firstElement = process_copy.begin() + 1;
+				auto lastElement = process_copy.end();
 				std::vector<DataType> functionArgs(firstElement, lastElement);
 
-				return d_list.at(0).call_function(functionArgs, enviroment);
+				return proc().at(0).call_function(functionArgs, enviroment);
 			}
 			else
 			{
 				DataType return_value = DataType(DataTypes::None);
-				for (DataType item : d_list)
+				for (DataType item : proc())
 					return_value = item.evaluate(enviroment);
 				return return_value;
 			}
 		}
-		else if (d_type == DataTypes::Tuple)
+		else if (type() == DataTypes::Tuple)
 		{
 			std::vector<DataType> new_tuple_data;
-			for (auto data : d_list)
+			for (auto data : tuple())
 			{
 				new_tuple_data.push_back(data.evaluate(enviroment));
 			}
@@ -398,43 +418,43 @@ namespace Xigua
 
 	void DataType::print(int indentation)
 	{
-		if (d_type == DataTypes::Proc)
+		if (type() == DataTypes::Proc)
 		{
 			std::cout << "p";
-			for (auto i : d_list)
+			for (auto i : proc())
 				i.print(indentation + 1);
 			std::cout << std::endl;
 		}
-		else if (d_type == DataTypes::Tuple)
+		else if (type() == DataTypes::Tuple)
 		{
 			std::cout << "t";
-			for (auto i : d_list)
+			for (auto i : tuple())
 				i.print(indentation + 1);
 			std::cout << std::endl;
 		}
-		else if (d_type == DataTypes::Symbol)
+		else if (type() == DataTypes::Symbol)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
-			std::cout << "Symbol: " << d_string << std::endl;
+			std::cout << "Symbol: " << symbol() << std::endl;
 		}
-		else if (d_type == DataTypes::String)
+		else if (type() == DataTypes::String)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
-			std::cout << "String: " << d_string << std::endl;
+			std::cout << "String: " << string() << std::endl;
 		}
-		else if (d_type == DataTypes::Number)
+		else if (type() == DataTypes::Number)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
-			std::cout << "Number: " << d_number << std::endl;
+			std::cout << "Number: " << number() << std::endl;
 		}
-		else if (d_type == DataTypes::Bool)
+		else if (type() == DataTypes::Bool)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
-			std::cout << "Boolean: " << d_boolean << std::endl;
+			std::cout << "Boolean: " << boolean() << std::endl;
 		}
 	}
 
