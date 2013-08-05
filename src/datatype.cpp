@@ -11,19 +11,36 @@ namespace Xigua
 	DataType::DataType(DataTypes data_type, std::string string_data)
 	{
 		type(data_type);
-		string(string_data);
+		if (data_type == DataTypes::String){
+			string(string_data);
+		} else if (data_type == DataTypes::Symbol){
+			symbol(string_data);
+		} else {
+			std::cout << "Wrong Data Passed to DataType string_data" << std::endl;
+			exit(1);
+		}
 	}
 
 	DataType::DataType(DataTypes data_type, long double number_data)
 	{
 		type(data_type);
-		number(number_data);
+		if (data_type == DataTypes::Number){
+			number(number_data);
+		} else {
+			std::cout << "Wrong Data Passed to DataType number_data" << std::endl;
+			exit(1);
+		}
 	}
 
 	DataType::DataType(DataTypes data_type, bool boolean_data)
 	{
 		type(data_type);
-		boolean(boolean_data);
+		if (data_type == DataTypes::Bool){
+			boolean(boolean_data);
+		} else {
+			std::cout << "Wrong Data Passed to DataType boolean_data" << std::endl;
+			exit(1);
+		}
 	}
 
 	DataType::DataType(DataTypes data_type, std::vector<DataType> list_data)
@@ -36,7 +53,7 @@ namespace Xigua
 		} else if (data_type == DataTypes::HashMap) {
 			hash_map(list_data);
 		} else {
-			std::cout << "Not a valid list";
+			std::cout << "Wrong Data Passed to DataType list_data";
 			exit(1);
 		}
 	}
@@ -44,9 +61,14 @@ namespace Xigua
 	DataType::DataType(DataTypes data_type, std::map<DataType, DataType> map_data)
 	{
 		type(data_type);
-		hash_map(map_data);
+		if (data_type == DataTypes::HashMap){
+			hash_map(map_data);
+		}  else {
+			std::cout << "Wrong Data Passed to DataType map_data";
+			exit(1);
+		}
+		
 	}
-
 
 	bool DataType::operator==(const DataType & other) const
 	{
@@ -126,16 +148,41 @@ namespace Xigua
 	void DataType::type(DataTypes in_type)
 	{
 		d_type = in_type;
+
+		if (in_type == DataTypes::None){
+			data_pointer = nullptr;
+		} else if (in_type == DataTypes::Symbol){
+			data_pointer = std::shared_ptr<void>(new std::string());
+		} else if (in_type == DataTypes::Bool){
+			data_pointer = std::shared_ptr<void>(new bool(false));
+		} else if (in_type == DataTypes::String){
+			data_pointer = std::shared_ptr<void>(new std::string());
+		} else if (in_type == DataTypes::Number){
+			data_pointer = std::shared_ptr<void>(new long double(0));
+		} else if (in_type == DataTypes::Tuple){
+			data_pointer = std::shared_ptr<void>(new std::vector<DataType>());
+		} else if (in_type == DataTypes::HashMap){
+			data_pointer = std::shared_ptr<void>(new std::map<DataType, DataType>());
+		} else if (in_type == DataTypes::Proc){
+			data_pointer = std::shared_ptr<void>(new std::vector<DataType>());
+		} else if (in_type == DataTypes::Function){
+			data_pointer = std::shared_ptr<void>(new function_map_t());
+		} else {
+			std::cout << "Something Wrong Passes To Type" << std::endl;
+			exit(1);
+		}
 	}
 
 	std::string DataType::string() const
 	{
-		return d_string;
+	//	return d_string;
+		return *(static_cast<std::string*>(data_pointer.get()));
 	}
 
 	void DataType::string(std::string in_string)
 	{
-		d_string = in_string;
+	//	d_string = in_string;
+		data_pointer = std::shared_ptr<void>(new std::string(in_string));
 	}
 
 	std::string DataType::as_string() const
@@ -187,81 +234,82 @@ namespace Xigua
 
 	std::string DataType::symbol() const
 	{
-		return d_string;
+		return *(static_cast<std::string*>(data_pointer.get()));
 	}
 	
 	void DataType::symbol(std::string symbol_name)
 	{
-		d_string = symbol_name;
+		data_pointer = std::shared_ptr<void>(new std::string(symbol_name));
 	}
 
 	long double DataType::number() const
 	{
-		return d_number;
+		return *(static_cast<long double*>(data_pointer.get()));
 	}
 
 	void DataType::number(long double in_number)
 	{
-		d_number = in_number;
+		data_pointer = std::shared_ptr<void>(new long double(in_number));
 	}
 
 	std::vector<DataType> DataType::tuple() const
 	{
-		return d_list;
+		return *(static_cast<std::vector<DataType>*>(data_pointer.get()));
 	}
 
 	void DataType::tuple(std::vector<DataType> tuple)
 	{
-		d_list = tuple;
+		data_pointer = std::shared_ptr<void>(new std::vector<DataType>(tuple));
 	}
 
 	std::map<DataType, DataType> DataType::hash_map() const
 	{
-		return d_hashmap;
+		return *(static_cast<std::map<DataType, DataType>*>(data_pointer.get()));
 	}
 	
 	void DataType::hash_map(std::map<DataType, DataType> in_map)
 	{
-		d_hashmap = in_map;
+		data_pointer = std::shared_ptr<void>(new std::map<DataType, DataType>(in_map));
 	}
 
 	void DataType::hash_map(std::vector<DataType> in_list)
 	{
+		std::map<DataType, DataType> temp_map;
 		for (int i(0); i+1 < in_list.size(); i+=2)
 		{
-			std::cout << in_list.at(i).as_string() << "=>" << in_list.at(i+1).as_string() << std::endl; 
-			d_hashmap[in_list.at(i)] = in_list.at(i+1);
+			temp_map[in_list.at(i)] = in_list.at(i + 1);
 		}
+		hash_map(temp_map);
 	}
 
 	std::vector<DataType> DataType::proc() const
 	{
-		return d_list;
+		return *(static_cast<std::vector<DataType>*>(data_pointer.get()));
 	}
 
 	void DataType::proc(std::vector<DataType> proc)
 	{
-		d_list = proc;
+		data_pointer = std::shared_ptr<void>(new std::vector<DataType>(proc));
 	}
 
 	bool DataType::boolean() const
 	{
-		return d_boolean;
+		return *(static_cast<bool*>(data_pointer.get()));
 	}
 
 	void DataType::boolean(bool in_boolean)
 	{
-		d_boolean = in_boolean;
+		data_pointer = std::shared_ptr<void>(new bool(in_boolean));
 	}
 
 	DataType::function_map_t DataType::function_map() const
 	{
-		return d_func_map;
+		return *(static_cast<function_map_t*>(data_pointer.get()));
 	}
 
 	void DataType::function_map(function_map_t in_fmap)
 	{
-		d_func_map = in_fmap;
+		data_pointer = std::shared_ptr<void>(new function_map_t(in_fmap));
 	}
 
 

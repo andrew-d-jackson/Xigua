@@ -8,6 +8,7 @@
 #include <map>
 #include <tuple>
 #include <utility>
+#include <memory>
 
 #include "enviroment.hpp"
 
@@ -26,14 +27,8 @@ namespace Xigua
 	{
 	protected:
 		DataTypes d_type;
-		std::string d_string;
-		long double d_number;
-		bool d_boolean;
-		std::vector<DataType> d_list;
-		std::map<DataType, DataType> d_hashmap;
 		typedef std::map<std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> function_map_t;
-
-		function_map_t d_func_map; // args repeating : func, sould eval
+		std::shared_ptr<void> data_pointer;
 
 	public:
 		DataType(){}
