@@ -67,7 +67,6 @@ namespace Xigua
 
 		std::vector<DataType> proc() const;
 		void proc(std::vector<DataType> in_list);
-		void proc_push_back(DataType item);
 
 		bool boolean() const;
 		void boolean(bool boolean);

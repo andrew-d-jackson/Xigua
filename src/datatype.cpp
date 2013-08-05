@@ -5,32 +5,34 @@ namespace Xigua
 
 	DataType::DataType(DataTypes data_type)
 	{
-		d_type = data_type;
+		type(data_type);
 	}
 
 	DataType::DataType(DataTypes data_type, std::string string_data)
 	{
-		d_type = data_type;
-		d_string = string_data;
+		type(data_type);
+		string(string_data);
 	}
 
 	DataType::DataType(DataTypes data_type, long double number_data)
 	{
-		d_type = data_type;
-		d_number = number_data;
+		type(data_type);
+		number(number_data);
 	}
 
 	DataType::DataType(DataTypes data_type, bool boolean_data)
 	{
-		d_type = data_type;
-		d_boolean = boolean_data;
+		type(data_type);
+		boolean(boolean_data);
 	}
 
 	DataType::DataType(DataTypes data_type, std::vector<DataType> list_data)
 	{
-		d_type = data_type;
-		if (data_type == DataTypes::Tuple || data_type == DataTypes::Proc){
-			d_list = list_data;
+		type(data_type);
+		if (data_type == DataTypes::Tuple){
+			tuple(list_data);
+		} else if (data_type == DataTypes::Proc){
+			proc(list_data);
 		} else if (data_type == DataTypes::HashMap) {
 			for (int i(0); i < list_data.size(); i+=2)
 			{
@@ -45,14 +47,14 @@ namespace Xigua
 
 	DataType::DataType(DataTypes data_type, std::map<DataType, DataType> map_data)
 	{
-		d_type = data_type;
-		d_hashmap = map_data;
+		type(data_type);
+		hash_map(map_data);
 	}
 
 
 	bool DataType::operator==(const DataType & other) const
 	{
-		if (other.type() != type())
+		if (type() != other.type())
 			return false;
 
 		if (type() == DataTypes::None)
@@ -143,18 +145,18 @@ namespace Xigua
 	std::string DataType::as_string() const
 	{
 		std::string return_value = "";
-		if (d_type == DataTypes::String) {
-			return_value += d_string;
-		} else if (d_type == DataTypes::Bool){
-			if (d_boolean) {
+		if (type() == DataTypes::String) {
+			return_value += string();
+		} else if (type() == DataTypes::Bool){
+			if (boolean()) {
 				return_value += "true";
 			} else {
 				return_value += "false";
 			}
-		} else if (d_type == DataTypes::Number){
+		} else if (type() == DataTypes::Number){
 			std::stringstream ss;
 			ss << std::fixed;
-			ss << d_number;
+			ss << number();
 			std::string str = ss.str();
 			int s;
 		    for (s = str.length()-1; s > 0; s--) {
@@ -166,16 +168,16 @@ namespace Xigua
 		    if (str[s] == '.')
 		    	str.erase(s,1);
 		    return_value += str;
-		} else if (d_type == DataTypes::Tuple){
+		} else if (type() == DataTypes::Tuple){
 			return_value += "{ ";
-			for (auto element : d_list) {
+			for (auto element : tuple()) {
 				return_value += element.as_string();
 				return_value += " ";
 			}
 			return_value += "}";
-		} else if (d_type == DataTypes::HashMap){
+		} else if (type() == DataTypes::HashMap){
 			return_value += "#{ ";
-			for (auto & element : d_hashmap) {
+			for (auto & element : hash_map()) {
 				return_value += element.first.as_string();
 				return_value += " => ";
 				return_value += element.second.as_string();
@@ -236,11 +238,6 @@ namespace Xigua
 	void DataType::proc(std::vector<DataType> proc)
 	{
 		d_list = proc;
-	}
-
-	void DataType::proc_push_back(DataType item)
-	{
-		d_list.push_back(item);
 	}
 
 	bool DataType::boolean() const
@@ -305,15 +302,15 @@ namespace Xigua
 			{
 				int args_size = function_to_call->first.first;
 				int prev_args_size = args.size();
-				DataType repeating_data(DataTypes::Tuple);
+				std::vector<DataType> repeating_data; 
 
 				for (int i(args_size); i < prev_args_size; i++)
-					repeating_data.proc_push_back(args.at(i));
+					repeating_data.push_back(args.at(i));
 
 				for (int i(args_size); i < prev_args_size; i++)
 					args.pop_back();
 
-				args.push_back(repeating_data);
+				args.push_back(DataType(DataTypes::Tuple, repeating_data));
 			}
 
 		}
@@ -388,12 +385,12 @@ namespace Xigua
 		}
 		else if (d_type == DataTypes::Tuple)
 		{
-			DataType new_tuple(DataTypes::Tuple);
+			std::vector<DataType> new_tuple_data;
 			for (auto data : d_list)
 			{
-				new_tuple.proc_push_back(data.evaluate(enviroment));
+				new_tuple_data.push_back(data.evaluate(enviroment));
 			}
-			return new_tuple;
+			return DataType(DataTypes::Tuple, new_tuple_data);
 		}
 
 		return DataType(DataTypes::None);
