@@ -35,25 +35,6 @@ namespace Xigua
 				return DataType(DataTypes::Tuple, return_value);
 			}
 
-			DataType at(std::vector<DataType> inputs, Enviroment* enviroment)
-			{
-				if (inputs.at(0).type() != DataTypes::Number || inputs.at(1).type() != DataTypes::Tuple)
-					Xigua::FunctionUtils::wrong_type_error("at");
-
-				if (inputs.at(0).number() < 0  || inputs.at(0).number() > inputs.at(1).tuple().size() - 1)
-					Xigua::FunctionUtils::misc_error("at", "not in rage of tuple");
-
-				return inputs.at(1).tuple().at(inputs.at(0).number());
-			}
-
-			DataType size(std::vector<DataType> inputs, Enviroment* enviroment)
-			{
-				if (inputs.at(0).type() != DataTypes::Tuple)
-					Xigua::FunctionUtils::wrong_type_error("size");
-
-				return DataType(DataTypes::Number, (long double)inputs.at(0).tuple().size());
-			}
-
 			DataType first(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
 				if (inputs.at(0).type() != DataTypes::Tuple)

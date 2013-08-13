@@ -40,27 +40,15 @@
 [greet "Peter"] ~ Hello Peter
 
 
-[println "Tuple"]
+[println "Tuple {1 2 3 4}"]
+[println [string "First " [first {1 2 3 4}]]]
+[println [string "last " [last {1 2 3 4}]]]
+[println [string "at 2 " [at 2 {1 2 3 4}]]]
+[println [string "size " [size {1 2 3 4}]]]
 
-[println [first {1 2 3 4}]]
-[println [at 2 {1 2 3 4}]]
-[println [last {1 2 3 4}]]
-[println [size {1 2 3 4}]]
 
-
-[println "True"]
-
-[println [== "ss" "ss"]]
-[println [== {1 2} {1 2}]]
-[println [== 1 1]]
-[println [== true true]]
-
-[println "False"]
-
-[println [== "ss" "saass"]]
-[println [== {1 2} {1 2 2}]]
-[println [== 1 41]]
-[println [== true false]]
-
-[println #{1 "Hello" 2 "Bye" 3 "Nothing" 4 "Something"}]
-
+[= mymap #{1 "Hello" 2 "Bye" 3 "Nothing" 4 "Something"}]
+[println "HashMap"]
+[println mymap]
+[println [string "at 2 " [at 2 mymap]]]
+[println [string "size " [size mymap]]]

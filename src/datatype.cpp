@@ -460,6 +460,17 @@ namespace Xigua
 			}
 			return DataType(DataTypes::Tuple, new_tuple_data);
 		}
+		else if (type() == DataTypes::HashMap)
+		{
+			std::map<DataType, DataType> new_tuple_data;
+			for (auto data : hash_map())
+			{
+				auto first = data.first;
+				auto second = data.second;
+				new_tuple_data[first.evaluate(enviroment)] = second.evaluate(enviroment);
+			}
+			return DataType(DataTypes::HashMap, new_tuple_data);
+		}
 
 		return DataType(DataTypes::None);
 	}
