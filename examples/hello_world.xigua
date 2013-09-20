@@ -52,3 +52,9 @@
 [println mymap]
 [println [string "at 2 " [at 2 mymap]]]
 [println [string "size " [size mymap]]]
+
+
+[= my-var "Let Works"]
+[let #{ my-var  [+ 2 2] }
+    [println my-var]]
+[println my-var]

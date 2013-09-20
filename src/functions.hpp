@@ -27,6 +27,9 @@ namespace Xigua
 		enviroment.defined_variables["if"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["if"].set_function(&Functions::Core::if_expression, 3, 0, false);
 
+		enviroment.defined_variables["let"] = DataType(DataTypes::Function);
+		enviroment.defined_variables["let"].set_function(&Functions::Core::let_expression, 2, 0, false);
+
 		enviroment.defined_variables["println"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["println"].set_function(&Functions::Core::print_line, 1, 0, true);
 

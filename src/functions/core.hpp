@@ -60,6 +60,23 @@ namespace Xigua
 				return return_data;
 			}
 
+			DataType let_expression(std::vector<DataType> inputs, Enviroment* enviroment)
+			{
+				if (inputs.at(0).type() != DataTypes::HashMap || inputs.at(1).type() != DataTypes::Proc)
+					Xigua::FunctionUtils::wrong_type_error("let");
+
+				Enviroment container_enviroment(EnvTypes::Let, enviroment);
+				for (auto map_pair : inputs.at(0).hash_map()) {
+
+					if (map_pair.first.type() != DataTypes::Symbol)
+						Xigua::FunctionUtils::misc_error("let", "non-symbol passed in map");
+
+					container_enviroment.set(map_pair.first.symbol(), map_pair.second.evaluate(&container_enviroment), true);
+				}
+
+				return inputs.at(1).evaluate(&container_enviroment);
+			}
+
 			DataType if_expression(std::vector<DataType> inputs, Enviroment* enviroment)
 			{
 				if (inputs.at(0).evaluate(enviroment).boolean())

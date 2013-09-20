@@ -43,9 +43,15 @@ namespace Xigua
 		return nullptr;
 	}
 
-	void Enviroment::set(std::string name, DataType value)
+	void Enviroment::set(std::string name, DataType value, bool force_here)
 	{
-		defined_variables[name] = value;
+		if (force_here) {
+			defined_variables[name] = value;
+		} else if (type == EnvTypes::Namespace || type == EnvTypes::Function) {
+			defined_variables[name] = value;
+		} else if (type == EnvTypes::Macro || type == EnvTypes::Let) {
+			parent->set(name, value);
+		}
 	}
 
 }

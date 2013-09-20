@@ -24,6 +24,6 @@ namespace Xigua
 		
 
 		DataType* find(std::string variable_name);
-		void set(std::string name, DataType value);
+		void set(std::string name, DataType value, bool force_here = false);
 	};
 }
