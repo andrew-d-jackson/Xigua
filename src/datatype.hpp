@@ -12,6 +12,7 @@
 
 #include "enviroment.hpp"
 
+#include "error.hpp"
 
 namespace Xigua
 {
@@ -21,7 +22,7 @@ namespace Xigua
 	class DataType;
 	class Enviroment;
 
-	typedef std::function<DataType(std::vector<DataType>, Enviroment*)> xigua_lambda_t;
+	typedef std::function<DataType(std::vector<DataType>, Enviroment*, std::vector<std::string>)> xigua_lambda_t;
 
 	class DataType
 	{
@@ -73,8 +74,8 @@ namespace Xigua
 		void function_map(function_map_t in_fmap);
 
 		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
-		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment);
-		DataType evaluate(Enviroment * enviroment);
+		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment, std::vector<std::string> function_call_list);
+		DataType evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list = {});
 		void print(int indentation = 0);
 	};
 

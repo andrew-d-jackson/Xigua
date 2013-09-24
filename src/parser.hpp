@@ -7,6 +7,7 @@
 
 #include "helpers.hpp"
 #include "datatype.hpp"
+#include "error.hpp"
 
 
 namespace Xigua
@@ -25,6 +26,7 @@ namespace Xigua
 		std::vector<std::string> as_string_list();
 		DataType string_to_data(std::string input_string);
 		DataType as_data_type();
+		void validate(std::vector<std::string> string_list);
 	};
 
 }

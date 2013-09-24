@@ -54,4 +54,26 @@ namespace Xigua
 		}
 	}
 
+	std::map<std::string, DataType> Enviroment::get_all_defined_variables() const
+	{
+		return get_defined_variables();
+
+	};
+
+	bool Enviroment::has_parent() const
+	{
+		return (parent != nullptr);
+	}
+	
+	Enviroment* Enviroment::get_parent() const
+	{
+		return parent;
+	};
+
+	std::map<std::string, DataType> Enviroment::get_defined_variables() const
+	{
+		return defined_variables;
+	};
+
+
 }

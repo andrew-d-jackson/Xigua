@@ -7,6 +7,7 @@
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
 #include "../functionutils.hpp"
+#include "../error.hpp"
 
 
 namespace Xigua
@@ -16,10 +17,12 @@ namespace Xigua
 		namespace Math
 		{
 
-			DataType less_than(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType less_than(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("less than", arguments, DataTypes::Number);
+				if (!Xigua::FunctionUtils::all_types_are(arguments, DataTypes::Number))
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+
 
 				long double previous_number = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)
@@ -34,10 +37,11 @@ namespace Xigua
 				return DataType(DataTypes::Bool, true);
 			}
 
-			DataType greater_than(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType greater_than(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("greater than", arguments, DataTypes::Number);
+				if (!Xigua::FunctionUtils::all_types_are(arguments, DataTypes::Number))
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double previous_number = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)
@@ -52,7 +56,7 @@ namespace Xigua
 				return DataType(DataTypes::Bool, true);
 			}
 
-			DataType equal_to(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType equal_to(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
 
@@ -66,10 +70,11 @@ namespace Xigua
 				return DataType(DataTypes::Bool, true);
 			}
 
-			DataType add(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType add(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("add", arguments, DataTypes::Number);
+				if (!Xigua::FunctionUtils::all_types_are(arguments, DataTypes::Number))
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)
@@ -80,10 +85,11 @@ namespace Xigua
 				return DataType(DataTypes::Number, return_value);
 			}
 
-			DataType minus(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType minus(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("minus", arguments, DataTypes::Number);
+				if (!Xigua::FunctionUtils::all_types_are(arguments, DataTypes::Number))
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)
@@ -94,10 +100,11 @@ namespace Xigua
 				return DataType(DataTypes::Number, return_value);
 			}
 
-			DataType multiply(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType multiply(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("multiply", arguments, DataTypes::Number);
+				if (!Xigua::FunctionUtils::all_types_are(arguments, DataTypes::Number))
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)
@@ -108,10 +115,11 @@ namespace Xigua
 				return DataType(DataTypes::Number, return_value);
 			}
 
-			DataType divide(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType divide(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
-				Xigua::FunctionUtils::assert_all_types_are("divide", arguments, DataTypes::Number);
+				if (!Xigua::FunctionUtils::all_types_are(arguments, DataTypes::Number))
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
 				for (int i(1); i < arguments.size(); i++)

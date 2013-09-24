@@ -8,6 +8,8 @@
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
 #include "../functionutils.hpp"
+#include "../error.hpp"
+
 
 
 namespace Xigua
@@ -17,7 +19,7 @@ namespace Xigua
 		namespace Tuple
 		{
 
-			DataType join(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType join(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
 
@@ -35,24 +37,24 @@ namespace Xigua
 				return DataType(DataTypes::Tuple, return_value);
 			}
 
-			DataType first(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType first(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != DataTypes::Tuple)
-					Xigua::FunctionUtils::wrong_type_error("first");
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
 
 				if (inputs.at(0).tuple().size() < 1)
-					Xigua::FunctionUtils::misc_error("first", "not in rage of tuple");
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
 
 				return inputs.at(0).tuple().at(0);
 			}
 
-			DataType last(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType last(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != DataTypes::Tuple)
-					Xigua::FunctionUtils::wrong_type_error("last");
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
 
 				if (inputs.at(0).tuple().size() < 1)
-					Xigua::FunctionUtils::misc_error("last", "not in rage of tuple");
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
 
 				return inputs.at(0).tuple().at(inputs.at(0).tuple().size()-1);
 			}

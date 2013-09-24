@@ -9,6 +9,7 @@
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
 #include "../functionutils.hpp"
+#include "../error.hpp"
 
 
 namespace Xigua
@@ -18,7 +19,7 @@ namespace Xigua
 		namespace String
 		{
 
-			DataType concatinate(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType concatinate(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 1);
 

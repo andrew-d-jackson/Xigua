@@ -58,3 +58,9 @@
 [let #{ my-var  [+ 2 2] }
     [println my-var]]
 [println my-var]
+
+[= add [fn {n} 
+	[let #{my-num n
+		   second [+ n n]}
+		[+ my-num second]]]]
+[println [add 2]]

@@ -8,7 +8,7 @@
 #include "../datatype.hpp"
 #include "../enviroment.hpp"
 #include "../functionutils.hpp"
-
+#include "../error.hpp"
 
 namespace Xigua
 {
@@ -17,13 +17,13 @@ namespace Xigua
 		namespace Core
 		{
 
-			DataType define(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType define(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				enviroment->set(inputs.at(0).string(), inputs.at(1).evaluate(enviroment));
+				enviroment->set(inputs.at(0).string(), inputs.at(1).evaluate(enviroment, function_call_list));
 				return DataType(DataTypes::None);
 			}
 
-			DataType create_lambda(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType create_lambda(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				Enviroment nenv(EnvTypes::Function, enviroment);
 				DataType return_data(DataTypes::Function);
@@ -40,7 +40,7 @@ namespace Xigua
 					}
 				}
 
-				xigua_lambda_t fn = [nenv, inputs](std::vector<DataType> fn_inputs, Enviroment* fn_enviroment)mutable->DataType
+				xigua_lambda_t fn = [nenv, inputs](std::vector<DataType> fn_inputs, Enviroment* fn_enviroment, std::vector<std::string> function_call_list)mutable->DataType
 				{
 					short missing = 0;
 					for (unsigned int i(0); i < inputs.at(0).tuple().size(); ++i)
@@ -52,7 +52,7 @@ namespace Xigua
 						}
 					}
 
-					return inputs.at(1).evaluate(&nenv);
+					return inputs.at(1).evaluate(&nenv, function_call_list);
 				};
 
 				return_data.set_function(fn, inputs.at(0).tuple().size()-(repeating*2), repeating, true);
@@ -60,45 +60,49 @@ namespace Xigua
 				return return_data;
 			}
 
-			DataType let_expression(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType let_expression(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).type() != DataTypes::HashMap || inputs.at(1).type() != DataTypes::Proc)
-					Xigua::FunctionUtils::wrong_type_error("let");
+				if (inputs.at(0).type() != DataTypes::HashMap)
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A HashMap", function_call_list);
+
+				if (inputs.at(1).type() != DataTypes::Proc)
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Process", function_call_list);
+
 
 				Enviroment container_enviroment(EnvTypes::Let, enviroment);
 				for (auto map_pair : inputs.at(0).hash_map()) {
 
 					if (map_pair.first.type() != DataTypes::Symbol)
-						Xigua::FunctionUtils::misc_error("let", "non-symbol passed in map");
+						throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Symbol", function_call_list);
 
-					container_enviroment.set(map_pair.first.symbol(), map_pair.second.evaluate(&container_enviroment), true);
+					container_enviroment.set(map_pair.first.symbol(), map_pair.second.evaluate(&container_enviroment, function_call_list), true);
 				}
 
-				return inputs.at(1).evaluate(&container_enviroment);
+				return inputs.at(1).evaluate(&container_enviroment, function_call_list);
 			}
 
-			DataType if_expression(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType if_expression(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).evaluate(enviroment).boolean())
-					return inputs.at(1).evaluate(enviroment);
+					return inputs.at(1).evaluate(enviroment, function_call_list);
 				else
-					return inputs.at(2).evaluate(enviroment);
+					return inputs.at(2).evaluate(enviroment, function_call_list);
 			}
 
-			DataType print_line(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType print_line(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				std::cout << inputs.at(0).as_string() << std::endl;
 				return DataType(DataTypes::None);
 			}
 
-			DataType get_input(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType get_input(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				std::string str;
 				std::cin >> str;
 				return DataType(DataTypes::String, str);
 			}
 
-			DataType map(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType map(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
 
@@ -106,7 +110,7 @@ namespace Xigua
 					int tuple_sizes = arguments.at(0).tuple().size();
 					for (int i(1); i < arguments.size()-1; i++)	{
 						if (arguments.at(i).tuple().size() != tuple_sizes)
-							Xigua::FunctionUtils::misc_error("map", "tuple lengths don't match");
+							throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Tuple Lengths Are Different", function_call_list);
 					}
 				}
 
@@ -119,16 +123,19 @@ namespace Xigua
 						temp_proc.push_back(arguments.at(j).tuple().at(i));
 
 					DataType temp_function(DataTypes::Proc, temp_proc);
-					return_values.push_back(temp_function.evaluate(enviroment));
+					return_values.push_back(temp_function.evaluate(enviroment, function_call_list));
 				}
 
 				return DataType(DataTypes::Tuple, return_values);
 			}
 
-			DataType apply(std::vector<DataType> inputs, Enviroment* enviroment)
+			DataType apply(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).type() != DataTypes::Tuple || inputs.at(1).type() != DataTypes::Function)
-					Xigua::FunctionUtils::wrong_type_error("apply");
+				if (inputs.at(0).type() != DataTypes::Tuple)
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+
+				if (inputs.at(1).type() != DataTypes::Function)
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Function", function_call_list);
 
 				std::vector<DataType> temp_proc = { inputs.at(1) };
 
@@ -136,7 +143,7 @@ namespace Xigua
 					temp_proc.push_back(data);
 
 				DataType temp_function(DataTypes::Proc, temp_proc);
-				return temp_function.evaluate(enviroment);
+				return temp_function.evaluate(enviroment, function_call_list);
 			}
 
 		}

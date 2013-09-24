@@ -172,7 +172,26 @@ namespace Xigua
 
 	DataType Parser::as_data_type()
 	{
-		return parse_to_data_types(as_string_list());
+		std::vector<std::string> string_list = as_string_list();
+		validate(string_list);
+		return parse_to_data_types(string_list);
 	}
+
+	void Parser::validate(std::vector<std::string> string_list)
+	{
+		int closing = 0;
+		int opening = 0;
+
+		for (auto token : string_list) {
+			if (token == "[")
+				opening++;
+			else if (token == "]")
+				closing++;
+		}
+
+		if (opening != closing)
+			throw Xigua::Error(Xigua::ErrorTypes::UNMATCHING_BRACKETS, "Amount Of Opening And Closing Brackets Do Not Match", {});
+	}
+
 
 }

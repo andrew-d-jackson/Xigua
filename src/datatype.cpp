@@ -320,7 +320,7 @@ namespace Xigua
 		function_map(function_map_copy);
 	}
 
-	DataType DataType::call_function(std::vector<DataType> & args, Enviroment * enviroment)
+	DataType DataType::call_function(std::vector<DataType> & args, Enviroment * enviroment, std::vector<std::string> function_call_list)
 	{
 		auto function_map_copy = function_map();
 		auto function_to_call = function_map_copy.find(std::make_pair(args.size(), 0));
@@ -385,23 +385,22 @@ namespace Xigua
 			for (auto & item : args)
 			{
 				if (item.type() == DataTypes::Proc || item.type() == DataTypes::Symbol || item.type() == DataTypes::Tuple)
-					item = item.evaluate(enviroment);
+					item = item.evaluate(enviroment, function_call_list);
 
 			}
 		}
 
-		return std::get<0>(function_to_call->second)(args, enviroment);
+		return std::get<0>(function_to_call->second)(args, enviroment, function_call_list);
 	}
 
-	DataType DataType::evaluate(Enviroment * enviroment)
+	DataType DataType::evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list)
 	{
 		if (type() == DataTypes::Symbol)
 		{
 			DataType* symbol_value = enviroment->find(symbol());
 			if (symbol_value == nullptr)
 			{
-				std::cout << "Cannot Find Symbol: " << symbol() << std::endl;
-				exit(1);
+				throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Cannot Find Symbol", function_call_list);
 			}
 			return *symbol_value;
 		}
@@ -425,8 +424,13 @@ namespace Xigua
 		{
 			if (proc().at(0).type() == DataTypes::Proc || proc().at(0).type() == DataTypes::Symbol)
 			{
+				if (proc().at(0).type() == DataTypes::Symbol)
+				{
+					function_call_list.push_back(proc().at(0).symbol());
+				}
+
 				std::vector<DataType> new_proc_data = proc();
-				new_proc_data.at(0) = proc().at(0).evaluate(enviroment);
+				new_proc_data.at(0) = proc().at(0).evaluate(enviroment, function_call_list);
 				proc(new_proc_data);
 			}
 
@@ -441,13 +445,13 @@ namespace Xigua
 				auto lastElement = process_copy.end();
 				std::vector<DataType> functionArgs(firstElement, lastElement);
 
-				return proc().at(0).call_function(functionArgs, enviroment);
+				return proc().at(0).call_function(functionArgs, enviroment, function_call_list);
 			}
 			else
 			{
 				DataType return_value = DataType(DataTypes::None);
 				for (DataType item : proc())
-					return_value = item.evaluate(enviroment);
+					return_value = item.evaluate(enviroment, function_call_list);
 				return return_value;
 			}
 		}
@@ -456,7 +460,7 @@ namespace Xigua
 			std::vector<DataType> new_tuple_data;
 			for (auto data : tuple())
 			{
-				new_tuple_data.push_back(data.evaluate(enviroment));
+				new_tuple_data.push_back(data.evaluate(enviroment, function_call_list));
 			}
 			return DataType(DataTypes::Tuple, new_tuple_data);
 		}
@@ -467,7 +471,7 @@ namespace Xigua
 			{
 				auto first = data.first;
 				auto second = data.second;
-				new_tuple_data[first.evaluate(enviroment)] = second.evaluate(enviroment);
+				new_tuple_data[first.evaluate(enviroment, function_call_list)] = second.evaluate(enviroment, function_call_list);
 			}
 			return DataType(DataTypes::HashMap, new_tuple_data);
 		}

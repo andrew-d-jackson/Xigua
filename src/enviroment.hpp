@@ -25,5 +25,12 @@ namespace Xigua
 
 		DataType* find(std::string variable_name);
 		void set(std::string name, DataType value, bool force_here = false);
+
+		std::map<std::string, DataType> get_all_defined_variables() const;
+
+		bool has_parent() const;
+		Enviroment* get_parent() const;
+		std::map<std::string, DataType> get_defined_variables() const;
+
 	};
 }
