@@ -108,7 +108,7 @@ namespace Xigua
 
 				if (arguments.size() > 2) {
 					int tuple_sizes = arguments.at(0).tuple().size();
-					for (int i(1); i < arguments.size()-1; i++)	{
+					for (unsigned int i(1); i < arguments.size() - 1; i++)	{
 						if (arguments.at(i).tuple().size() != tuple_sizes)
 							throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Tuple Lengths Are Different", function_call_list);
 					}
@@ -116,10 +116,10 @@ namespace Xigua
 
 				std::vector<DataType> return_values;
 
-				for (int i(0); i < arguments.at(1).tuple().size(); i++)
+				for (unsigned int i(0); i < arguments.at(1).tuple().size(); i++)
 				{
 					std::vector<DataType> temp_proc = { arguments.at(arguments.size()-1) };
-					for (int j(0); j < arguments.size()-1; j++)
+					for (unsigned int j(0); j < arguments.size() - 1; j++)
 						temp_proc.push_back(arguments.at(j).tuple().at(i));
 
 					DataType temp_function(DataTypes::Proc, temp_proc);

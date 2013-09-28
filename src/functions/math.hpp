@@ -25,7 +25,7 @@ namespace Xigua
 
 
 				long double previous_number = arguments.at(0).number();
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					if (previous_number < arguments.at(i).number()){
 						previous_number = arguments.at(i).number();
@@ -44,7 +44,7 @@ namespace Xigua
 					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double previous_number = arguments.at(0).number();
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					if (previous_number > arguments.at(i).number()){
 						previous_number = arguments.at(i).number();
@@ -60,7 +60,7 @@ namespace Xigua
 			{
 				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
 
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					if (arguments.at(0) != arguments.at(i)){
 						return DataType(DataTypes::Bool, false); 
@@ -77,7 +77,7 @@ namespace Xigua
 					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					return_value += arguments.at(i).number();
 				}
@@ -92,7 +92,7 @@ namespace Xigua
 					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					return_value -= arguments.at(i).number();
 				}
@@ -107,7 +107,7 @@ namespace Xigua
 					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					return_value *= arguments.at(i).number();
 				}
@@ -122,7 +122,7 @@ namespace Xigua
 					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double return_value = arguments.at(0).number();
-				for (int i(1); i < arguments.size(); i++)
+				for (unsigned int i(1); i < arguments.size(); i++)
 				{
 					return_value /= arguments.at(i).number();
 				}

@@ -275,7 +275,7 @@ namespace Xigua
 	void DataType::hash_map(std::vector<DataType> in_list)
 	{
 		std::map<DataType, DataType> temp_map;
-		for (int i(0); i+1 < in_list.size(); i+=2)
+		for (unsigned int i(0); i + 1 < in_list.size(); i += 2)
 		{
 			temp_map[in_list.at(i)] = in_list.at(i + 1);
 		}

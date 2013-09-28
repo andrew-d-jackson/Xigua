@@ -16,10 +16,10 @@ namespace Xigua
 	namespace FunctionUtils
 	{
 
-		std::vector<DataType> parse_arguments(std::vector<DataType> arguments, int nonrepeating)
+		std::vector<DataType> parse_arguments(std::vector<DataType> arguments, unsigned int nonrepeating)
 		{
 			std::vector<DataType> return_list;
-			for (int i(0); i < arguments.size(); i++) {
+			for (unsigned int i(0); i < arguments.size(); i++) {
 				if (i < nonrepeating) {
 					return_list.push_back(arguments.at(i));
 				} else {

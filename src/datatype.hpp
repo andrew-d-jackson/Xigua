@@ -75,7 +75,7 @@ namespace Xigua
 
 		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
 		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment, std::vector<std::string> function_call_list);
-		DataType evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list = {});
+		DataType evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list = std::vector<std::string>());
 		void print(int indentation = 0);
 	};
 
