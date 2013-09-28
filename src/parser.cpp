@@ -3,91 +3,42 @@
 
 namespace Xigua
 {
-	DataType Parser::parse_to_data_types(std::vector<std::string> string_list, DataTypes list_type)
-	{
-		std::vector<DataType> data;
-		for (unsigned int index = 0; index < string_list.size(); ++index)
-		{
-			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{")
-			{
-				DataTypes sub_list_type = DataTypes::Proc;
-				if (string_list.at(index) == "{"){
-					sub_list_type = DataTypes::Tuple;
-				} else if (string_list.at(index) == "#{"){
-					sub_list_type = DataTypes::HashMap;
-				}
 
-				std::vector<std::string> sub_list;
-				int internal_lists = 1;
-				while (true) {
-					index++;
-					if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{") {
-						internal_lists++;
-					}
-					else if (string_list.at(index) == "]" || string_list.at(index) == "}") {
-						internal_lists--;
-						if (internal_lists == 0) {
-							break;
-						}
-					}
-					sub_list.push_back(string_list.at(index));
-				}
-				data.push_back(parse_to_data_types(sub_list, sub_list_type));
-			}
-			else
-			{
-				data.push_back(string_to_data(string_list.at(index)));
-			}
-		}
-		return DataType(list_type, data);
+	DataType Parser::from_file(const std::string file_location) const {
+
+		std::string source_code = read_file(file_location);
+		return from_string(source_code);
+
 	}
 
-	DataType Parser::string_to_data(std::string input_string)
-	{
-		if (is_number(input_string))
-		{
-			DataType data(DataTypes::Number, (long double)atof(input_string.c_str()));
-			return data;
-		}
-		else if (input_string[0] == '"')
-		{
-			DataType data(DataTypes::String, input_string.substr(1, input_string.size() - 2));
-			return data;
-		}
-		else if (input_string == "true" || input_string == "false")
-		{
-			DataType data(DataTypes::Bool);
-			if (input_string == "true")
-				data.boolean(true);
-			else
-				data.boolean(false);
+	DataType Parser::from_string(const std::string source_code) const {
 
-			return data;
-		}
-		else
-		{
-			DataType data(DataTypes::Symbol, input_string);
-			return data;
-		}
+		std::vector<std::string> string_list = source_to_string_list(source_code);
+		validate_string_list(string_list);
+		return string_list_to_data_type(string_list);
+
 	}
 
+	std::string Parser::read_file(const std::string file_location) const {
 
-	Parser::Parser(std::string program_string)
-	{
-		raw_string = program_string;
+		std::ifstream file_stream(file_location.c_str());
+		std::stringstream string_buffer;
+		string_buffer << file_stream.rdbuf();
+		return string_buffer.str();
+
 	}
 
-	std::vector<std::string> Parser::as_string_list()
-	{
+	std::vector<std::string> Parser::source_to_string_list(const std::string source_code) const {
+
 		std::vector<std::string> parsed_list;
-
 		bool is_reading_string = false;
 		bool is_commenting = false;
 		std::stringstream string_buffer;
 		bool string_buffer_contains_data = false;
-		for (unsigned int index(0); index < raw_string.size(); index++)
+
+		for (unsigned int index(0); index < source_code.size(); index++)
 		{
-			char c = raw_string.at(index);
+			char c = source_code.at(index);
 			if (is_commenting)
 			{
 				if (c == '\n')
@@ -99,35 +50,37 @@ namespace Xigua
 				{
 					is_commenting = true;
 				}
-				else if (c == '#' && raw_string.at(index+1) == '{')
+				else if (c == '#' && source_code.at(index + 1) == '{')
 				{
 					if (!is_reading_string) {
-					    if (string_buffer_contains_data) {
-					    	parsed_list.push_back(string_buffer.str());
-					    	string_buffer.str("");
-					    	string_buffer_contains_data = false;
-					    }
-					    parsed_list.push_back(std::string("#{"));
-	                } else {
-	                    string_buffer << c;
+						if (string_buffer_contains_data) {
+							parsed_list.push_back(string_buffer.str());
+							string_buffer.str("");
+							string_buffer_contains_data = false;
+						}
+						parsed_list.push_back(std::string("#{"));
+					}
+					else {
+						string_buffer << c;
 						string_buffer_contains_data = true;
-	                }
-	                index++;
+					}
+					index++;
 				}
 				else if (c == '[' || c == ']' || c == '{' || c == '}')
 				{
 
-	                if (!is_reading_string) {
-					    if (string_buffer_contains_data) {
-					    	parsed_list.push_back(string_buffer.str());
-					    	string_buffer.str("");
-					    	string_buffer_contains_data = false;
-					    }
-					    parsed_list.push_back(std::string(1, c));
-	                } else {
-	                    string_buffer << c;
+					if (!is_reading_string) {
+						if (string_buffer_contains_data) {
+							parsed_list.push_back(string_buffer.str());
+							string_buffer.str("");
+							string_buffer_contains_data = false;
+						}
+						parsed_list.push_back(std::string(1, c));
+					}
+					else {
+						string_buffer << c;
 						string_buffer_contains_data = true;
-	                }
+					}
 				}
 				else if (c == ' ' || c == '\n' || c == '\t') {
 
@@ -166,19 +119,11 @@ namespace Xigua
 			}
 		}
 
-
 		return parsed_list;
+
 	}
 
-	DataType Parser::as_data_type()
-	{
-		std::vector<std::string> string_list = as_string_list();
-		validate(string_list);
-		return parse_to_data_types(string_list);
-	}
-
-	void Parser::validate(std::vector<std::string> string_list)
-	{
+	void Parser::validate_string_list(const std::vector<std::string> string_list) const	{
 		int closing = 0;
 		int opening = 0;
 
@@ -193,5 +138,75 @@ namespace Xigua
 			throw Xigua::Error(Xigua::ErrorTypes::UNMATCHING_BRACKETS, "Amount Of Opening And Closing Brackets Do Not Match", {});
 	}
 
+	DataType Parser::string_list_to_data_type(const std::vector<std::string> string_list, const DataTypes list_type) const {
+
+		std::vector<DataType> data;
+		for (unsigned int index = 0; index < string_list.size(); ++index)
+		{
+			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{")
+			{
+				DataTypes sub_list_type = DataTypes::Proc;
+				if (string_list.at(index) == "{"){
+					sub_list_type = DataTypes::Tuple;
+				}
+				else if (string_list.at(index) == "#{"){
+					sub_list_type = DataTypes::HashMap;
+				}
+
+				std::vector<std::string> sub_list;
+				int internal_lists = 1;
+				while (true) {
+					index++;
+					if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{") {
+						internal_lists++;
+					}
+					else if (string_list.at(index) == "]" || string_list.at(index) == "}") {
+						internal_lists--;
+						if (internal_lists == 0) {
+							break;
+						}
+					}
+					sub_list.push_back(string_list.at(index));
+				}
+				data.push_back(string_list_to_data_type(sub_list, sub_list_type));
+			}
+			else
+			{
+				data.push_back(string_to_data_type(string_list.at(index)));
+			}
+		}
+		return DataType(list_type, data);
+
+	}
+
+	DataType Parser::string_to_data_type(const std::string input_string) const {
+
+		if (is_number(input_string))
+		{
+			DataType data(DataTypes::Number, (long double) atof(input_string.c_str()));
+			return data;
+		}
+		else if (input_string[0] == '"')
+		{
+			DataType data(DataTypes::String, input_string.substr(1, input_string.size() - 2));
+			return data;
+		}
+		else if (input_string == "true" || input_string == "false")
+		{
+			DataType data(DataTypes::Bool);
+			if (input_string == "true")
+				data.boolean(true);
+			else
+				data.boolean(false);
+
+			return data;
+		}
+		else
+		{
+			DataType data(DataTypes::Symbol, input_string);
+			return data;
+		}
+
+	}
 
 }

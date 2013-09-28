@@ -13,20 +13,20 @@
 namespace Xigua
 {
 
-	class Parser
-	{
-	private:
-		std::string raw_string;
-
-		DataType parse_to_data_types(std::vector<std::string> string_list, DataTypes list_type = DataTypes::Proc);
-
+	class Parser {
 	public:
-		Parser(std::string program_string);
+		DataType from_file(const std::string file_location) const;
+		DataType from_string(const std::string source_code) const;
 
-		std::vector<std::string> as_string_list();
-		DataType string_to_data(std::string input_string);
-		DataType as_data_type();
-		void validate(std::vector<std::string> string_list);
+	private:
+
+		std::string read_file(const std::string file_location) const;
+
+		std::vector<std::string> source_to_string_list(const std::string source_code) const;
+		void validate_string_list(const std::vector<std::string> string_list) const;
+
+		DataType string_list_to_data_type(const std::vector<std::string> string_list, const DataTypes list_type = DataTypes::Proc) const;
+		DataType string_to_data_type(const std::string input_string) const;
 	};
 
 }

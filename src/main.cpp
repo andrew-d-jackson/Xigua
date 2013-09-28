@@ -10,12 +10,11 @@
 
 int main(int argc, char *argv [])
 {
-	std::string file_data = read_file(argv[1]);
-	Xigua::Parser parser(file_data);
+	Xigua::Parser parser;
 	Xigua::Enviroment enviroment = Xigua::get_global_enviroment();
 
 	try {
-		parser.as_data_type().evaluate(&enviroment);
+		parser.from_string("[println 22]").evaluate(&enviroment);
 	} catch (Xigua::Error e) {
 		e.print();
 	}
