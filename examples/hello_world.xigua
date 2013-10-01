@@ -64,3 +64,8 @@
 		   second [+ n n]}
 		[+ my-num second]]]]
 [println [add 2]]
+
+
+[println [+ 20 100]]
+[= add20 [part + 10 5 5]]
+[println [add20 100 100]]

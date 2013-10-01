@@ -14,7 +14,7 @@ int main(int argc, char *argv [])
 	Xigua::Enviroment enviroment = Xigua::get_global_enviroment();
 
 	try {
-		parser.from_string("[println 22]").evaluate(&enviroment);
+		parser.from_file(argv[1]).evaluate(&enviroment);
 	} catch (Xigua::Error e) {
 		e.print();
 	}

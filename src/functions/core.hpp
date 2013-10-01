@@ -146,6 +146,29 @@ namespace Xigua
 				return temp_function.evaluate(enviroment, function_call_list);
 			}
 
+			DataType partial(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			{
+				if (inputs.at(0).type() != DataTypes::Function)
+					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Function", function_call_list);
+
+				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				
+				DataType captured_function = arguments.at(0);
+				std::vector<DataType> captured_function_args(arguments.begin()+1, arguments.end());
+
+				xigua_lambda_t fn = [captured_function, captured_function_args](std::vector<DataType> fn_inputs, Enviroment* fn_enviroment, std::vector<std::string> fn_function_call_list)mutable -> DataType
+				{
+					auto fn_arguments = Xigua::FunctionUtils::parse_arguments(fn_inputs, 0);
+					
+					captured_function_args.insert(captured_function_args.end(), fn_arguments.begin(), fn_arguments.end());
+					return captured_function.call_function(captured_function_args, fn_enviroment, fn_function_call_list);
+				};
+
+				DataType return_function(DataTypes::Function);
+				return_function.set_function(fn, 0, 1, true);
+				return return_function;
+			}
+
 		}
 	}
 }
