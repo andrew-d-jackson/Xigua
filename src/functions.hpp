@@ -83,11 +83,17 @@ namespace Xigua
 		enviroment.defined_variables["join"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["join"].set_function(&Functions::Tuple::join, 2, 1, true);
 
+		enviroment.defined_variables["unique"] = DataType(DataTypes::Function);
+		enviroment.defined_variables["unique"].set_function(&Functions::Tuple::unique, 1, 0, true);
+
 		enviroment.defined_variables["first"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["first"].set_function(&Functions::Tuple::first, 1, 0, true);
 	
 		enviroment.defined_variables["last"] = DataType(DataTypes::Function);
 		enviroment.defined_variables["last"].set_function(&Functions::Tuple::last, 1, 0, true);
+
+		enviroment.defined_variables["range"] = DataType(DataTypes::Function);
+		enviroment.defined_variables["range"].set_function(&Functions::Tuple::range, 3, 0, true);
 
 	//containers
 
