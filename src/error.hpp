@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-namespace Xigua
+namespace xig
 {
 	enum class ErrorTypes { UNMATCHING_BRACKETS, INVALID_ARGS, };
 	class Error {
@@ -20,7 +20,7 @@ namespace Xigua
 		//ErrorTypes get_error_type() const;
 		//std::string get_description() const;
 		//std::vector<std::string> get_function_call_list() const;
-		//std::map<std::string, DataType> get_enviroment_variables() const;
+		//std::map<std::string, data> get_enviroment_variables() const;
 
 		void print() const {
 			std::cout << "Error: " << (int)error_type << std::endl;

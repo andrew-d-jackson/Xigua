@@ -12,23 +12,23 @@
 #include "../error.hpp"
 
 
-namespace Xigua
+namespace xig
 {
 	namespace Functions
 	{
 		namespace String
 		{
 
-			DataType concatinate(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data concatinate(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 1);
+				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 1);
 
 				std::string return_string = "";
 				for (auto argument : arguments) {
 					return_string += argument.as_string();
 				}
 
-				return DataType(DataTypes::String, return_string);
+				return data(data_type::String, return_string);
 			}
 
 		}

@@ -10,12 +10,12 @@
 
 int main(int argc, char *argv [])
 {
-	Xigua::Parser parser;
-	Xigua::Enviroment enviroment = Xigua::get_global_enviroment();
+	xig::Parser parser;
+	xig::Enviroment enviroment = xig::get_global_enviroment();
 
 	try {
 		parser.from_file(argv[1]).evaluate(&enviroment);
-	} catch (Xigua::Error e) {
+	} catch (xig::Error e) {
 		e.print();
 	}
 	

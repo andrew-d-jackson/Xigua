@@ -11,19 +11,19 @@
 #include "../error.hpp"
 
 
-namespace Xigua
+namespace xig
 {
 	namespace Functions
 	{
 		namespace Boolean
 		{
 
-			DataType boolean_not(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data boolean_not(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).type() != DataTypes::Bool)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Boolean", function_call_list);
+				if (inputs.at(0).type() != data_type::Bool)
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Boolean", function_call_list);
 
-				return DataType(DataTypes::Bool, !(inputs.at(0).boolean()));
+				return data(data_type::Bool, !(inputs.at(0).boolean()));
 			}
 
 		}

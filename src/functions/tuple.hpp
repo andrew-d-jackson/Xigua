@@ -13,21 +13,21 @@
 
 
 
-namespace Xigua
+namespace xig
 {
 	namespace Functions
 	{
 		namespace Tuple
 		{
 
-			DataType join(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data join(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				auto arguments = Xigua::FunctionUtils::parse_arguments(inputs, 2);
+				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 
-				std::vector<DataType> return_value;
+				std::vector<data> return_value;
 				for (auto argument : arguments)
 				{
-					if (argument.type() == DataTypes::Tuple) {
+					if (argument.type() == data_type::Tuple) {
 						for (auto element : argument.tuple())
 							return_value.push_back(element);
 					} else {
@@ -35,76 +35,76 @@ namespace Xigua
 					}
 				}
 
-				return DataType(DataTypes::Tuple, return_value);
+				return data(data_type::Tuple, return_value);
 			}
 
-			DataType unique(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data unique(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).type() != DataTypes::Tuple)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+				if (inputs.at(0).type() != data_type::Tuple)
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
 
 				auto initial_tuple = inputs.at(0).tuple();
 				std::sort(initial_tuple.begin(), initial_tuple.end());
 				auto unique_iterator = std::unique(initial_tuple.begin(), initial_tuple.end());
-				std::vector<DataType> return_value(initial_tuple.begin(), unique_iterator);
+				std::vector<data> return_value(initial_tuple.begin(), unique_iterator);
 
-				return DataType(DataTypes::Tuple, return_value);
+				return data(data_type::Tuple, return_value);
 			}
 
-			DataType first(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data first(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).type() != DataTypes::Tuple)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+				if (inputs.at(0).type() != data_type::Tuple)
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
 
 				if (inputs.at(0).tuple().size() < 1)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
 
 				return inputs.at(0).tuple().at(0);
 			}
 
-			DataType last(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data last(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).type() != DataTypes::Tuple)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+				if (inputs.at(0).type() != data_type::Tuple)
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
 
 				if (inputs.at(0).tuple().size() < 1)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
 
 				return inputs.at(0).tuple().at(inputs.at(0).tuple().size()-1);
 			}
 
-			DataType range(std::vector<DataType> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data range(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
 			{
-				if (!FunctionUtils::all_types_are(inputs, DataTypes::Number))
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+				if (!FunctionUtils::all_types_are(inputs, data_type::Number))
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
 
 				long double start = inputs.at(0).number();
 				long double end = inputs.at(1).number();
 				long double step = inputs.at(2).number();
 
 				if (start > end && step >= 0)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
 				else if (start < end && step <= 0)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
 				else if (step == 0 || start == end)
-					throw Xigua::Error(Xigua::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
+					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
 
 
-				std::vector<DataType> return_value;
+				std::vector<data> return_value;
 
 				if (start > end) {
 					while (start > end) {
-						return_value.push_back(DataType(DataTypes::Number, start));
+						return_value.push_back(data(data_type::Number, start));
 						start += step;
 					}
 				} else if (start < end) {
 					while (start < end) {
-						return_value.push_back(DataType(DataTypes::Number, start));
+						return_value.push_back(data(data_type::Number, start));
 						start += step;
 					}
 				}
 
-				return DataType(DataTypes::Tuple, return_value);
+				return data(data_type::Tuple, return_value);
 			}
 
 

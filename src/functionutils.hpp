@@ -11,14 +11,14 @@
 #include "error.hpp"
 
 
-namespace Xigua
+namespace xig
 {
 	namespace FunctionUtils
 	{
 
-		std::vector<DataType> parse_arguments(std::vector<DataType> arguments, unsigned int nonrepeating)
+		std::vector<data> parse_arguments(std::vector<data> arguments, unsigned int nonrepeating)
 		{
-			std::vector<DataType> return_list;
+			std::vector<data> return_list;
 			for (unsigned int i(0); i < arguments.size(); i++) {
 				if (i < nonrepeating) {
 					return_list.push_back(arguments.at(i));
@@ -31,7 +31,7 @@ namespace Xigua
 			return return_list;
 		}
 
-		bool all_types_are(std::vector<DataType> arguments, DataTypes expected)
+		bool all_types_are(std::vector<data> arguments, data_type expected)
 		{
 			for (auto argument : arguments)
 			{

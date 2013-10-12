@@ -10,13 +10,13 @@
 #include "error.hpp"
 
 
-namespace Xigua
+namespace xig
 {
 
 	class Parser {
 	public:
-		DataType from_file(const std::string file_location) const;
-		DataType from_string(const std::string source_code) const;
+		data from_file(const std::string file_location) const;
+		data from_string(const std::string source_code) const;
 
 	private:
 
@@ -25,8 +25,8 @@ namespace Xigua
 		std::vector<std::string> source_to_string_list(const std::string source_code) const;
 		void validate_string_list(const std::vector<std::string> string_list) const;
 
-		DataType string_list_to_data_type(const std::vector<std::string> string_list, const DataTypes list_type = DataTypes::Proc) const;
-		DataType string_to_data_type(const std::string input_string) const;
+		data string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type = data_type::Proc) const;
+		data string_to_data_type(const std::string input_string) const;
 	};
 
 }

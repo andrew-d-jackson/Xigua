@@ -6,16 +6,16 @@
 #include "datatype.hpp"
 
 
-namespace Xigua
+namespace xig
 {
-	class DataType;
+	class data;
 
 	enum class EnvTypes { Namespace, Function, Macro, Let };
 
 	class Enviroment
 	{
 	public:
-		std::map<std::string, DataType> defined_variables;
+		std::map<std::string, data> defined_variables;
 		Enviroment * parent;
 		EnvTypes type;
 
@@ -23,14 +23,14 @@ namespace Xigua
 		Enviroment(EnvTypes type, Enviroment * parent);
 		
 
-		DataType* find(std::string variable_name);
-		void set(std::string name, DataType value, bool force_here = false);
+		data* find(std::string variable_name);
+		void set(std::string name, data value, bool force_here = false);
 
-		std::map<std::string, DataType> get_all_defined_variables() const;
+		std::map<std::string, data> get_all_defined_variables() const;
 
 		bool has_parent() const;
 		Enviroment* get_parent() const;
-		std::map<std::string, DataType> get_defined_variables() const;
+		std::map<std::string, data> get_defined_variables() const;
 
 	};
 }

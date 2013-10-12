@@ -14,38 +14,38 @@
 
 #include "error.hpp"
 
-namespace Xigua
+namespace xig
 {
 
-	enum class DataTypes { None, Symbol, Bool, String, Number, Tuple, HashMap, Proc, Function };
+	enum class data_type { None, Symbol, Bool, String, Number, Tuple, HashMap, Proc, Function };
 
-	class DataType;
+	class data;
 	class Enviroment;
 
-	typedef std::function<DataType(std::vector<DataType>, Enviroment*, std::vector<std::string>)> xigua_lambda_t;
+	typedef std::function<data(std::vector<data>, Enviroment*, std::vector<std::string>)> xigua_lambda_t;
 
-	class DataType
+	class data
 	{
 	protected:
-		DataTypes d_type;
+		data_type my_type;
 		typedef std::map<std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> function_map_t;
 		std::shared_ptr<void> data_pointer;
 
 	public:
-		DataType(){}
-		DataType(DataTypes data_type);
-		DataType(DataTypes data_type, std::string string_data);
-		DataType(DataTypes data_type, long double number_data);
-		DataType(DataTypes data_type, bool boolean_data);
-		DataType(DataTypes data_type, std::vector<DataType> list_data);
-		DataType(DataTypes data_type, std::map<DataType, DataType> map_data);
+		data(){}
+		data(data_type in_type);
+		data(data_type in_type, std::string string_data);
+		data(data_type in_type, long double number_data);
+		data(data_type in_type, bool boolean_data);
+		data(data_type in_type, std::vector<data> list_data);
+		data(data_type in_type, std::map<data, data> map_data);
 
-		bool operator==(const DataType & other) const;
-		bool operator!=(const DataType & other) const;
-		bool operator<(const DataType & other) const;
+		bool operator==(const data & other) const;
+		bool operator!=(const data & other) const;
+		bool operator<(const data & other) const;
 
-		DataTypes type() const;
-		void type(DataTypes in_type);
+		data_type type() const;
+		void type(data_type in_type);
 
 		std::string string() const;
 		void string(std::string in_string);
@@ -57,15 +57,15 @@ namespace Xigua
 		long double number() const;
 		void number(long double in_number);
 
-		std::vector<DataType> tuple() const;
-		void tuple(std::vector<DataType> in_tuple);
+		std::vector<data> tuple() const;
+		void tuple(std::vector<data> in_tuple);
 
-		std::map<DataType, DataType> hash_map() const;
-		void hash_map(std::map<DataType, DataType> in_map);
-		void hash_map(std::vector<DataType> in_list);
+		std::map<data, data> hash_map() const;
+		void hash_map(std::map<data, data> in_map);
+		void hash_map(std::vector<data> in_list);
 
-		std::vector<DataType> proc() const;
-		void proc(std::vector<DataType> in_list);
+		std::vector<data> proc() const;
+		void proc(std::vector<data> in_list);
 
 		bool boolean() const;
 		void boolean(bool boolean);
@@ -74,8 +74,8 @@ namespace Xigua
 		void function_map(function_map_t in_fmap);
 
 		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
-		DataType call_function(std::vector<DataType> & args, Enviroment * enviroment, std::vector<std::string> function_call_list);
-		DataType evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list = std::vector<std::string>());
+		data call_function(std::vector<data> & args, Enviroment * enviroment, std::vector<std::string> function_call_list);
+		data evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list = std::vector<std::string>());
 		void print(int indentation = 0);
 	};
 

@@ -1,17 +1,17 @@
 #include "parser.hpp"
 
 
-namespace Xigua
+namespace xig
 {
 
-	DataType Parser::from_file(const std::string file_location) const {
+	data Parser::from_file(const std::string file_location) const {
 
 		std::string source_code = read_file(file_location);
 		return from_string(source_code);
 
 	}
 
-	DataType Parser::from_string(const std::string source_code) const {
+	data Parser::from_string(const std::string source_code) const {
 
 		std::vector<std::string> string_list = source_to_string_list(source_code);
 		validate_string_list(string_list);
@@ -135,22 +135,22 @@ namespace Xigua
 		}
 
 		if (opening != closing)
-			throw Xigua::Error(Xigua::ErrorTypes::UNMATCHING_BRACKETS, "Amount Of Opening And Closing Brackets Do Not Match", {});
+			throw xig::Error(xig::ErrorTypes::UNMATCHING_BRACKETS, "Amount Of Opening And Closing Brackets Do Not Match", {});
 	}
 
-	DataType Parser::string_list_to_data_type(const std::vector<std::string> string_list, const DataTypes list_type) const {
+	data Parser::string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type) const {
 
-		std::vector<DataType> data;
+		std::vector<data> current_data;
 		for (unsigned int index = 0; index < string_list.size(); ++index)
 		{
 			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{")
 			{
-				DataTypes sub_list_type = DataTypes::Proc;
+				data_type sub_list_type = data_type::Proc;
 				if (string_list.at(index) == "{"){
-					sub_list_type = DataTypes::Tuple;
+					sub_list_type = data_type::Tuple;
 				}
 				else if (string_list.at(index) == "#{"){
-					sub_list_type = DataTypes::HashMap;
+					sub_list_type = data_type::HashMap;
 				}
 
 				std::vector<std::string> sub_list;
@@ -168,32 +168,32 @@ namespace Xigua
 					}
 					sub_list.push_back(string_list.at(index));
 				}
-				data.push_back(string_list_to_data_type(sub_list, sub_list_type));
+				current_data.push_back(string_list_to_data_type(sub_list, sub_list_type));
 			}
 			else
 			{
-				data.push_back(string_to_data_type(string_list.at(index)));
+				current_data.push_back(string_to_data_type(string_list.at(index)));
 			}
 		}
-		return DataType(list_type, data);
+		return data(list_type, current_data);
 
 	}
 
-	DataType Parser::string_to_data_type(const std::string input_string) const {
+	data Parser::string_to_data_type(const std::string input_string) const {
 
 		if (is_number(input_string))
 		{
-			DataType data(DataTypes::Number, (long double) atof(input_string.c_str()));
+			data data(data_type::Number, (long double) atof(input_string.c_str()));
 			return data;
 		}
 		else if (input_string[0] == '"')
 		{
-			DataType data(DataTypes::String, input_string.substr(1, input_string.size() - 2));
+			data data(data_type::String, input_string.substr(1, input_string.size() - 2));
 			return data;
 		}
 		else if (input_string == "true" || input_string == "false")
 		{
-			DataType data(DataTypes::Bool);
+			data data(data_type::Bool);
 			if (input_string == "true")
 				data.boolean(true);
 			else
@@ -203,7 +203,7 @@ namespace Xigua
 		}
 		else
 		{
-			DataType data(DataTypes::Symbol, input_string);
+			data data(data_type::Symbol, input_string);
 			return data;
 		}
 

@@ -1,6 +1,6 @@
 #include "enviroment.hpp"
 
-namespace Xigua
+namespace xig
 {
 
 	Enviroment::Enviroment(EnvTypes enviroment_type)
@@ -30,7 +30,7 @@ namespace Xigua
 		}
 	}
 
-	DataType* Enviroment::find(std::string variable_name) {
+	data* Enviroment::find(std::string variable_name) {
 		if (defined_variables.find(variable_name) != defined_variables.end())
 			return &defined_variables[variable_name];
 
@@ -43,7 +43,7 @@ namespace Xigua
 		return nullptr;
 	}
 
-	void Enviroment::set(std::string name, DataType value, bool force_here)
+	void Enviroment::set(std::string name, data value, bool force_here)
 	{
 		if (force_here) {
 			defined_variables[name] = value;
@@ -54,7 +54,7 @@ namespace Xigua
 		}
 	}
 
-	std::map<std::string, DataType> Enviroment::get_all_defined_variables() const
+	std::map<std::string, data> Enviroment::get_all_defined_variables() const
 	{
 		return get_defined_variables();
 
@@ -70,7 +70,7 @@ namespace Xigua
 		return parent;
 	};
 
-	std::map<std::string, DataType> Enviroment::get_defined_variables() const
+	std::map<std::string, data> Enviroment::get_defined_variables() const
 	{
 		return defined_variables;
 	};
