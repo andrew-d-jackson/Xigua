@@ -17,7 +17,7 @@ namespace xig
 		namespace Math
 		{
 
-			data less_than(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data less_than(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 				if (!xig::FunctionUtils::all_types_are(arguments, data_type::Number))
@@ -37,7 +37,7 @@ namespace xig
 				return data(data_type::Bool, true);
 			}
 
-			data greater_than(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data greater_than(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 				if (!xig::FunctionUtils::all_types_are(arguments, data_type::Number))
@@ -56,7 +56,7 @@ namespace xig
 				return data(data_type::Bool, true);
 			}
 
-			data equal_to(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data equal_to(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 
@@ -70,7 +70,7 @@ namespace xig
 				return data(data_type::Bool, true);
 			}
 
-			data add(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data add(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 				if (!xig::FunctionUtils::all_types_are(arguments, data_type::Number))
@@ -85,7 +85,7 @@ namespace xig
 				return data(data_type::Number, return_value);
 			}
 
-			data minus(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data minus(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 				if (!xig::FunctionUtils::all_types_are(arguments, data_type::Number))
@@ -100,7 +100,7 @@ namespace xig
 				return data(data_type::Number, return_value);
 			}
 
-			data multiply(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data multiply(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 				if (!xig::FunctionUtils::all_types_are(arguments, data_type::Number))
@@ -115,7 +115,7 @@ namespace xig
 				return data(data_type::Number, return_value);
 			}
 
-			data divide(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data divide(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 				if (!xig::FunctionUtils::all_types_are(arguments, data_type::Number))

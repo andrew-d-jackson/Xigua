@@ -14,21 +14,21 @@
 
 #include "error.hpp"
 
+#include "function.hpp"
+
 namespace xig
 {
 
 	enum class data_type { None, Symbol, Bool, String, Number, Tuple, HashMap, Proc, Function };
 
 	class data;
-	class Enviroment;
+	class enviroment;
 
-	typedef std::function<data(std::vector<data>, Enviroment*, std::vector<std::string>)> xigua_lambda_t;
 
 	class data
 	{
 	protected:
 		data_type my_type;
-		typedef std::map<std::pair<int, int>, std::tuple<xigua_lambda_t, bool>> function_map_t;
 		std::shared_ptr<void> data_pointer;
 
 	public:
@@ -39,6 +39,7 @@ namespace xig
 		data(data_type in_type, bool boolean_data);
 		data(data_type in_type, std::vector<data> list_data);
 		data(data_type in_type, std::map<data, data> map_data);
+		data(data_type in_type, function function_data);
 
 		bool operator==(const data & other) const;
 		bool operator!=(const data & other) const;
@@ -70,12 +71,10 @@ namespace xig
 		bool boolean() const;
 		void boolean(bool boolean);
 
-		function_map_t function_map() const;
-		void function_map(function_map_t in_fmap);
+		function functions() const;
+		void functions(function in_function);
 
-		void set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval);
-		data call_function(std::vector<data> & args, Enviroment * enviroment, std::vector<std::string> function_call_list);
-		data evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list = std::vector<std::string>());
+		data evaluate(enviroment * enviroment, std::vector<std::string> function_call_list = std::vector<std::string>());
 		void print(int indentation = 0);
 	};
 

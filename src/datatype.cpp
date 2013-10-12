@@ -2,7 +2,6 @@
 
 namespace xig
 {
-
 	data::data(data_type in_type)
 	{
 		type(in_type);
@@ -69,6 +68,18 @@ namespace xig
 		}
 		
 	}
+
+	data::data(data_type in_type, function function_data)
+	{
+		type(in_type);
+		if (in_type == data_type::Function){
+			functions(function_data);
+		}  else {
+			std::cout << "Wrong Data Passed to data map_data";
+			exit(1);
+		}
+	}
+
 
 	bool data::operator==(const data & other) const
 	{
@@ -166,7 +177,7 @@ namespace xig
 		} else if (in_type == data_type::Proc){
 			data_pointer = std::shared_ptr<void>(new std::vector<data>());
 		} else if (in_type == data_type::Function){
-			data_pointer = std::shared_ptr<void>(new function_map_t());
+			data_pointer = std::shared_ptr<void>(new function());
 		} else {
 			std::cout << "Something Wrong Passes To Type" << std::endl;
 			exit(1);
@@ -302,98 +313,17 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new bool(in_boolean));
 	}
 
-	data::function_map_t data::function_map() const
+	function data::functions() const
 	{
-		return *(static_cast<function_map_t*>(data_pointer.get()));
+		return *(static_cast<function*>(data_pointer.get()));
+	};
+
+	void data::functions(function in_function)
+	{
+		data_pointer = std::shared_ptr<void>(new function(in_function));
 	}
 
-	void data::function_map(function_map_t in_fmap)
-	{
-		data_pointer = std::shared_ptr<void>(new function_map_t(in_fmap));
-	}
-
-
-	void data::set_function(xigua_lambda_t func, int num_args, int repeating_args, bool should_eval)
-	{
-		auto function_map_copy = function_map();
-		function_map_copy[std::make_pair(num_args, repeating_args)] = std::make_tuple(func, should_eval);
-		function_map(function_map_copy);
-	}
-
-	data data::call_function(std::vector<data> & args, Enviroment * enviroment, std::vector<std::string> function_call_list)
-	{
-		auto function_map_copy = function_map();
-		auto function_to_call = function_map_copy.find(std::make_pair(args.size(), 0));
-
-		if (function_to_call == function_map_copy.end())
-		{
-			for (auto it = function_map_copy.begin(); it != function_map_copy.end(); it++)
-			{
-				if (it->first.first == args.size()){
-					function_to_call = it;
-					for (int i(0); i < it->first.second; i++)
-						args.push_back(data(data_type::Tuple));
-				}
-			}
-		}
-
-		if (function_to_call == function_map_copy.end())
-		{
-			int current_biggest_args_with_repeating = -1;
-			int current_args_limit = args.size() - 1;
-
-			for (auto it = function_map_copy.begin(); it != function_map_copy.end(); it++)
-			{
-				if (it->first.second > 0)
-				{
-					if (it->first.first <= current_args_limit && it->first.first > current_biggest_args_with_repeating)
-					{
-						current_biggest_args_with_repeating = it->first.first;
-						function_to_call = it;
-					}
-				}
-			}
-
-			if (current_biggest_args_with_repeating == -1)
-			{
-				std::cout << "Wrong amount of args passed to function" << std::endl;
-				std::cout << " args passed:" << args.size() << std::endl;
-				for (auto i : args)
-					i.print();
-
-				exit(1);
-			}
-			else
-			{
-				int args_size = function_to_call->first.first;
-				int prev_args_size = args.size();
-				std::vector<data> repeating_data; 
-
-				for (int i(args_size); i < prev_args_size; i++)
-					repeating_data.push_back(args.at(i));
-
-				for (int i(args_size); i < prev_args_size; i++)
-					args.pop_back();
-
-				args.push_back(data(data_type::Tuple, repeating_data));
-			}
-
-		}
-
-		if (std::get<1>(function_to_call->second)) //should evaluate
-		{
-			for (auto & item : args)
-			{
-				if (item.type() == data_type::Proc || item.type() == data_type::Symbol || item.type() == data_type::Tuple)
-					item = item.evaluate(enviroment, function_call_list);
-
-			}
-		}
-
-		return std::get<0>(function_to_call->second)(args, enviroment, function_call_list);
-	}
-
-	data data::evaluate(Enviroment * enviroment, std::vector<std::string> function_call_list)
+	data data::evaluate(enviroment * enviroment, std::vector<std::string> function_call_list)
 	{
 		if (type() == data_type::Symbol)
 		{
@@ -445,7 +375,7 @@ namespace xig
 				auto lastElement = process_copy.end();
 				std::vector<data> functionArgs(firstElement, lastElement);
 
-				return proc().at(0).call_function(functionArgs, enviroment, function_call_list);
+				return proc().at(0).functions().call(functionArgs, enviroment, function_call_list);
 			}
 			else
 			{

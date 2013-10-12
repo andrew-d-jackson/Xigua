@@ -18,7 +18,7 @@ namespace xig
 		namespace Containers
 		{
 
-			data at(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data at(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() == data_type::Number && inputs.at(1).type() == data_type::Tuple) {
 					if (inputs.at(0).number() < 0  || inputs.at(0).number() > inputs.at(1).tuple().size() - 1)
@@ -38,7 +38,7 @@ namespace xig
 				return data_type::None;
 			}
 
-			data size(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data size(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() == data_type::Tuple)
 					return data(data_type::Number, (long double)inputs.at(0).tuple().size());

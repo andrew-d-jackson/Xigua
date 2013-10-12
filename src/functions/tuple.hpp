@@ -20,7 +20,7 @@ namespace xig
 		namespace Tuple
 		{
 
-			data join(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data join(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 
@@ -38,7 +38,7 @@ namespace xig
 				return data(data_type::Tuple, return_value);
 			}
 
-			data unique(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data unique(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != data_type::Tuple)
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
@@ -51,7 +51,7 @@ namespace xig
 				return data(data_type::Tuple, return_value);
 			}
 
-			data first(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data first(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != data_type::Tuple)
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
@@ -62,7 +62,7 @@ namespace xig
 				return inputs.at(0).tuple().at(0);
 			}
 
-			data last(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data last(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != data_type::Tuple)
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
@@ -73,7 +73,7 @@ namespace xig
 				return inputs.at(0).tuple().at(inputs.at(0).tuple().size()-1);
 			}
 
-			data range(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data range(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (!FunctionUtils::all_types_are(inputs, data_type::Number))
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);

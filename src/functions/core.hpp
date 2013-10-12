@@ -17,18 +17,18 @@ namespace xig
 		namespace Core
 		{
 
-			data define(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data define(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
-				enviroment->set(inputs.at(0).string(), inputs.at(1).evaluate(enviroment, function_call_list));
+				execution_enviroment->set(inputs.at(0).string(), inputs.at(1).evaluate(execution_enviroment, function_call_list));
 				return data(data_type::None);
 			}
 
-			data create_lambda(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data create_lambda(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
-				Enviroment nenv(EnvTypes::Function, enviroment);
-				data return_data(data_type::Function);
+				enviroment nenv(env_type::Function, execution_enviroment);
+				//data return_data(data_type::Function);
 
-				int repeating = 0;
+				bool repeating = false;
 
 				for (auto item : inputs.at(0).tuple())
 				{
@@ -36,11 +36,11 @@ namespace xig
 						std::cout << "non-symbol passed as function argument name" << std::endl;
 						exit(1);
 					} else if (item.symbol() == "&") {
-						repeating = 1;
+						repeating = true;
 					}
 				}
 
-				xigua_lambda_t fn = [nenv, inputs](std::vector<data> fn_inputs, Enviroment* fn_enviroment, std::vector<std::string> function_call_list)mutable->data
+				xigua_lambda_t fn = [nenv, inputs](std::vector<data> fn_inputs, enviroment* fn_enviroment, std::vector<std::string> function_call_list)mutable->data
 				{
 					short missing = 0;
 					for (unsigned int i(0); i < inputs.at(0).tuple().size(); ++i)
@@ -55,12 +55,12 @@ namespace xig
 					return inputs.at(1).evaluate(&nenv, function_call_list);
 				};
 
-				return_data.set_function(fn, inputs.at(0).tuple().size()-(repeating*2), repeating, true);
+				data return_data(data_type::Function, function(method(inputs.at(0).tuple().size()-((int)repeating*2), repeating, fn)));
 
 				return return_data;
 			}
 
-			data let_expression(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data let_expression(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != data_type::HashMap)
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A HashMap", function_call_list);
@@ -69,7 +69,7 @@ namespace xig
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Process", function_call_list);
 
 
-				Enviroment container_enviroment(EnvTypes::Let, enviroment);
+				enviroment container_enviroment(env_type::Let, execution_enviroment);
 				for (auto map_pair : inputs.at(0).hash_map()) {
 
 					if (map_pair.first.type() != data_type::Symbol)
@@ -81,28 +81,28 @@ namespace xig
 				return inputs.at(1).evaluate(&container_enviroment, function_call_list);
 			}
 
-			data if_expression(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data if_expression(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).evaluate(enviroment).boolean())
-					return inputs.at(1).evaluate(enviroment, function_call_list);
+				if (inputs.at(0).evaluate(execution_enviroment).boolean())
+					return inputs.at(1).evaluate(execution_enviroment, function_call_list);
 				else
-					return inputs.at(2).evaluate(enviroment, function_call_list);
+					return inputs.at(2).evaluate(execution_enviroment, function_call_list);
 			}
 
-			data print_line(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data print_line(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				std::cout << inputs.at(0).as_string() << std::endl;
 				return data(data_type::None);
 			}
 
-			data get_input(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data get_input(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				std::string str;
 				std::cin >> str;
 				return data(data_type::String, str);
 			}
 
-			data map(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data map(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 2);
 
@@ -123,13 +123,13 @@ namespace xig
 						temp_proc.push_back(arguments.at(j).tuple().at(i));
 
 					data temp_function(data_type::Proc, temp_proc);
-					return_values.push_back(temp_function.evaluate(enviroment, function_call_list));
+					return_values.push_back(temp_function.evaluate(execution_enviroment, function_call_list));
 				}
 
 				return data(data_type::Tuple, return_values);
 			}
 
-			data apply(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data apply(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != data_type::Tuple)
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
@@ -143,10 +143,10 @@ namespace xig
 					temp_proc.push_back(data);
 
 				data temp_function(data_type::Proc, temp_proc);
-				return temp_function.evaluate(enviroment, function_call_list);
+				return temp_function.evaluate(execution_enviroment, function_call_list);
 			}
 
-			data partial(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data partial(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				if (inputs.at(0).type() != data_type::Function)
 					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Function", function_call_list);
@@ -156,16 +156,15 @@ namespace xig
 				data captured_function = arguments.at(0);
 				std::vector<data> captured_function_args(arguments.begin()+1, arguments.end());
 
-				xigua_lambda_t fn = [captured_function, captured_function_args](std::vector<data> fn_inputs, Enviroment* fn_enviroment, std::vector<std::string> fn_function_call_list)mutable -> data
+				xigua_lambda_t fn = [captured_function, captured_function_args](std::vector<data> fn_inputs, enviroment* fn_enviroment, std::vector<std::string> fn_function_call_list)mutable -> data
 				{
 					auto fn_arguments = xig::FunctionUtils::parse_arguments(fn_inputs, 0);
 					
 					captured_function_args.insert(captured_function_args.end(), fn_arguments.begin(), fn_arguments.end());
-					return captured_function.call_function(captured_function_args, fn_enviroment, fn_function_call_list);
+					return captured_function.functions().call(captured_function_args, fn_enviroment, fn_function_call_list);
 				};
 
-				data return_function(data_type::Function);
-				return_function.set_function(fn, 0, 1, true);
+				data return_function(data_type::Function, function(method(0, true, fn)));
 				return return_function;
 			}
 

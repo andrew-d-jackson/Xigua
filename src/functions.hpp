@@ -12,98 +12,71 @@
 
 namespace xig
 {
-	Enviroment get_global_enviroment()
+	enviroment get_global_enviroment()
 	{
-		Enviroment enviroment(EnvTypes::Namespace);
+		enviroment enviroment(env_type::Namespace);
 
 	// core
 
-		enviroment.defined_variables["="] = data(data_type::Function);
-		enviroment.defined_variables["="].set_function(&Functions::Core::define, 2, 0, false);
+		enviroment.set("=", {data_type::Function, function(method(2, false, false, &Functions::Core::define))}, true);
 
-		enviroment.defined_variables["fn"] = data(data_type::Function);
-		enviroment.defined_variables["fn"].set_function(&Functions::Core::create_lambda, 2, 0, false);
+		enviroment.set("fn", {data_type::Function, function(method(2, false, false, &Functions::Core::create_lambda))}, true);
 
-		enviroment.defined_variables["if"] = data(data_type::Function);
-		enviroment.defined_variables["if"].set_function(&Functions::Core::if_expression, 3, 0, false);
+		enviroment.set("if", {data_type::Function, function(method(3, false, false, &Functions::Core::if_expression))}, true);
 
-		enviroment.defined_variables["let"] = data(data_type::Function);
-		enviroment.defined_variables["let"].set_function(&Functions::Core::let_expression, 2, 0, false);
+		enviroment.set("let", {data_type::Function, function(method(2, false, false, &Functions::Core::let_expression))}, true);
 
-		enviroment.defined_variables["println"] = data(data_type::Function);
-		enviroment.defined_variables["println"].set_function(&Functions::Core::print_line, 1, 0, true);
+		enviroment.set("println", {data_type::Function, function(method(1, false, &Functions::Core::print_line))}, true);
 
-		enviroment.defined_variables["get-input"] = data(data_type::Function);
-		enviroment.defined_variables["get-input"].set_function(&Functions::Core::get_input, 0, 0, true);
+		enviroment.set("get-input", {data_type::Function, function(method(0, false, &Functions::Core::get_input))}, true);
 
-		enviroment.defined_variables["apply"] = data(data_type::Function);
-		enviroment.defined_variables["apply"].set_function(&Functions::Core::apply, 2, 0, true);
+		enviroment.set("apply", {data_type::Function, function(method(2, false, &Functions::Core::apply))}, true);
 
-		enviroment.defined_variables["map"] = data(data_type::Function);
-		enviroment.defined_variables["map"].set_function(&Functions::Core::map, 2, 1, true);
+		enviroment.set("map", {data_type::Function, function(method(2, true, &Functions::Core::map))}, true);
 
-		enviroment.defined_variables["part"] = data(data_type::Function);
-		enviroment.defined_variables["part"].set_function(&Functions::Core::partial, 2, 1, true);
+		enviroment.set("part", {data_type::Function, function(method(2, true, &Functions::Core::partial))}, true);
 
 	// math
 
-		enviroment.defined_variables["+"] = data(data_type::Function);
-		enviroment.defined_variables["+"].set_function(&Functions::Math::add, 2, 1, true);
+		enviroment.set("+", {data_type::Function, function(method(2, true, &Functions::Math::add))}, true);
 
-		enviroment.defined_variables["-"] = data(data_type::Function);
-		enviroment.defined_variables["-"].set_function(&Functions::Math::minus, 2, 1, true);
+		enviroment.set("-", {data_type::Function, function(method(2, true, &Functions::Math::minus))}, true);
 
-		enviroment.defined_variables["*"] = data(data_type::Function);
-		enviroment.defined_variables["*"].set_function(&Functions::Math::multiply, 2, 1, true);
-		
-		enviroment.defined_variables["/"] = data(data_type::Function);
-		enviroment.defined_variables["/"].set_function(&Functions::Math::divide, 2, 1, true);
+		enviroment.set("*", {data_type::Function, function(method(2, true, &Functions::Math::multiply))}, true);
 
-		enviroment.defined_variables["<"] = data(data_type::Function);
-		enviroment.defined_variables["<"].set_function(&Functions::Math::less_than, 2, 1, true);
+		enviroment.set("/", {data_type::Function, function(method(2, true, &Functions::Math::divide))}, true);
 
-		enviroment.defined_variables[">"] = data(data_type::Function);
-		enviroment.defined_variables[">"].set_function(&Functions::Math::greater_than, 2, 1, true);
-		
-		enviroment.defined_variables["=="] = data(data_type::Function);
-		enviroment.defined_variables["=="].set_function(&Functions::Math::equal_to, 2, 1, true);
+		enviroment.set(">", {data_type::Function, function(method(2, true, &Functions::Math::greater_than))}, true);
+
+		enviroment.set("<", {data_type::Function, function(method(2, true, &Functions::Math::less_than))}, true);
+
+		enviroment.set("==", {data_type::Function, function(method(2, true, &Functions::Math::equal_to))}, true);
 
 	//string
 
-		enviroment.defined_variables["string"] = data(data_type::Function);
-		enviroment.defined_variables["string"].set_function(&Functions::String::concatinate, 1, 1, true);
+		enviroment.set("string", {data_type::Function, function(method(1, true, &Functions::String::concatinate))}, true);
 
 	//boolean
 
-		enviroment.defined_variables["not"] = data(data_type::Function);
-		enviroment.defined_variables["not"].set_function(&Functions::Boolean::boolean_not, 1, 0, true);
+		enviroment.set("not", {data_type::Function, function(method(1, false, &Functions::Boolean::boolean_not))}, true);
 
 	//tuple
 
-		enviroment.defined_variables["join"] = data(data_type::Function);
-		enviroment.defined_variables["join"].set_function(&Functions::Tuple::join, 2, 1, true);
+		enviroment.set("join", {data_type::Function, function(method(2, true, &Functions::Tuple::join))}, true);
 
-		enviroment.defined_variables["unique"] = data(data_type::Function);
-		enviroment.defined_variables["unique"].set_function(&Functions::Tuple::unique, 1, 0, true);
+		enviroment.set("unique", {data_type::Function, function(method(1, false, &Functions::Tuple::unique))}, true);
 
-		enviroment.defined_variables["first"] = data(data_type::Function);
-		enviroment.defined_variables["first"].set_function(&Functions::Tuple::first, 1, 0, true);
-	
-		enviroment.defined_variables["last"] = data(data_type::Function);
-		enviroment.defined_variables["last"].set_function(&Functions::Tuple::last, 1, 0, true);
+		enviroment.set("first", {data_type::Function, function(method(1, false, &Functions::Tuple::first))}, true);
 
-		enviroment.defined_variables["range"] = data(data_type::Function);
-		enviroment.defined_variables["range"].set_function(&Functions::Tuple::range, 3, 0, true);
+		enviroment.set("last", {data_type::Function, function(method(1, false, &Functions::Tuple::last))}, true);
+
+		enviroment.set("range", {data_type::Function, function(method(3, false, &Functions::Tuple::range))}, true);
 
 	//containers
 
-		enviroment.defined_variables["at"] = data(data_type::Function);
-		enviroment.defined_variables["at"].set_function(&Functions::Containers::at, 2, 0, true);
-	
-		enviroment.defined_variables["size"] = data(data_type::Function);
-		enviroment.defined_variables["size"].set_function(&Functions::Containers::size, 1, 0, true);
+		enviroment.set("at", {data_type::Function, function(method(2, false, &Functions::Containers::at))}, true);
 
-
+		enviroment.set("size", {data_type::Function, function(method(1, false, &Functions::Containers::size))}, true);
 
 		return enviroment;
 	}

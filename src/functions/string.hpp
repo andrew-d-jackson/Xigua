@@ -19,7 +19,7 @@ namespace xig
 		namespace String
 		{
 
-			data concatinate(std::vector<data> inputs, Enviroment* enviroment, std::vector<std::string> function_call_list)
+			data concatinate(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
 				auto arguments = xig::FunctionUtils::parse_arguments(inputs, 1);
 
