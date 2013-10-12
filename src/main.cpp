@@ -4,13 +4,12 @@
 #include "enviroment.hpp"
 #include "functions.hpp"
 #include "parser.hpp"
-#include "helpers.hpp"
 #include "error.hpp"
 
 
 int main(int argc, char *argv [])
 {
-	xig::Parser parser;
+	xig::parser parser;
 	xig::Enviroment enviroment = xig::get_global_enviroment();
 
 	try {

@@ -1,17 +1,16 @@
 #include "parser.hpp"
 
 
-namespace xig
-{
+namespace xig {
 
-	data Parser::from_file(const std::string file_location) const {
+	data parser::from_file(const std::string file_location) const {
 
 		std::string source_code = read_file(file_location);
 		return from_string(source_code);
 
 	}
 
-	data Parser::from_string(const std::string source_code) const {
+	data parser::from_string(const std::string source_code) const {
 
 		std::vector<std::string> string_list = source_to_string_list(source_code);
 		validate_string_list(string_list);
@@ -19,7 +18,7 @@ namespace xig
 
 	}
 
-	std::string Parser::read_file(const std::string file_location) const {
+	std::string parser::read_file(const std::string file_location) const {
 
 		std::ifstream file_stream(file_location.c_str());
 		std::stringstream string_buffer;
@@ -28,7 +27,7 @@ namespace xig
 
 	}
 
-	std::vector<std::string> Parser::source_to_string_list(const std::string source_code) const {
+	std::vector<std::string> parser::source_to_string_list(const std::string source_code) const {
 
 		std::vector<std::string> parsed_list;
 		bool is_reading_string = false;
@@ -123,7 +122,8 @@ namespace xig
 
 	}
 
-	void Parser::validate_string_list(const std::vector<std::string> string_list) const	{
+	void parser::validate_string_list(const std::vector<std::string> string_list) const	{
+
 		int closing = 0;
 		int opening = 0;
 
@@ -138,7 +138,7 @@ namespace xig
 			throw xig::Error(xig::ErrorTypes::UNMATCHING_BRACKETS, "Amount Of Opening And Closing Brackets Do Not Match", {});
 	}
 
-	data Parser::string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type) const {
+	data parser::string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type) const {
 
 		std::vector<data> current_data;
 		for (unsigned int index = 0; index < string_list.size(); ++index)
@@ -179,7 +179,7 @@ namespace xig
 
 	}
 
-	data Parser::string_to_data_type(const std::string input_string) const {
+	data parser::string_to_data_type(const std::string input_string) const {
 
 		if (is_number(input_string))
 		{
@@ -207,6 +207,20 @@ namespace xig
 			return data;
 		}
 
+	}
+
+	bool parser::is_number(std::string string) const {
+		
+		if (string.size() < 1)
+			return false;
+			
+		for (char c : string) {
+			if (!isdigit(c) && c != '.')
+				return false;
+		}
+
+		return true;
+		
 	}
 
 }
