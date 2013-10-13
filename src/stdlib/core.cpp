@@ -49,17 +49,17 @@ namespace stdlib {
 	data let_expression(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (inputs.at(0).type() != data_type::HashMap)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A HashMap", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A HashMap", function_call_list);
 
 		if (inputs.at(1).type() != data_type::Proc)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Process", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Process", function_call_list);
 
 
 		enviroment container_enviroment(env_type::Let, execution_enviroment);
 		for (auto map_pair : inputs.at(0).hash_map()) {
 
 			if (map_pair.first.type() != data_type::Symbol)
-				throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Symbol", function_call_list);
+				throw xig::error(xig::error_types::invalid_arguments, "Not A Symbol", function_call_list);
 
 			container_enviroment.set(map_pair.first.symbol(), evaluate(container_enviroment, map_pair.second, function_call_list), true);
 		}
@@ -96,7 +96,7 @@ namespace stdlib {
 			int tuple_sizes = arguments.at(0).tuple().size();
 			for (unsigned int i(1); i < arguments.size() - 1; i++)	{
 				if (arguments.at(i).tuple().size() != tuple_sizes)
-					throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Tuple Lengths Are Different", function_call_list);
+					throw xig::error(xig::error_types::invalid_arguments, "Tuple Lengths Are Different", function_call_list);
 			}
 		}
 
@@ -118,10 +118,10 @@ namespace stdlib {
 	data apply(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (inputs.at(0).type() != data_type::Tuple)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Tuple", function_call_list);
 
 		if (inputs.at(1).type() != data_type::Function)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Function", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Function", function_call_list);
 
 		std::vector<data> temp_proc = { inputs.at(1) };
 
@@ -135,7 +135,7 @@ namespace stdlib {
 	data partial(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (inputs.at(0).type() != data_type::Function)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Function", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Function", function_call_list);
 
 		auto arguments = utils::parse_arguments(inputs, 2);
 		

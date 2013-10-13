@@ -7,7 +7,7 @@ namespace stdlib {
 	{
 		auto arguments = utils::parse_arguments(inputs, 2);
 		if (!utils::all_types_are(arguments, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Number", function_call_list);
 
 
 		long double previous_number = arguments.at(0).number();
@@ -27,7 +27,7 @@ namespace stdlib {
 	{
 		auto arguments = utils::parse_arguments(inputs, 2);
 		if (!utils::all_types_are(arguments, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw error(error_types::invalid_arguments, "Not A Number", function_call_list);
 
 		long double previous_number = arguments.at(0).number();
 		for (unsigned int i(1); i < arguments.size(); i++)
@@ -60,7 +60,7 @@ namespace stdlib {
 	{
 		auto arguments = utils::parse_arguments(inputs, 2);
 		if (!utils::all_types_are(arguments, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Number", function_call_list);
 
 		long double return_value = arguments.at(0).number();
 		for (unsigned int i(1); i < arguments.size(); i++)
@@ -75,7 +75,7 @@ namespace stdlib {
 	{
 		auto arguments = utils::parse_arguments(inputs, 2);
 		if (!utils::all_types_are(arguments, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Number", function_call_list);
 
 		long double return_value = arguments.at(0).number();
 		for (unsigned int i(1); i < arguments.size(); i++)
@@ -90,7 +90,7 @@ namespace stdlib {
 	{
 		auto arguments = utils::parse_arguments(inputs, 2);
 		if (!utils::all_types_are(arguments, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Number", function_call_list);
 
 		long double return_value = arguments.at(0).number();
 		for (unsigned int i(1); i < arguments.size(); i++)
@@ -105,7 +105,7 @@ namespace stdlib {
 	{
 		auto arguments = utils::parse_arguments(inputs, 2);
 		if (!utils::all_types_are(arguments, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Number", function_call_list);
 
 		long double return_value = arguments.at(0).number();
 		for (unsigned int i(1); i < arguments.size(); i++)

@@ -135,7 +135,7 @@ namespace xig {
 		}
 
 		if (opening != closing)
-			throw xig::Error(xig::ErrorTypes::UNMATCHING_BRACKETS, "Amount Of Opening And Closing Brackets Do Not Match", {});
+			throw xig::error(xig::error_types::unmatching_brackets, "Amount Of Opening And Closing Brackets Do Not Match", {});
 	}
 
 	data parser::string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type) const {

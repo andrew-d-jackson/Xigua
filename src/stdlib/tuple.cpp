@@ -25,7 +25,7 @@ namespace stdlib {
 	data unique(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (inputs.at(0).type() != data_type::Tuple)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Tuple", function_call_list);
 
 		auto initial_tuple = inputs.at(0).tuple();
 		std::sort(initial_tuple.begin(), initial_tuple.end());
@@ -38,10 +38,10 @@ namespace stdlib {
 	data first(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (inputs.at(0).type() != data_type::Tuple)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Tuple", function_call_list);
 
 		if (inputs.at(0).tuple().size() < 1)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not In Range", function_call_list);
 
 		return inputs.at(0).tuple().at(0);
 	}
@@ -49,10 +49,10 @@ namespace stdlib {
 	data last(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (inputs.at(0).type() != data_type::Tuple)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Tuple", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Tuple", function_call_list);
 
 		if (inputs.at(0).tuple().size() < 1)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not In Range", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not In Range", function_call_list);
 
 		return inputs.at(0).tuple().at(inputs.at(0).tuple().size()-1);
 	}
@@ -60,18 +60,18 @@ namespace stdlib {
 	data range(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		if (!utils::all_types_are(inputs, data_type::Number))
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Number", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Not A Number", function_call_list);
 
 		long double start = inputs.at(0).number();
 		long double end = inputs.at(1).number();
 		long double step = inputs.at(2).number();
 
 		if (start > end && step >= 0)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Range Invalid", function_call_list);
 		else if (start < end && step <= 0)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Range Invalid", function_call_list);
 		else if (step == 0 || start == end)
-			throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Range Invalid", function_call_list);
+			throw xig::error(xig::error_types::invalid_arguments, "Range Invalid", function_call_list);
 
 
 		std::vector<data> return_value;

@@ -14,8 +14,8 @@ int main(int argc, char *argv [])
 
 	try {
 		xig::evaluate(enviroment, parser.from_file(argv[1]));
-	} catch (xig::Error e) {
-		e.print();
+	} catch (xig::error e) {
+		e.print_default_message();
 	}
 	
 }
