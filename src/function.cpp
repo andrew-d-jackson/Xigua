@@ -2,7 +2,7 @@
 
 
 #include "evaluate.hpp"
-#include "datatype.hpp"
+#include "data.hpp"
 
 namespace xig {
 

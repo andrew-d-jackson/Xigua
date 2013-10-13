@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-#include "datatype.hpp"
+#include "data.hpp"
 #include "error.hpp"
 
 

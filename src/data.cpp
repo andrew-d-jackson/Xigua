@@ -1,4 +1,4 @@
-#include "datatype.hpp"
+#include "data.hpp"
 
 namespace xig
 {

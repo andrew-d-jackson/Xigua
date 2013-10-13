@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-#include "datatype.hpp"
+#include "data.hpp"
 
 
 namespace xig

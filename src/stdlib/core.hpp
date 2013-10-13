@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 
-#include "../datatype.hpp"
+#include "../data.hpp"
 #include "../enviroment.hpp"
 #include "../error.hpp"
 #include "../evaluate.hpp"

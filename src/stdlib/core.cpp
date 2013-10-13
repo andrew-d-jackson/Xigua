@@ -12,7 +12,6 @@ namespace stdlib {
 	data create_lambda(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 	{
 		enviroment nenv(env_type::Function, execution_enviroment);
-		//data return_data(data_type::Function);
 
 		bool repeating = false;
 

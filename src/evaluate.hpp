@@ -1,6 +1,6 @@
 #pragma once
 
-#include "datatype.hpp"
+#include "data.hpp"
 #include "enviroment.hpp"
 
 namespace xig {
