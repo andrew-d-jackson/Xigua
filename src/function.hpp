@@ -20,10 +20,6 @@ namespace xig {
 
 		data call(std::vector<data> arguments, enviroment * enviroment, std::vector<std::string> function_call_list) const;
 
-		bool operator==(method other) const;
-		bool operator!=(method other) const;
-		bool operator<(method other) const;
-
 		int amount_of_arguments() const;
 		bool has_repeating_arguments() const;
 
@@ -32,6 +28,10 @@ namespace xig {
 		bool repeating;
 		bool should_evaluate;
 		xigua_lambda_t lambda;
+	};
+
+	struct method_set_comparator {
+		bool operator() (const method & a, const method & b);
 	};
 
 	class function {
@@ -43,7 +43,7 @@ namespace xig {
 			data call(std::vector<data> & args, enviroment * enviroment, std::vector<std::string> function_call_list);
 
 		private:
-			std::set<method> methods;
+			std::set<method, method_set_comparator> methods;
 	};
 
 }

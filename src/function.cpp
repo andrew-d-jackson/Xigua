@@ -49,31 +49,21 @@ namespace xig {
 
 	}
 
-
-	bool method::operator==(method other) const {
-		return (amount_of_args == other.amount_of_args && repeating == other.repeating);
-	}
-
-	bool method::operator!=(method other) const {
-		return !(*this == other);
-	}
-
-	bool method::operator<(method other) const {
-		if (amount_of_args < other.amount_of_args)
-			return true;
-		else if (repeating < other.repeating)
-			return true;
-		return false;
-	}
-
 	int method::amount_of_arguments() const {
 		return amount_of_args;
-	};
+	}
 
 	bool method::has_repeating_arguments() const {
 		return repeating;
 	}
 
+	bool method_set_comparator::operator() (const method & a, const method & b) {
+		if (a.amount_of_arguments() < b.amount_of_arguments())
+			return true;
+		if (a.has_repeating_arguments() < b.has_repeating_arguments())
+			return true;
+		return false;
+	}
 
 	function::function(method in_method) {
 		add_method(in_method);
