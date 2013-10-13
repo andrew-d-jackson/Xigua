@@ -4,6 +4,7 @@
 #include "functions.hpp"
 #include "parser.hpp"
 #include "error.hpp"
+#include "evaluate.hpp"
 
 
 int main(int argc, char *argv [])
@@ -12,7 +13,7 @@ int main(int argc, char *argv [])
 	xig::enviroment enviroment = xig::get_global_enviroment();
 
 	try {
-		parser.from_file(argv[1]).evaluate(&enviroment);
+		xig::evaluate(enviroment, parser.from_file(argv[1]));
 	} catch (xig::Error e) {
 		e.print();
 	}

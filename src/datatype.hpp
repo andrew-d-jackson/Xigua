@@ -74,7 +74,6 @@ namespace xig
 		function functions() const;
 		void functions(function in_function);
 
-		data evaluate(enviroment * enviroment, std::vector<std::string> function_call_list = std::vector<std::string>());
 		void print(int indentation = 0);
 	};
 

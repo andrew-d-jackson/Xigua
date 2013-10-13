@@ -9,6 +9,7 @@
 #include "../enviroment.hpp"
 #include "../functionutils.hpp"
 #include "../error.hpp"
+#include "../evaluate.hpp"
 
 namespace xig
 {
@@ -19,7 +20,7 @@ namespace xig
 
 			data define(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
-				execution_enviroment->set(inputs.at(0).string(), inputs.at(1).evaluate(execution_enviroment, function_call_list));
+				execution_enviroment->set(inputs.at(0).string(), evaluate(*execution_enviroment, inputs.at(1), function_call_list));
 				return data(data_type::None);
 			}
 
@@ -52,7 +53,7 @@ namespace xig
 						}
 					}
 
-					return inputs.at(1).evaluate(&nenv, function_call_list);
+					return evaluate(nenv, inputs.at(1), function_call_list);
 				};
 
 				data return_data(data_type::Function, function(method(inputs.at(0).tuple().size()-((int)repeating*2), repeating, fn)));
@@ -75,18 +76,18 @@ namespace xig
 					if (map_pair.first.type() != data_type::Symbol)
 						throw xig::Error(xig::ErrorTypes::INVALID_ARGS, "Not A Symbol", function_call_list);
 
-					container_enviroment.set(map_pair.first.symbol(), map_pair.second.evaluate(&container_enviroment, function_call_list), true);
+					container_enviroment.set(map_pair.first.symbol(), evaluate(container_enviroment, map_pair.second, function_call_list), true);
 				}
 
-				return inputs.at(1).evaluate(&container_enviroment, function_call_list);
+				return evaluate(container_enviroment, inputs.at(1), function_call_list);
 			}
 
 			data if_expression(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
 			{
-				if (inputs.at(0).evaluate(execution_enviroment).boolean())
-					return inputs.at(1).evaluate(execution_enviroment, function_call_list);
+				if (evaluate(*execution_enviroment, inputs.at(0)).boolean())
+					return evaluate(*execution_enviroment, inputs.at(1), function_call_list);
 				else
-					return inputs.at(2).evaluate(execution_enviroment, function_call_list);
+					return evaluate(*execution_enviroment, inputs.at(2), function_call_list);
 			}
 
 			data print_line(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)
@@ -123,7 +124,7 @@ namespace xig
 						temp_proc.push_back(arguments.at(j).tuple().at(i));
 
 					data temp_function(data_type::Proc, temp_proc);
-					return_values.push_back(temp_function.evaluate(execution_enviroment, function_call_list));
+					return_values.push_back(evaluate(*execution_enviroment, temp_function, function_call_list));
 				}
 
 				return data(data_type::Tuple, return_values);
@@ -143,7 +144,7 @@ namespace xig
 					temp_proc.push_back(data);
 
 				data temp_function(data_type::Proc, temp_proc);
-				return temp_function.evaluate(execution_enviroment, function_call_list);
+				return evaluate(*execution_enviroment, temp_function, function_call_list);
 			}
 
 			data partial(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list)

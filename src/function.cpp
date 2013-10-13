@@ -1,6 +1,7 @@
 #include "function.hpp"
 
 
+#include "evaluate.hpp"
 #include "datatype.hpp"
 
 namespace xig {
@@ -32,7 +33,7 @@ namespace xig {
 		if (should_evaluate) {
 			for (auto & item : arguments) {
 				if (item.type() == data_type::Proc || item.type() == data_type::Symbol || item.type() == data_type::Tuple || item.type() == data_type::HashMap)
-					item = item.evaluate(enviroment, function_call_list);
+					item = evaluate(*enviroment, item, function_call_list);
 			}
 		}
 
