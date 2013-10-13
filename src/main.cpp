@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "enviroment.hpp"
-#include "functions.hpp"
+#include "stdlib.hpp"
 #include "parser.hpp"
 #include "error.hpp"
 #include "evaluate.hpp"

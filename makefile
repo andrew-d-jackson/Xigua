@@ -1,4 +1,4 @@
-CPP_FILES := $(wildcard src/*.cpp)
+CPP_FILES := $(wildcard src/*.cpp) $(wildcard src/stdlib/*.cpp)
 
 compile: $(CPP_FILES)
 	g++ -std=c++11 $(CPP_FILES) -o xigua
