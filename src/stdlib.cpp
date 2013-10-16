@@ -7,66 +7,65 @@ namespace xig
 		enviroment enviroment(env_type::Namespace);
 
 	// core
+		enviroment.set("=", data(data_type::Function, function(stdlib::define())));
 
-		enviroment.set("=", {data_type::Function, function(method(2, false, false, &stdlib::define))}, true);
+		enviroment.set("fn", data(data_type::Function, function(stdlib::create_lambda())));
 
-		enviroment.set("fn", {data_type::Function, function(method(2, false, false, &stdlib::create_lambda))}, true);
+		enviroment.set("if", data(data_type::Function, function(stdlib::if_expression())));
 
-		enviroment.set("if", {data_type::Function, function(method(3, false, false, &stdlib::if_expression))}, true);
+		enviroment.set("let", data(data_type::Function, function(stdlib::let_expression())));
 
-		enviroment.set("let", {data_type::Function, function(method(2, false, false, &stdlib::let_expression))}, true);
+		enviroment.set("println", data(data_type::Function, function(stdlib::print_line())));
 
-		enviroment.set("println", {data_type::Function, function(method(1, false, &stdlib::print_line))}, true);
+		enviroment.set("get-input", data(data_type::Function, function(stdlib::get_input())));
 
-		enviroment.set("get-input", {data_type::Function, function(method(0, false, &stdlib::get_input))}, true);
+		enviroment.set("apply", data(data_type::Function, function(stdlib::apply())));
 
-		enviroment.set("apply", {data_type::Function, function(method(2, false, &stdlib::apply))}, true);
+		enviroment.set("map", data(data_type::Function, function(stdlib::map())));
 
-		enviroment.set("map", {data_type::Function, function(method(2, true, &stdlib::map))}, true);
-
-		enviroment.set("part", {data_type::Function, function(method(2, true, &stdlib::partial))}, true);
+		enviroment.set("part", data(data_type::Function, function(stdlib::partial())));
 
 	// math
 
-		enviroment.set("+", {data_type::Function, function(method(2, true, &stdlib::add))}, true);
+		enviroment.set("+", data(data_type::Function, function(stdlib::add())));
 
-		enviroment.set("-", {data_type::Function, function(method(2, true, &stdlib::minus))}, true);
+		enviroment.set("-", data(data_type::Function, function(stdlib::minus())));
 
-		enviroment.set("*", {data_type::Function, function(method(2, true, &stdlib::multiply))}, true);
+		enviroment.set("/", data(data_type::Function, function(stdlib::divide())));
 
-		enviroment.set("/", {data_type::Function, function(method(2, true, &stdlib::divide))}, true);
+		enviroment.set("*", data(data_type::Function, function(stdlib::multiply())));
 
-		enviroment.set(">", {data_type::Function, function(method(2, true, &stdlib::greater_than))}, true);
+		enviroment.set(">", data(data_type::Function, function(stdlib::greater_than())));
 
-		enviroment.set("<", {data_type::Function, function(method(2, true, &stdlib::less_than))}, true);
+		enviroment.set("<", data(data_type::Function, function(stdlib::less_than())));
 
-		enviroment.set("==", {data_type::Function, function(method(2, true, &stdlib::equal_to))}, true);
-
+		enviroment.set("==", data(data_type::Function, function(stdlib::equal_to())));
+	
 	//string
 
-		enviroment.set("string", {data_type::Function, function(method(1, true, &stdlib::concatinate))}, true);
+		enviroment.set("string", data(data_type::Function, function(stdlib::concatinate())));
 
 	//boolean
 
-		enviroment.set("not", {data_type::Function, function(method(1, false, &stdlib::boolean_not))}, true);
+		enviroment.set("not", data(data_type::Function, function(stdlib::boolean_not())));
 
 	//tuple
 
-		enviroment.set("join", {data_type::Function, function(method(2, true, &stdlib::join))}, true);
+		enviroment.set("join", data(data_type::Function, function(stdlib::join())));
 
-		enviroment.set("unique", {data_type::Function, function(method(1, false, &stdlib::unique))}, true);
+		enviroment.set("unique", data(data_type::Function, function(stdlib::unique())));
 
-		enviroment.set("first", {data_type::Function, function(method(1, false, &stdlib::first))}, true);
+		enviroment.set("first", data(data_type::Function, function(stdlib::first())));
 
-		enviroment.set("last", {data_type::Function, function(method(1, false, &stdlib::last))}, true);
+		enviroment.set("last", data(data_type::Function, function(stdlib::last())));
 
-		enviroment.set("range", {data_type::Function, function(method(3, false, &stdlib::range))}, true);
+		enviroment.set("range", data(data_type::Function, function(stdlib::range())));
 
 	//containers
 
-		enviroment.set("at", {data_type::Function, function(method(2, false, &stdlib::at))}, true);
+		enviroment.set("at", data(data_type::Function, function(stdlib::at())));
 
-		enviroment.set("size", {data_type::Function, function(method(1, false, &stdlib::size))}, true);
+		enviroment.set("size", data(data_type::Function, function(stdlib::size())));
 
 		return enviroment;
 	}

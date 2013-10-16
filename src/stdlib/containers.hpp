@@ -11,8 +11,42 @@
 namespace xig {
 namespace stdlib {
 
-	extern data at(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list);
-	
-	extern data size(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list);
+	class at : public method {
+		int amount_of_arguments() const { return 2; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() == data_type::Number && args.at(1).type() == data_type::Tuple) {
+				if (args.at(0).number() < 0  || args.at(0).number() > args.at(1).tuple().size() - 1)
+					throw error(error_types::invalid_arguments, "Not In Range Of Tuple", fcl);
+				return args.at(1).tuple().at((unsigned int)args.at(0).number());
+			} else if (args.at(1).type() == data_type::HashMap) {
+				auto map = args.at(1).hash_map();
+				auto location = map.find(args.at(0));
+				if (location != map.end()) {
+					return location->second;
+				} else {
+					throw error(error_types::invalid_arguments, "Not In HashMap", fcl);
+				}
+			} else {
+				throw error(error_types::invalid_arguments, "Not A HashMap Or A Tuple", fcl);
+			}
+			return data(data_type::None);
+		}
+	};
+
+	class size : public method {
+		int amount_of_arguments() const { return 1; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() == data_type::Tuple)
+				return data(data_type::Number, (long double)args.at(0).tuple().size());
+
+			if (args.at(0).type() == data_type::HashMap)
+				return data(data_type::Number, (long double)args.at(0).hash_map().size());
+
+			throw error(error_types::invalid_arguments, "Not A HashMap Or A Tuple", fcl);
+			return data(data_type::None);
+		}
+	};
 
 }}

@@ -2,6 +2,7 @@
 
 #include "data.hpp"
 #include "enviroment.hpp"
+#include "function.hpp"
 
 #include "stdlib/core.hpp"
 #include "stdlib/math.hpp"

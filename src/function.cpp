@@ -6,81 +6,50 @@
 
 namespace xig {
 
+	data method::call(std::vector<data> arguments, enviroment & enviroment, std::vector<std::string> function_call_list) {
 
-	method::method(int in_amount_of_args, xigua_lambda_t in_lambda) {
-		amount_of_args = in_amount_of_args;
-		lambda = in_lambda;
-		should_evaluate = true;
-		repeating = false;
-	}
-
-	method::method(int in_amount_of_args, bool in_repeating, xigua_lambda_t in_lambda) {
-		amount_of_args = in_amount_of_args;
-		repeating = in_repeating;
-		lambda = in_lambda;
-		should_evaluate = true;
-	}
-
-	method::method(int in_amount_of_args, bool in_repeating, bool in_should_evaluate, xigua_lambda_t in_lambda) {
-		amount_of_args = in_amount_of_args;
-		repeating = in_repeating;
-		lambda = in_lambda;
-		should_evaluate = in_should_evaluate;
-	}
-
-	data method::call(std::vector<data> arguments, enviroment * enviroment, std::vector<std::string> function_call_list) const {
-
-		if (should_evaluate) {
+		if (should_evaluate_arguments()) {
 			for (auto & item : arguments) {
 				if (item.type() == data_type::Proc || item.type() == data_type::Symbol || item.type() == data_type::Tuple || item.type() == data_type::HashMap)
-					item = evaluate(*enviroment, item, function_call_list);
+					item = evaluate(enviroment, item, function_call_list);
 			}
 		}
 
-		if (repeating) {
-			std::vector<data> new_args(arguments.begin(), arguments.begin() + amount_of_args); 
-			data repeating_args(data_type::Tuple, std::vector<data>(arguments.begin() + amount_of_args, arguments.end()));
+		if (has_repeating_arguments()) {
+			std::vector<data> new_args(arguments.begin(), arguments.begin() + amount_of_arguments()); 
+			data repeating_args(data_type::Tuple, std::vector<data>(arguments.begin() + amount_of_arguments(), arguments.end()));
 			new_args.push_back(repeating_args);
 
 			arguments = new_args;
 		}
 
-		return lambda(arguments, enviroment, function_call_list);
+		return run(arguments, enviroment, function_call_list);
 
-	}
-
-	int method::amount_of_arguments() const {
-		return amount_of_args;
 	}
 
 	bool method::has_repeating_arguments() const {
-		return repeating;
+		return false;
 	}
 
-	bool method_set_comparator::operator() (const method & a, const method & b) {
-		if (a.amount_of_arguments() < b.amount_of_arguments())
+	bool method::should_evaluate_arguments() const {
+		return true;
+	}
+
+	bool method_set_comparator::operator() (const std::shared_ptr<method> & a, const std::shared_ptr<method> & b) {
+		if (a->amount_of_arguments() < b->amount_of_arguments())
 			return true;
-		if (a.has_repeating_arguments() < b.has_repeating_arguments())
+		if (a->has_repeating_arguments() < b->has_repeating_arguments())
 			return true;
 		return false;
 	}
 
-	function::function(method in_method) {
-		add_method(in_method);
-	}
-
-
-	void function::add_method(method in_method) {
-		methods.insert(in_method);
-	}
-
-	data function::call(std::vector<data> & args, enviroment * enviroment, std::vector<std::string> function_call_list) {
+	data function::call(std::vector<data> & args, enviroment & enviroment, std::vector<std::string> function_call_list) {
 
 		for(auto iterator = methods.rbegin(); iterator != methods.rend(); iterator++) {
-			if (iterator->amount_of_arguments() == args.size())
-				return iterator->call(args, enviroment, function_call_list);
-			else if (iterator->amount_of_arguments() < args.size() && iterator->has_repeating_arguments())
-				return iterator->call(args, enviroment, function_call_list);
+			if ((*iterator)->amount_of_arguments() == args.size())
+				return (*iterator)->call(args, enviroment, function_call_list);
+			else if ((*iterator)->amount_of_arguments() < args.size() && (*iterator)->has_repeating_arguments())
+				return (*iterator)->call(args, enviroment, function_call_list);
 		}
 
 

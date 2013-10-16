@@ -53,7 +53,7 @@ namespace xig {
 				auto lastElement = process_copy.end();
 				std::vector<data> functionArgs(firstElement, lastElement);
 
-				return input_data.proc().at(0).functions().call(functionArgs, &env, function_call_list);
+				return input_data.proc().at(0).functions().call(functionArgs, env, function_call_list);
 			}
 			else
 			{

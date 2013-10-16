@@ -11,6 +11,20 @@
 namespace xig {
 namespace stdlib {
 
-	extern data concatinate(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list);
-	
+	class concatinate : public method {
+		int amount_of_arguments() const { return 1; }
+		bool has_repeating_arguments() const { return true; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			auto arguments = utils::parse_arguments(args, 1);
+
+			std::string return_string = "";
+			for (auto argument : arguments) {
+				return_string += argument.as_string();
+			}
+
+			return data(data_type::String, return_string);
+		}
+	};
+
 }}

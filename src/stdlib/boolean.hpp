@@ -12,6 +12,16 @@
 namespace xig {
 namespace stdlib {
 
-	extern data boolean_not(std::vector<data> inputs, enviroment* execution_enviroment, std::vector<std::string> function_call_list);
+	class boolean_not : public method {
+		int amount_of_arguments() const { return 1; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::Bool)
+				throw error(error_types::invalid_arguments, "Not A Boolean", fcl);
+
+			return data(data_type::Bool, !(args.at(0).boolean()));
+		}
+	};
+
 
 }}

@@ -2,6 +2,7 @@
 
 #include <set>
 #include <functional>
+#include <memory>
 
 #include "error.hpp"
 
@@ -10,40 +11,39 @@ namespace xig {
 	class data;
 	class enviroment;
 
-	typedef std::function<data(std::vector<data>, enviroment*, std::vector<std::string>)> xigua_lambda_t;
-
 	class method {
 	public:
-		method(int amount_of_args, xigua_lambda_t lambda);
-		method(int amount_of_args, bool repeating, xigua_lambda_t lambda);
-		method(int amount_of_args, bool repeating, bool should_evaluate, xigua_lambda_t lambda);
+		virtual data run(std::vector<data>, enviroment &, std::vector<std::string>) = 0;
 
-		data call(std::vector<data> arguments, enviroment * enviroment, std::vector<std::string> function_call_list) const;
+		virtual int amount_of_arguments() const = 0;
+		virtual bool has_repeating_arguments() const;
+		virtual bool should_evaluate_arguments() const;
 
-		int amount_of_arguments() const;
-		bool has_repeating_arguments() const;
-
-	private:
-		int amount_of_args;
-		bool repeating;
-		bool should_evaluate;
-		xigua_lambda_t lambda;
+		data call(std::vector<data> arguments, enviroment & enviroment, std::vector<std::string> function_call_list);
 	};
 
 	struct method_set_comparator {
-		bool operator() (const method & a, const method & b);
+		bool operator() (const std::shared_ptr<method> & a, const std::shared_ptr<method> & b);
 	};
 
 	class function {
 		public:
 			function(){};
-			function(method in_method);
 
-			void add_method(method in_method);
-			data call(std::vector<data> & args, enviroment * enviroment, std::vector<std::string> function_call_list);
+			template <class T>
+			function(T in_method) {
+				add_method(in_method);
+			}
+
+			template <class T>
+			void add_method(T in_method) {
+				methods.insert(std::shared_ptr<T>(new T(in_method)));
+			}
+
+			data call(std::vector<data> & args, enviroment & enviroment, std::vector<std::string> function_call_list);
 
 		private:
-			std::set<method, method_set_comparator> methods;
+			std::set<std::shared_ptr<method>, method_set_comparator> methods;
 	};
 
 }
