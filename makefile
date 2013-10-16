@@ -1,7 +1,7 @@
 CPP_FILES := $(wildcard src/*.cpp) $(wildcard src/stdlib/*.cpp)
 
 compile: $(CPP_FILES)
-	g++ -std=c++11 $(CPP_FILES) -o xigua
+	g++ -Wall -O2 -std=c++11 $(CPP_FILES) -o xigua
 	
 run-mac: compile
 	./xigua examples/hello_world.xigua

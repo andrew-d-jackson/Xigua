@@ -161,15 +161,15 @@ namespace stdlib {
 		int amount_of_arguments() const { return 2; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (args.at(0).type() != data_type::Tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
-
-			if (args.at(1).type() != data_type::Function)
+			if (args.at(0).type() != data_type::Function)
 				throw error(error_types::invalid_arguments, "Not A Function", fcl);
 
-			std::vector<data> temp_proc = { args.at(1) };
+			if (args.at(1).type() != data_type::Tuple)
+				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
-			for (auto data : args.at(0).tuple())
+			std::vector<data> temp_proc = { args.at(0) };
+
+			for (auto data : args.at(1).tuple())
 				temp_proc.push_back(data);
 
 			data temp_function(data_type::Proc, temp_proc);
