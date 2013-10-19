@@ -145,12 +145,12 @@ namespace xig {
 		{
 			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{")
 			{
-				data_type sub_list_type = data_type::Proc;
+				data_type sub_list_type = data_type::process;
 				if (string_list.at(index) == "{"){
-					sub_list_type = data_type::Tuple;
+					sub_list_type = data_type::tuple;
 				}
 				else if (string_list.at(index) == "#{"){
-					sub_list_type = data_type::HashMap;
+					sub_list_type = data_type::map;
 				}
 
 				std::vector<std::string> sub_list;
@@ -183,17 +183,17 @@ namespace xig {
 
 		if (is_number(input_string))
 		{
-			data data(data_type::Number, (long double) atof(input_string.c_str()));
+			data data(data_type::number, (long double) atof(input_string.c_str()));
 			return data;
 		}
 		else if (input_string[0] == '"')
 		{
-			data data(data_type::String, input_string.substr(1, input_string.size() - 2));
+			data data(data_type::string, input_string.substr(1, input_string.size() - 2));
 			return data;
 		}
 		else if (input_string == "true" || input_string == "false")
 		{
-			data data(data_type::Bool);
+			data data(data_type::boolean);
 			if (input_string == "true")
 				data.boolean(true);
 			else
@@ -203,7 +203,7 @@ namespace xig {
 		}
 		else
 		{
-			data data(data_type::Symbol, input_string);
+			data data(data_type::symbol, input_string);
 			return data;
 		}
 

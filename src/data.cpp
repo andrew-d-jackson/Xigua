@@ -10,9 +10,9 @@ namespace xig
 	data::data(data_type in_type, std::string string_data)
 	{
 		type(in_type);
-		if (in_type == data_type::String){
+		if (in_type == data_type::string){
 			string(string_data);
-		} else if (in_type == data_type::Symbol){
+		} else if (in_type == data_type::symbol){
 			symbol(string_data);
 		} else {
 			std::cout << "Wrong Data Passed to data string_data" << std::endl;
@@ -23,7 +23,7 @@ namespace xig
 	data::data(data_type in_type, long double number_data)
 	{
 		type(in_type);
-		if (in_type == data_type::Number){
+		if (in_type == data_type::number){
 			number(number_data);
 		} else {
 			std::cout << "Wrong Data Passed to data number_data" << std::endl;
@@ -34,7 +34,7 @@ namespace xig
 	data::data(data_type in_type, bool boolean_data)
 	{
 		type(in_type);
-		if (in_type == data_type::Bool){
+		if (in_type == data_type::boolean){
 			boolean(boolean_data);
 		} else {
 			std::cout << "Wrong Data Passed to data boolean_data" << std::endl;
@@ -45,11 +45,11 @@ namespace xig
 	data::data(data_type in_type, std::vector<data> list_data)
 	{
 		type(in_type);
-		if (in_type == data_type::Tuple){
+		if (in_type == data_type::tuple){
 			tuple(list_data);
-		} else if (in_type == data_type::Proc){
+		} else if (in_type == data_type::process){
 			proc(list_data);
-		} else if (in_type == data_type::HashMap) {
+		} else if (in_type == data_type::map) {
 			hash_map(list_data);
 		} else {
 			std::cout << "Wrong Data Passed to data list_data";
@@ -60,7 +60,7 @@ namespace xig
 	data::data(data_type in_type, std::map<data, data> map_data)
 	{
 		type(in_type);
-		if (in_type == data_type::HashMap){
+		if (in_type == data_type::map){
 			hash_map(map_data);
 		}  else {
 			std::cout << "Wrong Data Passed to data map_data";
@@ -72,7 +72,7 @@ namespace xig
 	data::data(data_type in_type, function function_data)
 	{
 		type(in_type);
-		if (in_type == data_type::Function){
+		if (in_type == data_type::function){
 			functions(function_data);
 		}  else {
 			std::cout << "Wrong Data Passed to data map_data";
@@ -86,28 +86,28 @@ namespace xig
 		if (type() != other.type())
 			return false;
 
-		if (type() == data_type::None)
+		if (type() == data_type::none)
 			return true;
 
-		if (type() == data_type::Symbol)
+		if (type() == data_type::symbol)
 			return false;
 		
-		if (type() == data_type::Bool)
+		if (type() == data_type::boolean)
 			return (boolean() == other.boolean());
 
-		if (type() == data_type::String)
+		if (type() == data_type::string)
 			return (string() == other.string());
 
-		if (type() == data_type::Number)
+		if (type() == data_type::number)
 			return (number() == other.number());
 
-		if (type() == data_type::Tuple)
+		if (type() == data_type::tuple)
 			return (tuple() == other.tuple());
 
-		if (type() == data_type::Proc)
+		if (type() == data_type::process)
 			return false;
 
-		if (type() == data_type::Function)
+		if (type() == data_type::function)
 			return false;
 
 		return false;
@@ -123,28 +123,28 @@ namespace xig
 		if (type() != other.type())
 			return (type() < other.type());
 
-		if (type() == data_type::None)
+		if (type() == data_type::none)
 			return false;
 
-		if (type() == data_type::Symbol)
+		if (type() == data_type::symbol)
 			return (symbol() < other.symbol());
 		
-		if (type() == data_type::Bool)
+		if (type() == data_type::boolean)
 			return (boolean() < other.boolean());
 
-		if (type() == data_type::String)
+		if (type() == data_type::string)
 			return (string() < other.string());
 
-		if (type() == data_type::Number)
+		if (type() == data_type::number)
 			return (number() < other.number());
 
-		if (type() == data_type::Tuple)
+		if (type() == data_type::tuple)
 			return (tuple() < other.tuple());
 
-		if (type() == data_type::Proc)
+		if (type() == data_type::process)
 			return false;
 
-		if (type() == data_type::Function)
+		if (type() == data_type::function)
 			return false;
 
 		return false;
@@ -160,23 +160,23 @@ namespace xig
 	{
 		my_type = in_type;
 
-		if (in_type == data_type::None){
+		if (in_type == data_type::none){
 			data_pointer = nullptr;
-		} else if (in_type == data_type::Symbol){
+		} else if (in_type == data_type::symbol){
 			data_pointer = std::shared_ptr<void>(new std::string());
-		} else if (in_type == data_type::Bool){
+		} else if (in_type == data_type::boolean){
 			data_pointer = std::shared_ptr<void>(new bool(false));
-		} else if (in_type == data_type::String){
+		} else if (in_type == data_type::string){
 			data_pointer = std::shared_ptr<void>(new std::string());
-		} else if (in_type == data_type::Number){
+		} else if (in_type == data_type::number){
 			data_pointer = std::shared_ptr<void>(new long double(0));
-		} else if (in_type == data_type::Tuple){
+		} else if (in_type == data_type::tuple){
 			data_pointer = std::shared_ptr<void>(new std::vector<data>());
-		} else if (in_type == data_type::HashMap){
+		} else if (in_type == data_type::map){
 			data_pointer = std::shared_ptr<void>(new std::map<data, data>());
-		} else if (in_type == data_type::Proc){
+		} else if (in_type == data_type::process){
 			data_pointer = std::shared_ptr<void>(new std::vector<data>());
-		} else if (in_type == data_type::Function){
+		} else if (in_type == data_type::function){
 			data_pointer = std::shared_ptr<void>(new function());
 		} else {
 			std::cout << "Something Wrong Passes To Type" << std::endl;
@@ -199,15 +199,15 @@ namespace xig
 	std::string data::as_string() const
 	{
 		std::string return_value = "";
-		if (type() == data_type::String) {
+		if (type() == data_type::string) {
 			return_value += string();
-		} else if (type() == data_type::Bool){
+		} else if (type() == data_type::boolean){
 			if (boolean()) {
 				return_value += "true";
 			} else {
 				return_value += "false";
 			}
-		} else if (type() == data_type::Number){
+		} else if (type() == data_type::number){
 			std::stringstream ss;
 			ss << std::fixed;
 			ss << number();
@@ -222,14 +222,14 @@ namespace xig
 		    if (str[s] == '.')
 		    	str.erase(s,1);
 		    return_value += str;
-		} else if (type() == data_type::Tuple){
+		} else if (type() == data_type::tuple){
 			return_value += "{ ";
 			for (auto element : tuple()) {
 				return_value += element.as_string();
 				return_value += " ";
 			}
 			return_value += "}";
-		} else if (type() == data_type::HashMap){
+		} else if (type() == data_type::map){
 			return_value += "#{ ";
 			for (auto & element : hash_map()) {
 				return_value += element.first.as_string();
@@ -325,39 +325,39 @@ namespace xig
 
 	void data::print(int indentation)
 	{
-		if (type() == data_type::Proc)
+		if (type() == data_type::process)
 		{
 			std::cout << "p";
 			for (auto i : proc())
 				i.print(indentation + 1);
 			std::cout << std::endl;
 		}
-		else if (type() == data_type::Tuple)
+		else if (type() == data_type::tuple)
 		{
 			std::cout << "t";
 			for (auto i : tuple())
 				i.print(indentation + 1);
 			std::cout << std::endl;
 		}
-		else if (type() == data_type::Symbol)
+		else if (type() == data_type::symbol)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
 			std::cout << "Symbol: " << symbol() << std::endl;
 		}
-		else if (type() == data_type::String)
+		else if (type() == data_type::string)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
 			std::cout << "String: " << string() << std::endl;
 		}
-		else if (type() == data_type::Number)
+		else if (type() == data_type::number)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";
 			std::cout << "Number: " << number() << std::endl;
 		}
-		else if (type() == data_type::Bool)
+		else if (type() == data_type::boolean)
 		{
 			for (int i(indentation); i > 0; i--)
 				std::cout << "\t";

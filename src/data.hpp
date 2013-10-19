@@ -19,7 +19,7 @@
 namespace xig
 {
 
-	enum class data_type { None, Symbol, Bool, String, Number, Tuple, HashMap, Proc, Function };
+	enum class data_type { none, symbol, boolean, string, number, tuple, map, process, function };
 
 	class data;
 	class enviroment;

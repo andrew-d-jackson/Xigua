@@ -21,14 +21,14 @@ namespace stdlib {
 			auto arguments = utils::parse_arguments(args, 2);
 			std::vector<data> return_value;
 			for (auto argument : arguments)	{
-				if (argument.type() == data_type::Tuple) {
+				if (argument.type() == data_type::tuple) {
 					for (auto element : argument.tuple())
 						return_value.push_back(element);
 				} else {
 					return_value.push_back(argument);
 				}
 			}
-			return data(data_type::Tuple, return_value);
+			return data(data_type::tuple, return_value);
 		}
 	};
 
@@ -36,7 +36,7 @@ namespace stdlib {
 		int amount_of_arguments() const { return 1; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (args.at(0).type() != data_type::Tuple)
+			if (args.at(0).type() != data_type::tuple)
 				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
 			auto initial_tuple = args.at(0).tuple();
@@ -44,7 +44,7 @@ namespace stdlib {
 			auto unique_iterator = std::unique(initial_tuple.begin(), initial_tuple.end());
 			std::vector<data> return_value(initial_tuple.begin(), unique_iterator);
 
-			return data(data_type::Tuple, return_value);
+			return data(data_type::tuple, return_value);
 		}
 	};
 
@@ -52,7 +52,7 @@ namespace stdlib {
 		int amount_of_arguments() const { return 1; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (args.at(0).type() != data_type::Tuple)
+			if (args.at(0).type() != data_type::tuple)
 				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
 			if (args.at(0).tuple().size() < 1)
@@ -66,7 +66,7 @@ namespace stdlib {
 		int amount_of_arguments() const { return 1; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (args.at(0).type() != data_type::Tuple)
+			if (args.at(0).type() != data_type::tuple)
 				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
 			if (args.at(0).tuple().size() < 1)
@@ -80,7 +80,7 @@ namespace stdlib {
 		int amount_of_arguments() const { return 3; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (!utils::all_types_are(args, data_type::Number))
+			if (!utils::all_types_are(args, data_type::number))
 				throw error(error_types::invalid_arguments, "Not A Number", fcl);
 
 			long double start = args.at(0).number();
@@ -99,17 +99,17 @@ namespace stdlib {
 
 			if (start > end) {
 				while (start > end) {
-					return_value.push_back(data(data_type::Number, start));
+					return_value.push_back(data(data_type::number, start));
 					start += step;
 				}
 			} else if (start < end) {
 				while (start < end) {
-					return_value.push_back(data(data_type::Number, start));
+					return_value.push_back(data(data_type::number, start));
 					start += step;
 				}
 			}
 
-			return data(data_type::Tuple, return_value);
+			return data(data_type::tuple, return_value);
 		}
 	};
 	

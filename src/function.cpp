@@ -10,14 +10,14 @@ namespace xig {
 
 		if (should_evaluate_arguments()) {
 			for (auto & item : arguments) {
-				if (item.type() == data_type::Proc || item.type() == data_type::Symbol || item.type() == data_type::Tuple || item.type() == data_type::HashMap)
+				if (item.type() == data_type::process || item.type() == data_type::symbol || item.type() == data_type::tuple || item.type() == data_type::map)
 					item = evaluate(enviroment, item, function_call_list);
 			}
 		}
 
 		if (has_repeating_arguments()) {
 			std::vector<data> new_args(arguments.begin(), arguments.begin() + amount_of_arguments()); 
-			data repeating_args(data_type::Tuple, std::vector<data>(arguments.begin() + amount_of_arguments(), arguments.end()));
+			data repeating_args(data_type::tuple, std::vector<data>(arguments.begin() + amount_of_arguments(), arguments.end()));
 			new_args.push_back(repeating_args);
 
 			arguments = new_args;

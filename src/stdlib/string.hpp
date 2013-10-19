@@ -23,7 +23,7 @@ namespace stdlib {
 				return_string += argument.as_string();
 			}
 
-			return data(data_type::String, return_string);
+			return data(data_type::string, return_string);
 		}
 	};
 

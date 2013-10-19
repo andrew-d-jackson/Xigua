@@ -21,14 +21,14 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			auto arguments = utils::parse_arguments(args, 2);
-			if (!utils::all_types_are(arguments, data_type::Number) && all_types_must_be_numbers())
+			if (!utils::all_types_are(arguments, data_type::number) && all_types_must_be_numbers())
 				throw error(error_types::invalid_arguments, "Not A Number", fcl);
 
 			for (auto it = arguments.begin(); it < arguments.end()-1; it++) {
 				if (!compare(*it, *(it+1)))
-					return data(data_type::Bool, false);
+					return data(data_type::boolean, false);
 			}
-			return data(data_type::Bool, true);
+			return data(data_type::boolean, true);
 		}
 	};
 
@@ -59,14 +59,14 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			auto arguments = utils::parse_arguments(args, 2);
-			if (!utils::all_types_are(arguments, data_type::Number))
+			if (!utils::all_types_are(arguments, data_type::number))
 				throw error(error_types::invalid_arguments, "Not A Number", fcl);
 
 			long double return_value = arguments.at(0).number();
 			for (auto it = arguments.begin()+1; it < arguments.end(); it++) {
 				return_value = operate(return_value, it->number());
 			}
-			return data(data_type::Number, return_value);
+			return data(data_type::number, return_value);
 		}
 	};
 
