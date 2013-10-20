@@ -193,13 +193,13 @@ namespace xig {
 		}
 		else if (input_string == "true" || input_string == "false")
 		{
-			data data(data_type::boolean);
+			bool return_value;
 			if (input_string == "true")
-				data.boolean(true);
+				return_value = true;
 			else
-				data.boolean(false);
+				return_value = false;
 
-			return data;
+			return data(data_type::boolean, return_value);
 		}
 		else
 		{

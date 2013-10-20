@@ -323,46 +323,4 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new function(in_function));
 	}
 
-	void data::print(int indentation)
-	{
-		if (type() == data_type::process)
-		{
-			std::cout << "p";
-			for (auto i : proc())
-				i.print(indentation + 1);
-			std::cout << std::endl;
-		}
-		else if (type() == data_type::tuple)
-		{
-			std::cout << "t";
-			for (auto i : tuple())
-				i.print(indentation + 1);
-			std::cout << std::endl;
-		}
-		else if (type() == data_type::symbol)
-		{
-			for (int i(indentation); i > 0; i--)
-				std::cout << "\t";
-			std::cout << "Symbol: " << symbol() << std::endl;
-		}
-		else if (type() == data_type::string)
-		{
-			for (int i(indentation); i > 0; i--)
-				std::cout << "\t";
-			std::cout << "String: " << string() << std::endl;
-		}
-		else if (type() == data_type::number)
-		{
-			for (int i(indentation); i > 0; i--)
-				std::cout << "\t";
-			std::cout << "Number: " << number() << std::endl;
-		}
-		else if (type() == data_type::boolean)
-		{
-			for (int i(indentation); i > 0; i--)
-				std::cout << "\t";
-			std::cout << "Boolean: " << boolean() << std::endl;
-		}
-	}
-
 }

@@ -46,35 +46,30 @@ namespace xig
 		bool operator<(const data & other) const;
 
 		data_type type() const;
-		void type(data_type in_type);
 
 		std::string string() const;
-		void string(std::string in_string);
+		std::string symbol() const;
+		long double number() const;
+		std::vector<data> tuple() const;
+		std::map<data, data> hash_map() const;
+		std::vector<data> proc() const;
+		bool boolean() const;
+		function functions() const;
+
 		std::string as_string() const;
 
-		std::string symbol() const;
+	protected:
+		void type(data_type in_type);
+
+		void string(std::string in_string);
 		void symbol(std::string symbol_name);
-
-		long double number() const;
 		void number(long double in_number);
-
-		std::vector<data> tuple() const;
+		void boolean(bool boolean);
 		void tuple(std::vector<data> in_tuple);
-
-		std::map<data, data> hash_map() const;
 		void hash_map(std::map<data, data> in_map);
 		void hash_map(std::vector<data> in_list);
-
-		std::vector<data> proc() const;
 		void proc(std::vector<data> in_list);
-
-		bool boolean() const;
-		void boolean(bool boolean);
-
-		function functions() const;
 		void functions(function in_function);
-
-		void print(int indentation = 0);
 	};
 
 }

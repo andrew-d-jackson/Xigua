@@ -39,7 +39,7 @@ namespace xig {
 
 				std::vector<data> new_proc_data = input_data.proc();
 				new_proc_data.at(0) = evaluate(env, input_data.proc().at(0), function_call_list);
-				input_data.proc(new_proc_data);
+				input_data = data(data_type::process, new_proc_data);
 			}
 
 			if (input_data.proc().size() == 0)
