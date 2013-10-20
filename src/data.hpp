@@ -47,16 +47,14 @@ namespace xig
 
 		data_type type() const;
 
-		std::string string() const;
-		std::string symbol() const;
-		long double number() const;
-		std::vector<data> tuple() const;
-		std::map<data, data> hash_map() const;
-		std::vector<data> proc() const;
-		bool boolean() const;
-		function functions() const;
-
 		std::string as_string() const;
+		std::string as_symbol() const;
+		long double as_number() const;
+		std::vector<data> as_tuple() const;
+		std::map<data, data> as_map() const;
+		std::vector<data> as_process() const;
+		bool as_boolean() const;
+		function as_function() const;
 
 	protected:
 		void type(data_type in_type);
@@ -71,5 +69,7 @@ namespace xig
 		void proc(std::vector<data> in_list);
 		void functions(function in_function);
 	};
+
+	extern std::string string_representation(const data & in_data);
 
 }

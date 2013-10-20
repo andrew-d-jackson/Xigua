@@ -18,7 +18,7 @@ namespace stdlib {
 		bool should_evaluate_arguments() const { return false; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			env.set(args.at(0).string(), evaluate(env, args.at(1), fcl));
+			env.set(args.at(0).as_string(), evaluate(env, args.at(1), fcl));
 			return data(data_type::none);
 		}
 	};
@@ -31,14 +31,15 @@ namespace stdlib {
 			enviroment new_env(env_type::Function, &env);
 
 			bool repeating = false;
-			for (auto arg : args.at(0).tuple()) {
+			for (auto arg : args.at(0).as_tuple()) {
 				if (arg.type() != data_type::symbol) {
 					throw error(error_types::invalid_arguments, "Not A Symbol In Tuple", fcl);
-				} else if (arg.symbol() == "&") {
+				}
+				else if (arg.as_symbol() == "&") {
 					repeating = true;
 				}
 			}
-			int amount_of_args = args.at(0).tuple().size() - (int)repeating; 
+			int amount_of_args = args.at(0).as_tuple().size() - (int)repeating;
 
 			struct fn : public method {
 				int _amount_of_args;
@@ -54,9 +55,9 @@ namespace stdlib {
 
 				data run(std::vector<data> fn_args, enviroment & fn_env, std::vector<std::string> fn_fcl) {
 					short missing = 0;
-					for (unsigned int i(0); i < _args.at(0).tuple().size(); ++i){
-						if (_args.at(0).tuple().at(i).symbol() != "&") {
-							_new_env.set(_args.at(0).tuple().at(i).symbol(), fn_args.at(i-missing));
+					for (unsigned int i(0); i < _args.at(0).as_tuple().size(); ++i){
+						if (_args.at(0).as_tuple().at(i).as_symbol() != "&") {
+							_new_env.set(_args.at(0).as_tuple().at(i).as_symbol(), fn_args.at(i - missing));
 						} else {
 							missing = 1;
 						}
@@ -77,7 +78,7 @@ namespace stdlib {
 		bool should_evaluate_arguments() const { return false; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (evaluate(env, args.at(0), fcl).boolean())
+			if (evaluate(env, args.at(0), fcl).as_boolean())
 				return evaluate(env, args.at(1), fcl);
 			else
 				return evaluate(env, args.at(2), fcl);
@@ -97,11 +98,11 @@ namespace stdlib {
 
 
 			enviroment container_enviroment(env_type::Let, &env);
-			for (auto map_pair : args.at(0).hash_map()) {
+			for (auto map_pair : args.at(0).as_map()) {
 				if (map_pair.first.type() != data_type::symbol)
 					throw xig::error(xig::error_types::invalid_arguments, "Not A Symbol", fcl);
 
-				container_enviroment.set(map_pair.first.symbol(), evaluate(container_enviroment, map_pair.second, fcl), true);
+				container_enviroment.set(map_pair.first.as_symbol(), evaluate(container_enviroment, map_pair.second, fcl), true);
 			}
 
 			return evaluate(container_enviroment, args.at(1), fcl);
@@ -122,7 +123,7 @@ namespace stdlib {
 		int amount_of_arguments() const { return 1; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			std::cout << args.at(0).as_string() << std::endl;
+			std::cout << string_representation(args.at(0)) << std::endl;
 			return data(data_type::none);
 		}
 	};
@@ -135,18 +136,18 @@ namespace stdlib {
 			auto arguments = utils::parse_arguments(args, 2);
 
 			if (arguments.size() > 2) {
-				int tuple_sizes = arguments.at(0).tuple().size();
+				int tuple_sizes = arguments.at(0).as_tuple().size();
 				for (unsigned int i(1); i < arguments.size() - 1; i++)	{
-					if (arguments.at(i).tuple().size() != tuple_sizes)
+					if (arguments.at(i).as_tuple().size() != tuple_sizes)
 						throw error(error_types::invalid_arguments, "Tuple Lengths Are Different", fcl);
 				}
 			}
 
 			std::vector<data> return_values;
-			for (unsigned int i(0); i < arguments.at(1).tuple().size(); i++) {
+			for (unsigned int i(0); i < arguments.at(1).as_tuple().size(); i++) {
 				std::vector<data> temp_proc = { arguments.at(arguments.size()-1) };
 				for (unsigned int j(0); j < arguments.size() - 1; j++)
-					temp_proc.push_back(arguments.at(j).tuple().at(i));
+					temp_proc.push_back(arguments.at(j).as_tuple().at(i));
 
 				data temp_function(data_type::process, temp_proc);
 				return_values.push_back(evaluate(env, temp_function, fcl));
@@ -169,7 +170,7 @@ namespace stdlib {
 
 			std::vector<data> temp_proc = { args.at(0) };
 
-			for (auto data : args.at(1).tuple())
+			for (auto data : args.at(1).as_tuple())
 				temp_proc.push_back(data);
 
 			data temp_function(data_type::process, temp_proc);
@@ -205,7 +206,7 @@ namespace stdlib {
 					auto fn_arguments = utils::parse_arguments(fn_args, 0);
 					std::vector<data> final_args = _captured_function_args;
 					final_args.insert(final_args.end(), fn_arguments.begin(), fn_arguments.end());
-					return _captured_function.functions().call(final_args, fn_env, fn_fcl);
+					return _captured_function.as_function().call(final_args, fn_env, fn_fcl);
 				}
 			} return_method = {captured_function, captured_function_args};
 

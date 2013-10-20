@@ -12,7 +12,7 @@ namespace utils {
 			if (i < nonrepeating) {
 				return_list.push_back(arguments.at(i));
 			} else {
-				for (auto j : arguments.at(i).tuple())
+				for (auto j : arguments.at(i).as_tuple())
 					return_list.push_back(j);
 			}
 		}

@@ -20,7 +20,7 @@ namespace stdlib {
 
 			std::string return_string = "";
 			for (auto argument : arguments) {
-				return_string += argument.as_string();
+				return_string += string_representation(argument);
 			}
 
 			return data(data_type::string, return_string);

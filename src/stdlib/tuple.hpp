@@ -22,7 +22,7 @@ namespace stdlib {
 			std::vector<data> return_value;
 			for (auto argument : arguments)	{
 				if (argument.type() == data_type::tuple) {
-					for (auto element : argument.tuple())
+					for (auto element : argument.as_tuple())
 						return_value.push_back(element);
 				} else {
 					return_value.push_back(argument);
@@ -39,7 +39,7 @@ namespace stdlib {
 			if (args.at(0).type() != data_type::tuple)
 				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
-			auto initial_tuple = args.at(0).tuple();
+			auto initial_tuple = args.at(0).as_tuple();
 			std::sort(initial_tuple.begin(), initial_tuple.end());
 			auto unique_iterator = std::unique(initial_tuple.begin(), initial_tuple.end());
 			std::vector<data> return_value(initial_tuple.begin(), unique_iterator);
@@ -55,10 +55,10 @@ namespace stdlib {
 			if (args.at(0).type() != data_type::tuple)
 				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
-			if (args.at(0).tuple().size() < 1)
+			if (args.at(0).as_tuple().size() < 1)
 				throw error(error_types::invalid_arguments, "Not In Range", fcl);
 
-			return args.at(0).tuple().at(0);
+			return args.at(0).as_tuple().at(0);
 		}
 	};
 
@@ -69,10 +69,10 @@ namespace stdlib {
 			if (args.at(0).type() != data_type::tuple)
 				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
 
-			if (args.at(0).tuple().size() < 1)
+			if (args.at(0).as_tuple().size() < 1)
 				throw error(error_types::invalid_arguments, "Not In Range", fcl);
 
-			return args.at(0).tuple().at(args.at(0).tuple().size()-1);
+			return args.at(0).as_tuple().at(args.at(0).as_tuple().size() - 1);
 		}
 	};
 
@@ -83,9 +83,9 @@ namespace stdlib {
 			if (!utils::all_types_are(args, data_type::number))
 				throw error(error_types::invalid_arguments, "Not A Number", fcl);
 
-			long double start = args.at(0).number();
-			long double end = args.at(1).number();
-			long double step = args.at(2).number();
+			long double start = args.at(0).as_number();
+			long double end = args.at(1).as_number();
+			long double step = args.at(2).as_number();
 
 			if (start > end && step >= 0)
 				throw error(error_types::invalid_arguments, "Range Invalid", fcl);

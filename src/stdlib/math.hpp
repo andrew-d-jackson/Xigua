@@ -34,13 +34,13 @@ namespace stdlib {
 
 	class less_than : public comparator {
 		bool compare(data a, data b) const {
-			return (a.number() < b.number());
+			return (a.as_number() < b.as_number());
 		}
 	};
 
 	class greater_than : public comparator {
 		bool compare(data a, data b) const {
-			return (a.number() > b.number());
+			return (a.as_number() > b.as_number());
 		}
 	};
 
@@ -62,9 +62,9 @@ namespace stdlib {
 			if (!utils::all_types_are(arguments, data_type::number))
 				throw error(error_types::invalid_arguments, "Not A Number", fcl);
 
-			long double return_value = arguments.at(0).number();
+			long double return_value = arguments.at(0).as_number();
 			for (auto it = arguments.begin()+1; it < arguments.end(); it++) {
-				return_value = operate(return_value, it->number());
+				return_value = operate(return_value, it->as_number());
 			}
 			return data(data_type::number, return_value);
 		}

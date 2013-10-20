@@ -19,7 +19,7 @@ namespace stdlib {
 			if (args.at(0).type() != data_type::boolean)
 				throw error(error_types::invalid_arguments, "Not A Boolean", fcl);
 
-			return data(data_type::boolean, !(args.at(0).boolean()));
+			return data(data_type::boolean, !(args.at(0).as_boolean()));
 		}
 	};
 

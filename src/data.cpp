@@ -93,16 +93,16 @@ namespace xig
 			return false;
 		
 		if (type() == data_type::boolean)
-			return (boolean() == other.boolean());
+			return (as_boolean() == other.as_boolean());
 
 		if (type() == data_type::string)
-			return (string() == other.string());
+			return (as_string() == other.as_string());
 
 		if (type() == data_type::number)
-			return (number() == other.number());
+			return (as_number() == other.as_number());
 
 		if (type() == data_type::tuple)
-			return (tuple() == other.tuple());
+			return (as_tuple() == other.as_tuple());
 
 		if (type() == data_type::process)
 			return false;
@@ -127,19 +127,19 @@ namespace xig
 			return false;
 
 		if (type() == data_type::symbol)
-			return (symbol() < other.symbol());
+			return (as_symbol() < other.as_symbol());
 		
 		if (type() == data_type::boolean)
-			return (boolean() < other.boolean());
+			return (as_boolean() < other.as_boolean());
 
 		if (type() == data_type::string)
-			return (string() < other.string());
+			return (as_string() < other.as_string());
 
 		if (type() == data_type::number)
-			return (number() < other.number());
+			return (as_number() < other.as_number());
 
 		if (type() == data_type::tuple)
-			return (tuple() < other.tuple());
+			return (as_tuple() < other.as_tuple());
 
 		if (type() == data_type::process)
 			return false;
@@ -184,7 +184,7 @@ namespace xig
 		}
 	}
 
-	std::string data::string() const
+	std::string data::as_string() const
 	{
 	//	return d_string;
 		return *(static_cast<std::string*>(data_pointer.get()));
@@ -196,54 +196,8 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new std::string(in_string));
 	}
 
-	std::string data::as_string() const
-	{
-		std::string return_value = "";
-		if (type() == data_type::string) {
-			return_value += string();
-		} else if (type() == data_type::boolean){
-			if (boolean()) {
-				return_value += "true";
-			} else {
-				return_value += "false";
-			}
-		} else if (type() == data_type::number){
-			std::stringstream ss;
-			ss << std::fixed;
-			ss << number();
-			std::string str = ss.str();
-			int s;
-		    for (s = str.length()-1; s > 0; s--) {
-		        if(str[s] == '0')
-		        	str.erase(s,1);
-		        else
-		        	break;
-		    }
-		    if (str[s] == '.')
-		    	str.erase(s,1);
-		    return_value += str;
-		} else if (type() == data_type::tuple){
-			return_value += "{ ";
-			for (auto element : tuple()) {
-				return_value += element.as_string();
-				return_value += " ";
-			}
-			return_value += "}";
-		} else if (type() == data_type::map){
-			return_value += "#{ ";
-			for (auto & element : hash_map()) {
-				return_value += element.first.as_string();
-				return_value += " => ";
-				return_value += element.second.as_string();
-				return_value += ", ";
-			}
-			return_value += "}";
-		}
-		return return_value;
-	}
 
-
-	std::string data::symbol() const
+	std::string data::as_symbol() const
 	{
 		return *(static_cast<std::string*>(data_pointer.get()));
 	}
@@ -253,7 +207,7 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new std::string(symbol_name));
 	}
 
-	long double data::number() const
+	long double data::as_number() const
 	{
 		return *(static_cast<long double*>(data_pointer.get()));
 	}
@@ -263,7 +217,7 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new long double(in_number));
 	}
 
-	std::vector<data> data::tuple() const
+	std::vector<data> data::as_tuple() const
 	{
 		return *(static_cast<std::vector<data>*>(data_pointer.get()));
 	}
@@ -273,7 +227,7 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new std::vector<data>(tuple));
 	}
 
-	std::map<data, data> data::hash_map() const
+	std::map<data, data> data::as_map() const
 	{
 		return *(static_cast<std::map<data, data>*>(data_pointer.get()));
 	}
@@ -293,7 +247,7 @@ namespace xig
 		hash_map(temp_map);
 	}
 
-	std::vector<data> data::proc() const
+	std::vector<data> data::as_process() const
 	{
 		return *(static_cast<std::vector<data>*>(data_pointer.get()));
 	}
@@ -303,7 +257,7 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new std::vector<data>(proc));
 	}
 
-	bool data::boolean() const
+	bool data::as_boolean() const
 	{
 		return *(static_cast<bool*>(data_pointer.get()));
 	}
@@ -313,14 +267,65 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new bool(in_boolean));
 	}
 
-	function data::functions() const
+	function data::as_function() const
 	{
 		return *(static_cast<function*>(data_pointer.get()));
-	};
+	}
 
 	void data::functions(function in_function)
 	{
 		data_pointer = std::shared_ptr<void>(new function(in_function));
+	}
+
+	std::string string_representation(const data & in_data)
+	{
+		std::string return_value = "";
+		if (in_data.type() == data_type::string) {
+			return_value += in_data.as_string();
+		}
+		else if (in_data.type() == data_type::boolean){
+			if (in_data.as_boolean()) {
+				return_value += "true";
+			}
+			else {
+				return_value += "false";
+			}
+		}
+		else if (in_data.type() == data_type::number){
+			std::stringstream ss;
+			ss << std::fixed;
+			ss << in_data.as_number();
+			std::string str = ss.str();
+			int s;
+			for (s = str.length() - 1; s > 0; s--) {
+				if (str[s] == '0')
+					str.erase(s, 1);
+				else
+					break;
+			}
+			if (str[s] == '.')
+				str.erase(s, 1);
+			return_value += str;
+		}
+		else if (in_data.type() == data_type::tuple){
+			return_value += "{ ";
+			for (auto element : in_data.as_tuple()) {
+				return_value += string_representation(element);
+				return_value += " ";
+			}
+			return_value += "}";
+		}
+		else if (in_data.type() == data_type::map){
+			return_value += "#{ ";
+			for (auto & element : in_data.as_map()) {
+				return_value += string_representation(element.first);
+				return_value += " => ";
+				return_value += string_representation(element.second);
+				return_value += ", ";
+			}
+			return_value += "}";
+		}
+		return return_value;
 	}
 
 }
