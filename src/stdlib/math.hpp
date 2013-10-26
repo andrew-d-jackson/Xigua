@@ -44,6 +44,18 @@ namespace stdlib {
 		}
 	};
 
+	class less_than_or_equal : public comparator {
+		bool compare(data a, data b) const {
+			return (a.as_number() <= b.as_number());
+		}
+	};
+
+	class greater_than_or_equal : public comparator {
+		bool compare(data a, data b) const {
+			return (a.as_number() >= b.as_number());
+		}
+	};
+
 	class equal_to : public comparator {
 		bool all_types_must_be_numbers() const { return false; }
 		bool compare(data a, data b) const {

@@ -39,6 +39,10 @@ namespace xig
 
 		enviroment.set("<", data(data_type::function, function(stdlib::less_than())));
 
+		enviroment.set(">=", data(data_type::function, function(stdlib::greater_than_or_equal())));
+
+		enviroment.set("<=", data(data_type::function, function(stdlib::less_than_or_equal())));
+
 		enviroment.set("==", data(data_type::function, function(stdlib::equal_to())));
 	
 	//string
