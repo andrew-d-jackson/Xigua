@@ -191,6 +191,11 @@ namespace xig {
 			data data(data_type::string, input_string.substr(1, input_string.size() - 2));
 			return data;
 		}
+		else if (input_string[0] == ':')
+		{
+			data data(data_type::keyword, input_string.substr(1, input_string.size() - 1));
+			return data;
+		}
 		else if (input_string == "true" || input_string == "false")
 		{
 			bool return_value;

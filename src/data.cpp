@@ -14,6 +14,8 @@ namespace xig
 			string(string_data);
 		} else if (in_type == data_type::symbol){
 			symbol(string_data);
+		} else if (in_type == data_type::keyword) {
+			keyword(string_data);
 		} else {
 			std::cout << "Wrong Data Passed to data string_data" << std::endl;
 			exit(1);
@@ -98,6 +100,9 @@ namespace xig
 		if (type() == data_type::string)
 			return (as_string() == other.as_string());
 
+		if (type() == data_type::keyword)
+			return (as_keyword() == other.as_keyword());
+
 		if (type() == data_type::number)
 			return (as_number() == other.as_number());
 
@@ -128,6 +133,9 @@ namespace xig
 
 		if (type() == data_type::symbol)
 			return (as_symbol() < other.as_symbol());
+
+		if (type() == data_type::keyword)
+			return (as_keyword() < other.as_keyword());
 		
 		if (type() == data_type::boolean)
 			return (as_boolean() < other.as_boolean());
@@ -168,6 +176,8 @@ namespace xig
 			data_pointer = std::shared_ptr<void>(new bool(false));
 		} else if (in_type == data_type::string){
 			data_pointer = std::shared_ptr<void>(new std::string());
+		} else if (in_type == data_type::keyword){
+			data_pointer = std::shared_ptr<void>(new std::string());
 		} else if (in_type == data_type::number){
 			data_pointer = std::shared_ptr<void>(new long double(0));
 		} else if (in_type == data_type::tuple){
@@ -186,16 +196,23 @@ namespace xig
 
 	std::string data::as_string() const
 	{
-	//	return d_string;
 		return *(static_cast<std::string*>(data_pointer.get()));
 	}
 
 	void data::string(std::string in_string)
 	{
-	//	d_string = in_string;
 		data_pointer = std::shared_ptr<void>(new std::string(in_string));
 	}
 
+	std::string data::as_keyword() const
+	{
+		return *(static_cast<std::string*>(data_pointer.get()));
+	}
+
+	void data::keyword(std::string in_string)
+	{
+		data_pointer = std::shared_ptr<void>(new std::string(in_string));
+	}
 
 	std::string data::as_symbol() const
 	{
@@ -282,6 +299,9 @@ namespace xig
 		std::string return_value = "";
 		if (in_data.type() == data_type::string) {
 			return_value += in_data.as_string();
+		}
+		else if (in_data.type() == data_type::keyword) {
+			return_value += ":" + in_data.as_string();
 		}
 		else if (in_data.type() == data_type::boolean){
 			if (in_data.as_boolean()) {

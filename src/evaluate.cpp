@@ -20,6 +20,10 @@ namespace xig {
 		{
 			return input_data;
 		}
+		else if (input_data.type() == data_type::keyword)
+		{
+			return input_data;
+		}
 		else if (input_data.type() == data_type::string)
 		{
 			return input_data;

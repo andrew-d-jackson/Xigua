@@ -19,7 +19,7 @@
 namespace xig
 {
 
-	enum class data_type { none, symbol, boolean, string, number, tuple, map, process, function };
+	enum class data_type { none, symbol, boolean, string, keyword, number, tuple, map, process, function };
 
 	class data;
 	class enviroment;
@@ -49,6 +49,7 @@ namespace xig
 
 		std::string as_string() const;
 		std::string as_symbol() const;
+		std::string as_keyword() const;
 		long double as_number() const;
 		std::vector<data> as_tuple() const;
 		std::map<data, data> as_map() const;
@@ -61,6 +62,7 @@ namespace xig
 
 		void string(std::string in_string);
 		void symbol(std::string symbol_name);
+		void keyword(std::string keyword_name);
 		void number(long double in_number);
 		void boolean(bool boolean);
 		void tuple(std::vector<data> in_tuple);
