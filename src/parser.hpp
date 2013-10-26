@@ -13,18 +13,18 @@ namespace xig {
 
 	class parser {
 	public:
-		data from_file(const std::string file_location) const;
-		data from_string(const std::string source_code) const;
+		static data from_file(const std::string file_location);
+		static data from_string(const std::string source_code);
 
 	private:
-		std::string read_file(const std::string file_location) const;
+		static std::string read_file(const std::string file_location);
 
-		std::vector<std::string> source_to_string_list(const std::string source_code) const;
-		void validate_string_list(const std::vector<std::string> string_list) const;
+		static std::vector<std::string> source_to_string_list(const std::string source_code);
+		static void validate_string_list(const std::vector<std::string> string_list);
 
-		data string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type = data_type::process) const;
-		data string_to_data_type(const std::string input_string) const;
-		bool is_number(std::string string) const;
+		static data string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type = data_type::process);
+		static data string_to_data_type(const std::string input_string);
+		static bool is_number(std::string string);
 	};
 
 }
