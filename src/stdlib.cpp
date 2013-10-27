@@ -49,6 +49,8 @@ namespace xig
 
 		enviroment.set("string", data(data_type::function, function(stdlib::concatinate())));
 
+		enviroment.set("substr", data(data_type::function, function(stdlib::substring())));
+		
 	//boolean
 
 		enviroment.set("not", data(data_type::function, function(stdlib::boolean_not())));
