@@ -10,6 +10,7 @@
 #include "stdlib/string.hpp"
 #include "stdlib/tuple.hpp"
 #include "stdlib/containers.hpp"
+#include "stdlib/benchmark.hpp"
 
 namespace xig
 {

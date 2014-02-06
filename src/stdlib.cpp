@@ -73,6 +73,11 @@ namespace xig
 
 		enviroment.set("size", data(data_type::function, function(stdlib::size())));
 
+	//testing
+
+		enviroment.set("bench", data(data_type::function, function(stdlib::benchmark())));
+
+
 		return enviroment;
 	}
 }

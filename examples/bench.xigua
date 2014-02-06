@@ -1,0 +1,3 @@
+[= add [fn {x y} [+ x y]]]
+
+[bench "add" 10000 [add 2 2]]
