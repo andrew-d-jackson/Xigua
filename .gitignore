@@ -5,5 +5,4 @@ xiguatest.exe
 
 *.a
 *.o
-gtest/*
 .DS_Store
