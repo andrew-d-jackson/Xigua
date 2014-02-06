@@ -11,6 +11,7 @@
 #include "stdlib/tuple.hpp"
 #include "stdlib/containers.hpp"
 #include "stdlib/benchmark.hpp"
+#include "stdlib/test.hpp"
 
 namespace xig
 {

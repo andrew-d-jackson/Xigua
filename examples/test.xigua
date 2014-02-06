@@ -1,0 +1,8 @@
+[test-eq "add" [+ 2 2] [+ 1 3]]
+
+[test-eq "sub" [- 3 2] [- 1 0]]
+
+[test-ne "subne" [- 3 2] [- 33 0]]
+
+[test-tr "mul" [== [* 3 2] [* 6 1]]]
+

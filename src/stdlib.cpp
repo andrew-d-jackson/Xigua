@@ -75,6 +75,14 @@ namespace xig
 
 	//testing
 
+		enviroment.set("test-eq", data(data_type::function, function(stdlib::testeq())));
+		
+		enviroment.set("test-ne", data(data_type::function, function(stdlib::testne())));
+		
+		enviroment.set("test-tr", data(data_type::function, function(stdlib::testtr())));
+
+	// benchmark
+
 		enviroment.set("bench", data(data_type::function, function(stdlib::benchmark())));
 
 
