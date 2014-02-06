@@ -1,4 +1,9 @@
 xigua
 xigua.exe
+xiguatest
+xiguatest.exe
 
+*.a
+*.o
+gtest/*
 .DS_Store
