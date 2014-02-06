@@ -6,5 +6,3 @@ xiguatest.exe
 *.a
 *.o
 .DS_Store
-
-googletest/
