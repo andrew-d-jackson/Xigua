@@ -356,8 +356,8 @@ namespace xig
 		return data(data_type::string, str);
 	}
 
-	data make_symbol(std::string str) {
-		return data(data_type::symbol, str);
+	data make_keyword(std::string str) {
+		return data(data_type::keyword, str);
 	}
 
 	data make_boolean(bool b) {

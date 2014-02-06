@@ -7,83 +7,83 @@ namespace xig
 		enviroment enviroment(env_type::Namespace);
 
 	// core
-		enviroment.set("=", data(data_type::function, function(stdlib::define())));
+		enviroment.set("=", make_function(stdlib::define()));
 
-		enviroment.set("fn", data(data_type::function, function(stdlib::create_lambda())));
+		enviroment.set("fn", make_function(stdlib::create_lambda()));
 
-		enviroment.set("if", data(data_type::function, function(stdlib::if_expression())));
+		enviroment.set("if", make_function(stdlib::if_expression()));
 
-		enviroment.set("let", data(data_type::function, function(stdlib::let_expression())));
+		enviroment.set("let", make_function(stdlib::let_expression()));
 
-		enviroment.set("println", data(data_type::function, function(stdlib::print_line())));
+		enviroment.set("println", make_function(stdlib::print_line()));
 
-		enviroment.set("get-input", data(data_type::function, function(stdlib::get_input())));
+		enviroment.set("get-input", make_function(stdlib::get_input()));
 
-		enviroment.set("apply", data(data_type::function, function(stdlib::apply())));
+		enviroment.set("apply", make_function(stdlib::apply()));
 
-		enviroment.set("map", data(data_type::function, function(stdlib::map())));
+		enviroment.set("map", make_function(stdlib::map()));
 
-		enviroment.set("part", data(data_type::function, function(stdlib::partial())));
+		enviroment.set("part", make_function(stdlib::partial()));
 
 	// math
 
-		enviroment.set("+", data(data_type::function, function(stdlib::add())));
+		enviroment.set("+", make_function(stdlib::add()));
 
-		enviroment.set("-", data(data_type::function, function(stdlib::minus())));
+		enviroment.set("-", make_function(stdlib::minus()));
 
-		enviroment.set("/", data(data_type::function, function(stdlib::divide())));
+		enviroment.set("/", make_function(stdlib::divide()));
 
-		enviroment.set("*", data(data_type::function, function(stdlib::multiply())));
+		enviroment.set("*", make_function(stdlib::multiply()));
 
-		enviroment.set(">", data(data_type::function, function(stdlib::greater_than())));
+		enviroment.set(">", make_function(stdlib::greater_than()));
 
-		enviroment.set("<", data(data_type::function, function(stdlib::less_than())));
+		enviroment.set("<", make_function(stdlib::less_than()));
 
-		enviroment.set(">=", data(data_type::function, function(stdlib::greater_than_or_equal())));
+		enviroment.set(">=", make_function(stdlib::greater_than_or_equal()));
 
-		enviroment.set("<=", data(data_type::function, function(stdlib::less_than_or_equal())));
+		enviroment.set("<=", make_function(stdlib::less_than_or_equal()));
 
-		enviroment.set("==", data(data_type::function, function(stdlib::equal_to())));
+		enviroment.set("==", make_function(stdlib::equal_to()));
 	
 	//string
 
-		enviroment.set("string", data(data_type::function, function(stdlib::concatinate())));
+		enviroment.set("string", make_function(stdlib::concatinate()));
 
-		enviroment.set("substr", data(data_type::function, function(stdlib::substring())));
+		enviroment.set("substr", make_function(stdlib::substring()));
 		
 	//boolean
 
-		enviroment.set("not", data(data_type::function, function(stdlib::boolean_not())));
+		enviroment.set("not", make_function(stdlib::boolean_not()));
 
 	//tuple
 
-		enviroment.set("join", data(data_type::function, function(stdlib::join())));
+		enviroment.set("join", make_function(stdlib::join()));
 
-		enviroment.set("unique", data(data_type::function, function(stdlib::unique())));
+		enviroment.set("unique", make_function(stdlib::unique()));
 
-		enviroment.set("first", data(data_type::function, function(stdlib::first())));
+		enviroment.set("first", make_function(stdlib::first()));
 
-		enviroment.set("last", data(data_type::function, function(stdlib::last())));
+		enviroment.set("last", make_function(stdlib::last()));
 
-		enviroment.set("range", data(data_type::function, function(stdlib::range())));
+		enviroment.set("range", make_function(stdlib::range()));
 
 	//containers
 
-		enviroment.set("at", data(data_type::function, function(stdlib::at())));
+		enviroment.set("at", make_function(stdlib::at()));
 
-		enviroment.set("size", data(data_type::function, function(stdlib::size())));
+		enviroment.set("size", make_function(stdlib::size()));
 
 	//testing
 
-		enviroment.set("test-eq", data(data_type::function, function(stdlib::testeq())));
+		enviroment.set("test-eq", make_function(stdlib::testeq()));
 		
-		enviroment.set("test-ne", data(data_type::function, function(stdlib::testne())));
+		enviroment.set("test-ne", make_function(stdlib::testne()));
 		
-		enviroment.set("test-tr", data(data_type::function, function(stdlib::testtr())));
+		enviroment.set("test-tr", make_function(stdlib::testtr()));
 
 	// benchmark
 
-		enviroment.set("bench", data(data_type::function, function(stdlib::benchmark())));
+		enviroment.set("bench", make_function(stdlib::benchmark()));
 
 
 		return enviroment;

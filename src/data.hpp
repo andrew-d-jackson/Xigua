@@ -76,7 +76,7 @@ namespace xig
 
 	extern data make_number(long double num);
 	extern data make_string(std::string str);
-	extern data make_symbol(std::string str);
+	extern data make_keyword(std::string str);
 	extern data make_boolean(bool b);
 
 	template<typename T>
