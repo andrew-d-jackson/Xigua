@@ -3,6 +3,8 @@
 
 #include "data.hpp"
 
+using namespace xig;
+
 TEST(Data, Equality) {
-	EXPECT_TRUE(xig::data(xig::data_type::number, (long double)2.0) == xig::data(xig::data_type::number, (long double)2.0));
+	EXPECT_EQ(make_number(2), make_number(2));
 }

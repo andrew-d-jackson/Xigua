@@ -74,4 +74,15 @@ namespace xig
 
 	extern std::string string_representation(const data & in_data);
 
+	extern data make_number(long double num);
+	extern data make_string(std::string str);
+	extern data make_symbol(std::string str);
+	extern data make_boolean(bool b);
+
+	template<typename T>
+	extern data make_function(T fn) {
+		return data(data_type::function, function(fn));
+	}
+
+
 }

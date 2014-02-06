@@ -348,4 +348,21 @@ namespace xig
 		return return_value;
 	}
 
+	data make_number(long double num) {
+		return data(data_type::number, num);
+	}
+
+	data make_string(std::string str) {
+		return data(data_type::string, str);
+	}
+
+	data make_symbol(std::string str) {
+		return data(data_type::symbol, str);
+	}
+
+	data make_boolean(bool b) {
+		return data(data_type::boolean, b);
+	}
+
+
 }
