@@ -8,12 +8,10 @@ compile: $(CPP_FILES)
 shared: $(CPP_FILES)
 	g++ -Iinclude -Isrc -Wall -O2 -std=c++11 -c $(CPP_FILES)
 	ar -rv libxigua.a $(O_FILES)
-	rm $(O_FILES)
 
 compile-gtest: googletest/src/gtest-all.cc
 	g++ -isystem googletest/include -Igoogletest -pthread -c googletest/src/gtest-all.cc
 	ar -rv libgtest.a gtest-all.o
-	rm gtest-all.o
 
 compile-test: $(CPP_FILES) compile-gtest
 	g++ -Iinclude -Isrc -DTEST -isystem googletest/include -isystem src -Wall -O2 -std=c++11 $(CPP_FILES) $(TEST_FILES) libgtest.a -o xiguatest

@@ -6,3 +6,4 @@ xiguatest.exe
 *.o
 .DS_Store
 repl
+repl.exe

@@ -28,14 +28,14 @@ namespace stdlib {
 			if (args.at(2).type() != data_type::process)
 				throw error(error_types::invalid_arguments, "Not A Process", fcl);
 
-  			std::chrono::steady_clock::time_point start_time = std::chrono::high_resolution_clock::now();
+  			std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
 
   			auto times = args.at(1).as_number();
   			for (long i = 0; i < times; i++) {
   				evaluate(env, args.at(2), fcl);
   			}
 
-  			std::chrono::steady_clock::time_point end_time = std::chrono::high_resolution_clock::now();
+  			std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
   			
   			auto dur = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end_time - start_time).count();
   			auto average = dur / times;
