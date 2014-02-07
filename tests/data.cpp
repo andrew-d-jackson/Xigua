@@ -1,7 +1,7 @@
 
 #include "gtest/gtest.h"
 
-#include "data.hpp"
+#include "xigua/data.hpp"
 
 using namespace xig;
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "xigua.hpp"
+#include "xigua/xigua.hpp"
 
 int main(int argc, char *argv [])
 { 
