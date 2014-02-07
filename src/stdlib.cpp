@@ -1,5 +1,14 @@
 #include "stdlib.hpp"
 
+#include "stdlib/core.hpp"
+#include "stdlib/math.hpp"
+#include "stdlib/boolean.hpp"
+#include "stdlib/string.hpp"
+#include "stdlib/tuple.hpp"
+#include "stdlib/containers.hpp"
+#include "stdlib/benchmark.hpp"
+#include "stdlib/test.hpp"
+
 namespace xig
 {
 	enviroment get_global_enviroment()

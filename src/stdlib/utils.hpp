@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../data.hpp"
-#include "../enviroment.hpp"
+#include "data.hpp"
+#include "enviroment.hpp"
 
 namespace xig {
 namespace stdlib {

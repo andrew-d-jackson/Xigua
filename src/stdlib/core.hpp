@@ -3,10 +3,10 @@
 #include <vector>
 #include <functional>
 
-#include "../data.hpp"
-#include "../enviroment.hpp"
-#include "../error.hpp"
-#include "../evaluate.hpp"
+#include "data.hpp"
+#include "enviroment.hpp"
+#include "error.hpp"
+#include "evaluate.hpp"
 
 #include "utils.hpp"
 

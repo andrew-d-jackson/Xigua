@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "../data.hpp"
-#include "../enviroment.hpp"
-#include "../error.hpp"
+#include "data.hpp"
+#include "enviroment.hpp"
+#include "error.hpp"
 
 #include "utils.hpp"
 

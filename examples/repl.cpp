@@ -1,11 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "enviroment.hpp"
-#include "stdlib.hpp"
-#include "parser.hpp"
-#include "error.hpp"
-#include "evaluate.hpp"
+#include "xigua.hpp"
 
 int main(int argc, char *argv [])
 { 

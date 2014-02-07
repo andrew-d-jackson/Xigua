@@ -3,10 +3,10 @@
 #include <vector>
 #include <chrono>
 
-#include "../data.hpp"
-#include "../enviroment.hpp"
-#include "../evaluate.hpp"
-#include "../error.hpp"
+#include "data.hpp"
+#include "enviroment.hpp"
+#include "evaluate.hpp"
+#include "error.hpp"
 
 #include "utils.hpp"
 
