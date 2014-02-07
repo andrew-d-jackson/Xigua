@@ -1,25 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "xigua/enviroment.hpp"
-#include "xigua/stdlib.hpp"
-#include "xigua/parser.hpp"
-#include "xigua/error.hpp"
-#include "xigua/evaluate.hpp"
-
-#ifdef TEST
-#include "gtest/gtest.h"
-#endif
+#include "xigua/xigua.hpp"
 
 int main(int argc, char *argv [])
-{ 
-#ifdef TEST
-
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-
-#else
-
+{
 	if (argc > 1) {
 		xig::enviroment enviroment = xig::get_global_enviroment();
 		try {
@@ -39,10 +24,5 @@ int main(int argc, char *argv [])
 				e.print_default_message();
 			}
 		}
-		
-
 	}
-	
-
-#endif
 }
