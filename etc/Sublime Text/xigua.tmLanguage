@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>xigua</string>
+	</array>
+	<key>name</key>
+	<string>Xigua</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>match</key>
+			<string>\d+(.[\d+])?</string>
+			<key>name</key>
+			<string>constant.numeric.source.xigua</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>:[a-zA-Z0-9_-]+</string>
+			<key>name</key>
+			<string>keyword.source.xigua</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>[a-zA-Z][a-zA-Z0-9_-]+</string>
+			<key>name</key>
+			<string>entity.name.function.source.xigua</string>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>"</string>
+			<key>end</key>
+			<string>"</string>
+			<key>name</key>
+			<string>string.source.xigua</string>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>~</string>
+			<key>end</key>
+			<string>\n</string>
+			<key>name</key>
+			<string>comment.source.xigua</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.xigua</string>
+	<key>uuid</key>
+	<string>ca03e751-04ef-4330-9a6b-9b99aae1c418</string>
+</dict>
+</plist>
