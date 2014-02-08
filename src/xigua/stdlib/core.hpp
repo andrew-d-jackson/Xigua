@@ -281,12 +281,8 @@ namespace stdlib {
 				throw error(error_types::invalid_arguments, "Not A Sring", fcl);
 
 			auto file_name = args.at(0).as_string();
-
-			std::cout << "hello" << std::endl;
-
 			evaluate(env, parser::from_file(file_name, env));
 
-			std::cout << "hello" << std::endl;
 			return data(data_type::none);
 		}
 	};
