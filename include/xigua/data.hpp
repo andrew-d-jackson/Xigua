@@ -78,6 +78,9 @@ namespace xig
 	extern data make_string(std::string str);
 	extern data make_keyword(std::string str);
 	extern data make_boolean(bool b);
+	extern data make_tuple(std::vector<data> tuple);
+	extern data make_process(std::vector<data> proc);
+	extern data make_map(std::map<data, data> map);
 
 	template<typename T>
 	extern data make_function(T fn) {

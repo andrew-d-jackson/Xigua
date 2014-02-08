@@ -1,0 +1,3 @@
+[= afn [macro {name args proc} [= name [fn args proc]]]]
+
+[afn hello {a b} [+ a b]]

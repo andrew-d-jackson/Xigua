@@ -215,4 +215,60 @@ namespace stdlib {
 		}
 	};
 
+	class macro : public method {
+		int amount_of_arguments() const { return 2; }
+		bool should_evaluate_arguments() const { return false; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::tuple)
+				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+
+			if (args.at(1).type() != data_type::process)
+				throw error(error_types::invalid_arguments, "Not A Process", fcl);
+
+			for (const auto &i: args.at(0).as_tuple()) {
+				if (i.type() != data_type::symbol)
+					throw error(error_types::invalid_arguments, "Not A Symbol", fcl);
+			}
+
+			struct fn : public method {
+				const data _captured_proc;
+				const std::vector<data> _captured_proc_args;
+
+				fn(data func, std::vector<data> args)
+					: _captured_proc(func),	 _captured_proc_args(args) {}
+
+				int amount_of_arguments() const { return _captured_proc_args.size(); }
+				bool has_repeating_arguments() const { return false; }
+				bool should_evaluate_arguments() const { return false; }
+
+				std::vector<data> replace(std::vector<data> list, const std::vector<data> &rp) {
+					for(auto &i: list) {
+						if (i.type() == data_type::tuple) {
+							i = make_tuple(replace(i.as_tuple(), rp));
+						} else if (i.type() == data_type::process) {
+							i = make_process(replace(i.as_process(), rp));
+						} else if (i.type() == data_type::symbol){
+							for(unsigned keyword_i(0); keyword_i < _captured_proc_args.size(); keyword_i++) {
+								if (_captured_proc_args.at(keyword_i).as_symbol() == i.as_symbol()) {
+									i = rp.at(keyword_i);
+									break;
+								}
+							}
+						}
+					}
+					return list;
+				}
+
+				data run(std::vector<data> fn_args, enviroment & fn_env, std::vector<std::string> fn_fcl) {
+					auto new_proc = replace(_captured_proc.as_process(), fn_args);
+					return evaluate(fn_env, make_process(new_proc), fn_fcl);
+				}
+			} return_method = {args.at(1), args.at(0).as_tuple()};
+
+			data return_function(data_type::function, function(return_method));
+			return return_function;
+		}
+	};
+
 }}

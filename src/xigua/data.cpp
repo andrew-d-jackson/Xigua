@@ -364,5 +364,16 @@ namespace xig
 		return data(data_type::boolean, b);
 	}
 
+	data make_tuple(std::vector<data> tuple) {
+		return data(data_type::tuple, tuple);
+	}
+
+	data make_process(std::vector<data> proc) {
+		return data(data_type::process, proc);
+	}
+
+	extern data make_map(std::map<data, data> map) {
+		return data(data_type::map, map);
+	}
 
 }

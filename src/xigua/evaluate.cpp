@@ -8,7 +8,7 @@ namespace xig {
 		{
 			data * symbol_value = env.find(input_data.as_symbol());
 			if (symbol_value == nullptr) {
-				throw xig::error(xig::error_types::invalid_arguments, "Cannot Find Symbol", function_call_list);
+				throw xig::error(xig::error_types::invalid_arguments, "Cannot Find Symbol: " + input_data.as_symbol(), function_call_list);
 			}
 			return *symbol_value;
 		}
