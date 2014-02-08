@@ -12,9 +12,9 @@ namespace xig
 	{
 		type(in_type);
 
-		if (in_type != env_type::Namespace)
+		if (in_type != env_type::container)
 		{
-			if (parent_enviroment->type() != env_type::Namespace)
+			if (parent_enviroment->type() != env_type::container)
 			{
 				defined_variables = (*parent_enviroment).defined_variables;
 				my_parent = parent_enviroment->parent();
@@ -56,9 +56,9 @@ namespace xig
 	{
 		if (force_here) {
 			defined_variables[name] = value;
-		} else if (my_type == env_type::Namespace || my_type == env_type::Function) {
+		} else if (my_type == env_type::container || my_type == env_type::function) {
 			defined_variables[name] = value;
-		} else if (my_type == env_type::Macro || my_type == env_type::Let) {
+		} else if (my_type == env_type::macro || my_type == env_type::let) {
 			parent()->set(name, value);
 		}
 	}

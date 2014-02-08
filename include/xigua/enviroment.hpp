@@ -10,7 +10,7 @@ namespace xig
 {
 	class data;
 
-	enum class env_type { Namespace, Function, Macro, Let };
+	enum class env_type { container, function, macro, let };
 
 	class enviroment {
 	public:

@@ -46,9 +46,9 @@ namespace xig {
 	data function::call(std::vector<data> & args, enviroment & enviroment, std::vector<std::string> function_call_list) {
 
 		for(auto iterator = methods.rbegin(); iterator != methods.rend(); iterator++) {
-			if ((*iterator)->amount_of_arguments() == args.size())
+			if ((unsigned)(*iterator)->amount_of_arguments() == args.size())
 				return (*iterator)->call(args, enviroment, function_call_list);
-			else if ((*iterator)->amount_of_arguments() < args.size() && (*iterator)->has_repeating_arguments())
+			else if ((unsigned)(*iterator)->amount_of_arguments() < args.size() && (*iterator)->has_repeating_arguments())
 				return (*iterator)->call(args, enviroment, function_call_list);
 		}
 

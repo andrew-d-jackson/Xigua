@@ -28,7 +28,7 @@ namespace stdlib {
 		bool should_evaluate_arguments() const { return false; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			enviroment new_env(env_type::Function, &env);
+			enviroment new_env(env_type::function, &env);
 
 			bool repeating = false;
 			for (auto arg : args.at(0).as_tuple()) {
@@ -97,7 +97,7 @@ namespace stdlib {
 				throw error(error_types::invalid_arguments, "Not A Process", fcl);
 
 
-			enviroment container_enviroment(env_type::Let, &env);
+			enviroment container_enviroment(env_type::let, &env);
 			for (auto map_pair : args.at(0).as_map()) {
 				if (map_pair.first.type() != data_type::symbol)
 					throw xig::error(xig::error_types::invalid_arguments, "Not A Symbol", fcl);
@@ -136,7 +136,7 @@ namespace stdlib {
 			auto arguments = utils::parse_arguments(args, 2);
 
 			if (arguments.size() > 2) {
-				int tuple_sizes = arguments.at(0).as_tuple().size();
+				unsigned tuple_sizes = arguments.at(0).as_tuple().size();
 				for (unsigned int i(1); i < arguments.size() - 1; i++)	{
 					if (arguments.at(i).as_tuple().size() != tuple_sizes)
 						throw error(error_types::invalid_arguments, "Tuple Lengths Are Different", fcl);

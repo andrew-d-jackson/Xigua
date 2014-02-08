@@ -13,7 +13,7 @@ namespace xig
 {
 	enviroment get_global_enviroment()
 	{
-		enviroment enviroment(env_type::Namespace);
+		enviroment enviroment(env_type::container);
 
 	// core
 		enviroment.set("=", make_function(stdlib::define()));
