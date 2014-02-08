@@ -6,11 +6,13 @@ namespace xig
 	enviroment::enviroment(env_type in_type)
 	{
 		type(in_type);
+		my_relative_path = "";
 	}
 
 	enviroment::enviroment(env_type in_type, enviroment * parent_enviroment)
 	{
 		type(in_type);
+		my_relative_path = "";
 
 		if (in_type != env_type::container)
 		{
@@ -71,6 +73,16 @@ namespace xig
 	bool enviroment::has_parent() const
 	{
 		return (parent() != nullptr);
+	}
+	
+	std::string enviroment::relative_path() const
+	{
+		return my_relative_path;
+	}
+	
+	void enviroment::set_relative_path(std::string path)
+	{
+		my_relative_path = path;
 	}
 	
 

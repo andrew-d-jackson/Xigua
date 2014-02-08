@@ -26,10 +26,13 @@ namespace xig
 		enviroment* parent() const;
 		bool has_parent() const;
 
+		std::string relative_path() const;
+		void set_relative_path(std::string path);
 
 	private:
 		std::map<std::string, data> defined_variables;
 		enviroment * my_parent;
 		env_type my_type;
+		std::string my_relative_path;
 	};
 }

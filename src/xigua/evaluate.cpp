@@ -34,6 +34,8 @@ namespace xig {
 		}
 		else if (input_data.type() == data_type::process)
 		{
+			if (input_data.as_process().size() == 0) throw error(error_types::parsing_error, "No Data In Process", {});
+
 			if (input_data.as_process().at(0).type() == data_type::process || input_data.as_process().at(0).type() == data_type::symbol)
 			{
 				if (input_data.as_process().at(0).type() == data_type::symbol)

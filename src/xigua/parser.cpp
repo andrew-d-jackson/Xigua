@@ -3,9 +3,18 @@
 
 namespace xig {
 
-	data parser::from_file(const std::string file_location) {
 
+	data parser::from_file(std::string file_location, enviroment &env) {
+
+		file_location = env.relative_path() + file_location;
 		std::string source_code = read_file(file_location);
+
+		size_t last_bracket = file_location.find_last_of("/\\");
+		if (last_bracket != file_location.npos) {
+			env.set_relative_path(file_location.substr(0, last_bracket+1));
+		}
+
+
 		return from_string(source_code);
 
 	}
@@ -21,6 +30,7 @@ namespace xig {
 	std::string parser::read_file(const std::string file_location) {
 
 		std::ifstream file_stream(file_location.c_str());
+		if (!file_stream) throw error(error_types::parsing_error, "File Does Not Exist: " + file_location, {});
 		std::stringstream string_buffer;
 		string_buffer << file_stream.rdbuf();
 		return string_buffer.str();

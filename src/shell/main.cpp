@@ -8,7 +8,7 @@ int main(int argc, char *argv [])
 	if (argc > 1) {
 		xig::enviroment enviroment = xig::get_global_enviroment();
 		try {
-			xig::evaluate(enviroment, xig::parser::from_file(argv[1]));
+			xig::evaluate(enviroment, xig::parser::from_file(argv[1], enviroment));
 		} catch (xig::error e) {
 			e.print_default_message();
 		}

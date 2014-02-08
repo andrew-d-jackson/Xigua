@@ -22,6 +22,8 @@ namespace xig
 
 		enviroment.set("macro", make_function(stdlib::macro()));
 
+		enviroment.set("import", make_function(stdlib::import()));
+
 		enviroment.set("if", make_function(stdlib::if_expression()));
 
 		enviroment.set("let", make_function(stdlib::let_expression()));

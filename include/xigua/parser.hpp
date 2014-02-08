@@ -13,7 +13,7 @@ namespace xig {
 
 	class parser {
 	public:
-		static data from_file(const std::string file_location);
+		static data from_file(std::string file_location, enviroment &env);
 		static data from_string(const std::string source_code);
 
 	private:
