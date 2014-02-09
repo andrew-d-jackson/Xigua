@@ -9,4 +9,4 @@ before_script:
 
 script:
   - make
-  - ./unit-tests
+  - make test
