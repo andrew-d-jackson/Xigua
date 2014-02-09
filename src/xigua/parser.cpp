@@ -30,7 +30,7 @@ namespace xig {
 	std::string parser::read_file(const std::string file_location) {
 
 		std::ifstream file_stream(file_location.c_str());
-		if (!file_stream) throw error(error_types::parsing_error, "File Does Not Exist: " + file_location, {});
+	//	if (!file_stream) throw error(error_types::parsing_error, "File Does Not Exist: " + file_location, {});
 		std::stringstream string_buffer;
 		string_buffer << file_stream.rdbuf();
 		return string_buffer.str();

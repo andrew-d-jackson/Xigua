@@ -287,6 +287,30 @@ namespace stdlib {
 		}
 	};
 
+	class import_as : public method {
+		int amount_of_arguments() const { return 2; }
+		bool should_evaluate_arguments() const { return false; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::symbol)
+				throw error(error_types::invalid_arguments, "Not A Symbol", fcl);
+
+			if (args.at(1).type() != data_type::string)
+				throw error(error_types::invalid_arguments, "Not A Sring", fcl);
+
+			auto file_name = args.at(1).as_string();
+			auto import_name = args.at(0).as_symbol();
+
+			env.set(import_name, make_container(enviroment(env_type::container, &env)));
+			auto sub_env = env.find(import_name)->as_container();
+
+			evaluate(*sub_env, parser::from_file(file_name, *sub_env));
+
+
+			return data(data_type::none);
+		}
+	};
+
 
 
 }}

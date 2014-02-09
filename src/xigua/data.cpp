@@ -82,6 +82,17 @@ namespace xig
 		}
 	}
 
+	data::data(data_type in_type, enviroment container_data)
+	{
+		type(in_type);
+		if (in_type == data_type::container){
+			container(container_data);
+		}  else {
+			std::cout << "Wrong Data Passed to data container";
+			exit(1);
+		}
+	}
+
 
 	bool data::operator==(const data & other) const
 	{
@@ -113,6 +124,9 @@ namespace xig
 			return false;
 
 		if (type() == data_type::function)
+			return false;
+
+		if (type() == data_type::container)
 			return false;
 
 		return false;
@@ -155,6 +169,9 @@ namespace xig
 		if (type() == data_type::function)
 			return false;
 
+		if (type() == data_type::container)
+			return false;
+
 		return false;
 	}
 
@@ -188,6 +205,8 @@ namespace xig
 			data_pointer = std::shared_ptr<void>(new std::vector<data>());
 		} else if (in_type == data_type::function){
 			data_pointer = std::shared_ptr<void>(new function());
+		} else if (in_type == data_type::container){
+			data_pointer = std::shared_ptr<void>(new enviroment(env_type::container));
 		} else {
 			std::cout << "Something Wrong Passes To Type" << std::endl;
 			exit(1);
@@ -294,6 +313,16 @@ namespace xig
 		data_pointer = std::shared_ptr<void>(new function(in_function));
 	}
 
+	enviroment* data::as_container() const
+	{
+		return (static_cast<enviroment*>(data_pointer.get()));
+	}
+
+	void data::container(enviroment in_container)
+	{
+		data_pointer = std::shared_ptr<void>(new enviroment(in_container));
+	}
+
 	std::string string_representation(const data & in_data)
 	{
 		std::string return_value = "";
@@ -374,6 +403,14 @@ namespace xig
 
 	extern data make_map(std::map<data, data> map) {
 		return data(data_type::map, map);
+	}
+
+	extern data make_container(enviroment container) {
+		return data(data_type::container, container);
+	}
+
+	extern data make_container() {
+		return data(data_type::container, enviroment(env_type::container));
 	}
 
 }

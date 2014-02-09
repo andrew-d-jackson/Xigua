@@ -6,6 +6,7 @@ namespace xig {
 
 		if (input_data.type() == data_type::symbol)
 		{
+			auto sym = input_data.as_symbol();
 			data * symbol_value = env.find(input_data.as_symbol());
 			if (symbol_value == nullptr) {
 				throw xig::error(xig::error_types::invalid_arguments, "Cannot Find Symbol: " + input_data.as_symbol(), function_call_list);

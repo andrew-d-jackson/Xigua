@@ -19,7 +19,7 @@
 namespace xig
 {
 
-	enum class data_type { none, symbol, boolean, string, keyword, number, tuple, map, process, function };
+	enum class data_type { none, symbol, boolean, string, keyword, number, tuple, map, process, function, container };
 
 	class data;
 	class enviroment;
@@ -40,6 +40,7 @@ namespace xig
 		data(data_type in_type, std::vector<data> list_data);
 		data(data_type in_type, std::map<data, data> map_data);
 		data(data_type in_type, function function_data);
+		data(data_type in_type, enviroment container_data);
 
 		bool operator==(const data & other) const;
 		bool operator!=(const data & other) const;
@@ -56,6 +57,7 @@ namespace xig
 		std::vector<data> as_process() const;
 		bool as_boolean() const;
 		function as_function() const;
+		enviroment* as_container() const;
 
 	protected:
 		void type(data_type in_type);
@@ -70,6 +72,7 @@ namespace xig
 		void hash_map(std::vector<data> in_list);
 		void proc(std::vector<data> in_list);
 		void functions(function in_function);
+		void container(enviroment in_container);
 	};
 
 	extern std::string string_representation(const data & in_data);
@@ -81,6 +84,8 @@ namespace xig
 	extern data make_tuple(std::vector<data> tuple);
 	extern data make_process(std::vector<data> proc);
 	extern data make_map(std::map<data, data> map);
+	extern data make_container(enviroment container);
+	extern data make_container();
 
 	template<typename T>
 	extern data make_function(T fn) {

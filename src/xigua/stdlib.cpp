@@ -24,6 +24,8 @@ namespace xig
 
 		enviroment.set("import", make_function(stdlib::import()));
 
+		enviroment.set("import-as", make_function(stdlib::import_as()));
+
 		enviroment.set("if", make_function(stdlib::if_expression()));
 
 		enviroment.set("let", make_function(stdlib::let_expression()));

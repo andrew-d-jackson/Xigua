@@ -42,11 +42,29 @@ namespace xig
 
 
 	data* enviroment::find(std::string variable_name) {
+		std::string delimiter = "::";
+		size_t pos = 0;
+		if ((pos = variable_name.find(delimiter)) != std::string::npos) {
+
+		    auto var_env = variable_name.substr(0, pos);
+		    auto new_var_name = variable_name;
+		    new_var_name.erase(0, pos + delimiter.length());
+
+		    auto e = find(var_env);
+		    if (e == nullptr || e->type() != data_type::container) {
+					if (parent() != nullptr) {
+						auto data = parent()->find(variable_name);
+						return data;
+					}
+					return nullptr;
+				}
+				return e->as_container()->find(new_var_name);
+		}
+
 		if (defined_variables.find(variable_name) != defined_variables.end())
 			return &defined_variables[variable_name];
 
-		if (parent() != nullptr)
-		{
+		if (parent() != nullptr) {
 			auto data = parent()->find(variable_name);
 			return data;
 		}
@@ -77,6 +95,9 @@ namespace xig
 	
 	std::string enviroment::relative_path() const
 	{
+		if (has_parent() && (my_relative_path == "")) {
+			return parent()->relative_path();
+		}
 		return my_relative_path;
 	}
 	

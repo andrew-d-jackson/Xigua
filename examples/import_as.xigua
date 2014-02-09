@@ -1,0 +1,3 @@
+[import-as numb "import_2.xigua"]
+
+[println [numb::add 1 2]]
