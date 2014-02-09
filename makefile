@@ -26,3 +26,10 @@ run-test: test
 
 clean:
 	rm -f $(wildcard *.o)
+
+travis-cl:
+	clang++ -Iinclude -Isrc -Wall -O2 -std=c++11 -c $(XIGUA_FILES)
+	ar -rv libxigua.a $(O_FILES)
+	clang++ -isystem googletest/include -Igoogletest -pthread -c googletest/src/gtest-all.cc
+	ar -rv libgtest.a gtest-all.o
+	clang++ -DTEST -Iinclude -Isrc -isystem googletest/include -Wall -O2 -std=c++11 $(TEST_FILES) libxigua.a libgtest.a -o test
