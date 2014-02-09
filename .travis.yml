@@ -5,7 +5,7 @@ before_script:
   - sudo apt-get -qq update
   - sudo apt-get -qq install g++-4.8 libgtest-dev
   - export CXX="g++-4.8"
-  - cmake -DXIGUA_BUILD_TESTS=ON ..
+  - cmake -DXIGUA_BUILD_TESTS=ON .
 
 script:
   - make
