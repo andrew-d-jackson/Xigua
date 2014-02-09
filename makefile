@@ -30,4 +30,6 @@ clean:
 travis-ci:
 	g++-4.8 -Iinclude -Isrc -Wall -O2 -std=c++11 -c $(XIGUA_FILES)
 	ar -rv libxigua.a $(O_FILES)
-	g++-4.8 -DTEST -Iinclude -Isrc -isystem googletest/include -Wall -O2 -std=c++11 $(TEST_FILES) libxigua.a libgtest_main.a -o test
+	g++-4.8 -isystem googletest/include -Igoogletest -c googletest/src/gtest-all.cc
+	ar -rv libgtest.a gtest-all.o
+	g++-4.8 -DTEST -Iinclude -Isrc -isystem googletest/include -Wall -O2 -std=c++11 $(TEST_FILES) libxigua.a libgtest.a -o test
