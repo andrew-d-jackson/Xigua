@@ -1,6 +1,9 @@
 language: cpp
 compiler: clang
 
+install:
+  - sudo apt-get install gcc
+
 script:
-  - make travis-cl
+  - make test
   - ./test
