@@ -12,13 +12,23 @@ TEST(Standard_Library_Math, Add) {
   );
 
   EXPECT_EQ(
-    evaluate(env, parser::from_string("[+ 2 4]")),
-  	make_number(6)
+    evaluate(env, parser::from_string("[+ 2.2 4]")),
+  	make_number(6.2)
   );
 
   EXPECT_EQ(
     evaluate(env, parser::from_string("[+ 0 0]")),
-  	make_number(0)
+    make_number(0)
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[+ -2 3]")),
+    make_number(1)
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[+ -2.2 -2.2]")),
+    make_number(-4.4)
   );
 }
 
@@ -31,13 +41,23 @@ TEST(Standard_Library_Math, Subtract) {
   );
 
   EXPECT_EQ(
-    evaluate(env, parser::from_string("[- 10 4]")),
-  	make_number(6)
+    evaluate(env, parser::from_string("[- 10 4.2]")),
+  	make_number(5.8)
   );
 
   EXPECT_EQ(
     evaluate(env, parser::from_string("[- 1 2]")),
   	make_number(-1)
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[- -2 3]")),
+    make_number(-5)
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[- -2.2 -2.2]")),
+    make_number(0)
   );
 }
 

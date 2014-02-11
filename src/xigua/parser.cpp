@@ -228,10 +228,18 @@ namespace xig {
 		
 		if (string.size() < 1)
 			return false;
-			
-		for (char c : string) {
-			if (!isdigit(c) && c != '.')
+		
+		if (string.find_first_of("0123456789") == std::string::npos)
+			return false;
+
+		if (std::count(string.begin(), string.end(), '.') > 1)
+			return false;
+
+		for(auto it = string.begin(); it < string.end(); it++) {
+
+			if (!(isdigit(*it) || *it == '.' || (*it == '-' && it == string.begin())))
 				return false;
+
 		}
 
 		return true;
