@@ -1,4 +1,17 @@
-set(SOURCE_FILES main.cpp data.cpp enviroment.cpp evaluate.cpp)
+set(SOURCE_FILES
+	stdlib/math.cpp
+	stdlib/boolean.cpp
+	stdlib/containers.cpp
+	stdlib/string.cpp
+	stdlib/tuple.cpp
+	stdlib/core.cpp
+	evaluate.cpp
+	enviroment.cpp
+	data.cpp
+	main.cpp
+)
+
+
 
 add_executable(unit_tests ${SOURCE_FILES})
 target_link_libraries(unit_tests xigua gtest)

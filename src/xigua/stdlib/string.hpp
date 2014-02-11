@@ -41,7 +41,7 @@ namespace stdlib {
 			int start_pos = (int)args.at(1).as_number();
 			int length = (int)args.at(2).as_number() - start_pos;
 
-			std::string return_string = start_string.substr(start_pos, length);
+			std::string return_string = start_string.substr(start_pos, length+1);
 			return data(data_type::string, return_string);
 		}
 	};
