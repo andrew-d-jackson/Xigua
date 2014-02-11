@@ -1,7 +1,7 @@
 ![Xigua](http://i.imgur.com/TFpew7Z.png)
 ===
 
-[![Build Status](https://travis-ci.org/LiquidHelium/XiguaLang.png?branch=master)](https://travis-ci.org/LiquidHelium/XiguaLang)
+[![Build Status](https://travis-ci.org/LiquidHelium/Xigua.png?branch=master)](https://travis-ci.org/LiquidHelium/Xigua)
 
 
 Xigua is a interpreted functional programming language that aims to be simple, extensible, flexible and easily integrated into other projects. Xigua is written in modern C++ and requires no other libraries or tools to run other than a C++11 compiler. This repo also contains a Sublime Text theme for the language.
