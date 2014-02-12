@@ -179,6 +179,29 @@ namespace stdlib {
 		}
 	};
 
+	class filter : public method {
+		int amount_of_arguments() const { return 2; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::function)
+				throw error(error_types::invalid_arguments, "Not A Function", fcl);
+
+			if (args.at(1).type() != data_type::tuple)
+				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+
+			auto fn = args.at(0).as_function();
+			auto original = args.at(1).as_tuple();
+			std::vector<data> ret;
+			std::copy_if(original.begin(), original.end(), std::back_inserter(ret),
+					[&](const data &i){ 
+						std::vector<data> a;
+						a.push_back(i);
+						return (make_boolean(true) == fn.call(a, env, fcl));
+					 });
+
+			return make_tuple(ret);
+		}
+	};
 
 	class partial : public method {
 		int amount_of_arguments() const { return 2; }

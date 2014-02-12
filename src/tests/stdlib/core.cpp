@@ -90,6 +90,19 @@ TEST(Standard_Library_Core, Map) {
   );
 }
 
+TEST(Standard_Library_Core, Filter) {
+  enviroment env = get_global_enviroment();
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[filter [fn {i} [== i 2]] {1 2 3 4 2}]")),
+    make_tuple({make_number(2), make_number(2)})
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[filter [fn {i} [> i 2]] {1 2 3 4}]")),
+    make_tuple({make_number(3), make_number(4)})
+  );
+}
 
 TEST(Standard_Library_Core, Partial) {
   enviroment env = get_global_enviroment();
