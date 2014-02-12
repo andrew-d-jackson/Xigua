@@ -166,16 +166,45 @@ TEST(Standard_Library_Math, Greater_Than) {
   
   EXPECT_EQ(
     evaluate(env, parser::from_string("[> 2 4]")),
-  	make_boolean(false)
+    make_boolean(false)
   );
 
   EXPECT_EQ(
     evaluate(env, parser::from_string("[> 4 2]")),
-  	make_boolean(true)
+    make_boolean(true)
   );
 
   EXPECT_EQ(
     evaluate(env, parser::from_string("[> [+ 2 4] 2]")),
-  	make_boolean(true)
+    make_boolean(true)
+  );
+}
+
+TEST(Standard_Library_Math, Modulo) {
+  enviroment env = get_global_enviroment();
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[% 2 4]")),
+    make_number(2)
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[% 6 4]")),
+    make_number(2)
+  );
+
+  ASSERT_DOUBLE_EQ(
+    evaluate(env, parser::from_string("[% 6 4.2]")).as_number(),
+    1.8
+  );
+
+  ASSERT_DOUBLE_EQ(
+    evaluate(env, parser::from_string("[% 6.2 4]")).as_number(),
+    2.2
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[% 6.2 4.2]")),
+    make_number(2)
   );
 }

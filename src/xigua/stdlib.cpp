@@ -59,6 +59,8 @@ namespace xig
 		enviroment.set("<=", make_function(stdlib::less_than_or_equal()));
 
 		enviroment.set("==", make_function(stdlib::equal_to()));
+
+		enviroment.set("%", make_function(stdlib::modulo()));
 	
 	//string
 
@@ -69,7 +71,7 @@ namespace xig
 	//boolean
 
 		enviroment.set("not", make_function(stdlib::boolean_not()));
-		
+
 		enviroment.set("and", make_function(stdlib::boolean_and()));
 
 		enviroment.set("or", make_function(stdlib::boolean_or()));

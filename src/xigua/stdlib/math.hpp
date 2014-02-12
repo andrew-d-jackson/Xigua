@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cmath>
 
 #include "xigua/data.hpp"
 #include "xigua/enviroment.hpp"
@@ -103,6 +104,17 @@ namespace stdlib {
 	class divide : public math_operation {
 		long double operate(long double a, long double b) const {
 			return a/b;
+		}
+	};
+
+	class modulo : public method {
+		int amount_of_arguments() const { return 2; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {			
+			if (!utils::all_types_are(args, data_type::number))
+				throw error(error_types::invalid_arguments, "Not A Number", fcl);
+
+			return make_number(std::fmod(args.at(0).as_number(), args.at(1).as_number()));
 		}
 	};
 }}
