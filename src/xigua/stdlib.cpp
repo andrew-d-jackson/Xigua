@@ -69,6 +69,10 @@ namespace xig
 	//boolean
 
 		enviroment.set("not", make_function(stdlib::boolean_not()));
+		
+		enviroment.set("and", make_function(stdlib::boolean_and()));
+
+		enviroment.set("or", make_function(stdlib::boolean_or()));
 
 	//tuple
 
