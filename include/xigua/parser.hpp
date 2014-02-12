@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 #include "xigua/data.hpp"
 #include "xigua/error.hpp"
