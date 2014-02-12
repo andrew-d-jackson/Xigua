@@ -8,6 +8,7 @@ set(SOURCE_FILES
 	evaluate.cpp
 	enviroment.cpp
 	data.cpp
+	parser.cpp
 	main.cpp
 )
 

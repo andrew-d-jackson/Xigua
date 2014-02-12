@@ -128,6 +128,10 @@ namespace xig {
 			}
 		}
 
+		if (string_buffer_contains_data) {
+			parsed_list.push_back(string_buffer.str());
+		}
+
 		return parsed_list;
 
 	}
@@ -147,6 +151,15 @@ namespace xig {
 		if (opening != closing)
 			throw xig::error(xig::error_types::unmatching_brackets, "Amount Of Opening And Closing Brackets Do Not Match", {});
 	}
+
+	data parser::string_list_to_data_type(const std::vector<std::string> string_list) {
+		auto i = parser::string_list_to_data_type(string_list, data_type::process);
+		auto p = i.as_process();
+		if (p.size() == 1)
+			return p.at(0);
+		return i;
+	}	
+
 
 	data parser::string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type) {
 
@@ -190,7 +203,6 @@ namespace xig {
 	}
 
 	data parser::string_to_data_type(const std::string input_string) {
-
 		if (is_number(input_string))
 		{
 			data data(data_type::number, (long double) atof(input_string.c_str()));

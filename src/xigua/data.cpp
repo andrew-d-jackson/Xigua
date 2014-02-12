@@ -103,7 +103,7 @@ namespace xig
 			return true;
 
 		if (type() == data_type::symbol)
-			return false;
+			return (as_symbol() == other.as_symbol());
 		
 		if (type() == data_type::boolean)
 			return (as_boolean() == other.as_boolean());
@@ -332,6 +332,9 @@ namespace xig
 		else if (in_data.type() == data_type::keyword) {
 			return_value += ":" + in_data.as_string();
 		}
+		else if (in_data.type() == data_type::symbol) {
+			return_value += in_data.as_symbol();
+		}
 		else if (in_data.type() == data_type::boolean){
 			if (in_data.as_boolean()) {
 				return_value += "true";
@@ -374,6 +377,14 @@ namespace xig
 			}
 			return_value += "}";
 		}
+		else if (in_data.type() == data_type::process){
+			return_value += "[ ";
+			for (auto element : in_data.as_process()) {
+				return_value += string_representation(element);
+				return_value += " ";
+			}
+			return_value += "]";
+		}
 		return return_value;
 	}
 
@@ -383,6 +394,10 @@ namespace xig
 
 	data make_string(std::string str) {
 		return data(data_type::string, str);
+	}
+
+	data make_symbol(std::string str) {
+		return data(data_type::symbol, str);
 	}
 
 	data make_keyword(std::string str) {
