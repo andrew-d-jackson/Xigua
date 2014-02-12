@@ -6,7 +6,7 @@
 
 namespace xig {
 
-	enum class error_types { unmatching_brackets, invalid_arguments, parsing_error, };
+	enum class error_types { internal_error, unmatching_brackets, invalid_arguments, parsing_error, };
 
 	class error {
 	private:
