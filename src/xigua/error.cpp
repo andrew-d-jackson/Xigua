@@ -2,14 +2,14 @@
 
 namespace xig {
 
-		error::error(error_types error_type, std::string descripton, std::vector<std::string> function_call_list) {
-			this->error_type = error_type;
+		error::error(error_type e_type, std::string descripton, std::vector<std::string> function_call_list) {
+			this->my_error_type = e_type;
 			this->descripton = descripton;
 			this->function_call_list = function_call_list;
 		}
 
-		error_types error::get_error_type() const {
-			return error_type;
+		error_type error::get_error_type() const {
+			return my_error_type;
 		};
 
 		std::string error::get_description() const {
@@ -21,7 +21,7 @@ namespace xig {
 		};
 
 		void error::print_default_message() const {
-			std::cout << "Error: " << (int)error_type << std::endl;
+			std::cout << "Error: " << (int)my_error_type << std::endl;
 
 			std::cout << "Description: " << descripton << std::endl;
 

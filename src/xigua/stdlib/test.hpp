@@ -17,7 +17,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::string)
-				throw error(error_types::invalid_arguments, "Not A String", fcl);
+				throw error(error_type::invalid_arguments, "Not A String", fcl);
 
 			if (args.at(1) == args.at(2)) {
 				std::cout << "Test Passed: " << args.at(0).as_string() << std::endl;
@@ -37,7 +37,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::string)
-				throw error(error_types::invalid_arguments, "Not A String", fcl);
+				throw error(error_type::invalid_arguments, "Not A String", fcl);
 
 			if (args.at(1) != args.at(2)) {
 				std::cout << "Test Passed: " << args.at(0).as_string() << std::endl;
@@ -57,10 +57,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::string)
-				throw error(error_types::invalid_arguments, "Not A String", fcl);
+				throw error(error_type::invalid_arguments, "Not A String", fcl);
 			
 			if (args.at(1).type() != data_type::boolean)
-				throw error(error_types::invalid_arguments, "Not A Boolean", fcl);
+				throw error(error_type::invalid_arguments, "Not A Boolean", fcl);
 
 			if (args.at(1).as_boolean()) {
 				std::cout << "Test Passed: " << args.at(0).as_string() << std::endl;

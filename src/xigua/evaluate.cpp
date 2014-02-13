@@ -9,7 +9,7 @@ namespace xig {
 			auto sym = input_data.as_symbol();
 			data * symbol_value = env.find(input_data.as_symbol());
 			if (symbol_value == nullptr) {
-				throw xig::error(xig::error_types::invalid_arguments, "Cannot Find Symbol: " + input_data.as_symbol(), function_call_list);
+				throw xig::error(xig::error_type::invalid_arguments, "Cannot Find Symbol: " + input_data.as_symbol(), function_call_list);
 			}
 			return *symbol_value;
 		}
@@ -35,7 +35,7 @@ namespace xig {
 		}
 		else if (input_data.type() == data_type::process)
 		{
-			if (input_data.as_process().size() == 0) throw error(error_types::parsing_error, "No Data In Process", {});
+			if (input_data.as_process().size() == 0) throw error(error_type::parsing_error, "No Data In Process", {});
 
 			if (input_data.as_process().at(0).type() == data_type::process || input_data.as_process().at(0).type() == data_type::symbol)
 			{

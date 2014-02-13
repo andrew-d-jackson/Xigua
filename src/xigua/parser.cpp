@@ -31,7 +31,7 @@ namespace xig {
 
 		std::ifstream file_stream(file_location.c_str());
 		if (!((bool)file_stream)) {
-			throw error(error_types::parsing_error, "File Does Not Exist: " + file_location, {});
+			throw error(error_type::parsing_error, "File Does Not Exist: " + file_location, {});
 		}
 		std::stringstream string_buffer;
 		string_buffer << file_stream.rdbuf();
@@ -151,7 +151,7 @@ namespace xig {
 		}
 
 		if (opening != closing)
-			throw xig::error(xig::error_types::unmatching_brackets, "Amount Of Opening And Closing Brackets Do Not Match", {});
+			throw xig::error(xig::error_type::unmatching_brackets, "Amount Of Opening And Closing Brackets Do Not Match", {});
 	}
 
 	data parser::string_list_to_data_type(const std::vector<std::string> string_list) {

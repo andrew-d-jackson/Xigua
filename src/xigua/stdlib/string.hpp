@@ -32,10 +32,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::string)
-				throw error(error_types::invalid_arguments, "Not A String", fcl);
+				throw error(error_type::invalid_arguments, "Not A String", fcl);
 
 			if (args.at(1).type() != data_type::number || args.at(2).type() != data_type::number)
-				throw error(error_types::invalid_arguments, "Not A Number", fcl);
+				throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
 			std::string start_string = args.at(0).as_string();
 			int start_pos = (int)args.at(1).as_number();

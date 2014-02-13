@@ -55,7 +55,7 @@ namespace xig {
 
 		std::stringstream error_message ("dosen't match a method overload in function. Amount of Args Passed:");
 		error_message << (int)args.size();
-		throw error(error_types::invalid_arguments, error_message.str(), function_call_list);
+		throw error(error_type::invalid_arguments, error_message.str(), function_call_list);
 	}
 
 	

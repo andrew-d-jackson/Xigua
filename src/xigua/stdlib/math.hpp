@@ -23,7 +23,7 @@ namespace stdlib {
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			auto arguments = utils::parse_arguments(args, 2);
 			if (!utils::all_types_are(arguments, data_type::number) && all_types_must_be_numbers())
-				throw error(error_types::invalid_arguments, "Not A Number", fcl);
+				throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
 			for (auto it = arguments.begin(); it < arguments.end()-1; it++) {
 				if (!compare(*it, *(it+1)))
@@ -73,7 +73,7 @@ namespace stdlib {
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			auto arguments = utils::parse_arguments(args, 2);
 			if (!utils::all_types_are(arguments, data_type::number))
-				throw error(error_types::invalid_arguments, "Not A Number", fcl);
+				throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
 			long double return_value = arguments.at(0).as_number();
 			for (auto it = arguments.begin()+1; it < arguments.end(); it++) {
@@ -112,7 +112,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {			
 			if (!utils::all_types_are(args, data_type::number))
-				throw error(error_types::invalid_arguments, "Not A Number", fcl);
+				throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
 			return make_number(std::fmod(args.at(0).as_number(), args.at(1).as_number()));
 		}

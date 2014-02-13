@@ -34,7 +34,7 @@ namespace stdlib {
 			bool repeating = false;
 			for (auto arg : args.at(0).as_tuple()) {
 				if (arg.type() != data_type::symbol) {
-					throw error(error_types::invalid_arguments, "Not A Symbol In Tuple", fcl);
+					throw error(error_type::invalid_arguments, "Not A Symbol In Tuple", fcl);
 				}
 				else if (arg.as_symbol() == "&") {
 					repeating = true;
@@ -92,16 +92,16 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::map)
-				throw error(error_types::invalid_arguments, "Not A HashMap", fcl);
+				throw error(error_type::invalid_arguments, "Not A HashMap", fcl);
 
 			if (args.at(1).type() != data_type::process)
-				throw error(error_types::invalid_arguments, "Not A Process", fcl);
+				throw error(error_type::invalid_arguments, "Not A Process", fcl);
 
 
 			enviroment container_enviroment(env_type::let, &env);
 			for (auto map_pair : args.at(0).as_map()) {
 				if (map_pair.first.type() != data_type::symbol)
-					throw xig::error(xig::error_types::invalid_arguments, "Not A Symbol", fcl);
+					throw xig::error(xig::error_type::invalid_arguments, "Not A Symbol", fcl);
 
 				container_enviroment.set(map_pair.first.as_symbol(), evaluate(container_enviroment, map_pair.second, fcl), true);
 			}
@@ -140,7 +140,7 @@ namespace stdlib {
 				unsigned tuple_sizes = arguments.at(0).as_tuple().size();
 				for (unsigned int i(1); i < arguments.size() - 1; i++)	{
 					if (arguments.at(i).as_tuple().size() != tuple_sizes)
-						throw error(error_types::invalid_arguments, "Tuple Lengths Are Different", fcl);
+						throw error(error_type::invalid_arguments, "Tuple Lengths Are Different", fcl);
 				}
 			}
 
@@ -164,10 +164,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::function)
-				throw error(error_types::invalid_arguments, "Not A Function", fcl);
+				throw error(error_type::invalid_arguments, "Not A Function", fcl);
 
 			if (args.at(1).type() != data_type::tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
 
 			std::vector<data> temp_proc = { args.at(0) };
 
@@ -184,10 +184,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::function)
-				throw error(error_types::invalid_arguments, "Not A Function", fcl);
+				throw error(error_type::invalid_arguments, "Not A Function", fcl);
 
 			if (args.at(1).type() != data_type::tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
 
 			auto fn = args.at(0).as_function();
 			auto original = args.at(1).as_tuple();
@@ -209,7 +209,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::function)
-				throw error(error_types::invalid_arguments, "Not A Function", fcl);
+				throw error(error_type::invalid_arguments, "Not A Function", fcl);
 
 			auto arguments = utils::parse_arguments(args, 2);
 			
@@ -245,14 +245,14 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
 
 			if (args.at(1).type() != data_type::process)
-				throw error(error_types::invalid_arguments, "Not A Process", fcl);
+				throw error(error_type::invalid_arguments, "Not A Process", fcl);
 
 			for (const auto &i: args.at(0).as_tuple()) {
 				if (i.type() != data_type::symbol)
-					throw error(error_types::invalid_arguments, "Not A Symbol", fcl);
+					throw error(error_type::invalid_arguments, "Not A Symbol", fcl);
 			}
 
 			struct fn : public method {
@@ -301,7 +301,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::string)
-				throw error(error_types::invalid_arguments, "Not A Sring", fcl);
+				throw error(error_type::invalid_arguments, "Not A Sring", fcl);
 
 			auto file_name = args.at(0).as_string();
 			evaluate(env, parser::from_file(file_name, env));
@@ -316,10 +316,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::symbol)
-				throw error(error_types::invalid_arguments, "Not A Symbol", fcl);
+				throw error(error_type::invalid_arguments, "Not A Symbol", fcl);
 
 			if (args.at(1).type() != data_type::string)
-				throw error(error_types::invalid_arguments, "Not A Sring", fcl);
+				throw error(error_type::invalid_arguments, "Not A Sring", fcl);
 
 			auto file_name = args.at(1).as_string();
 			auto import_name = args.at(0).as_symbol();

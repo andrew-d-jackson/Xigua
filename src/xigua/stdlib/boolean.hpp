@@ -18,7 +18,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::boolean)
-				throw error(error_types::invalid_arguments, "Not A Boolean", fcl);
+				throw error(error_type::invalid_arguments, "Not A Boolean", fcl);
 
 			return data(data_type::boolean, !(args.at(0).as_boolean()));
 		}
@@ -31,7 +31,7 @@ namespace stdlib {
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			auto inputs = utils::parse_arguments(args, 2);
 			if (!utils::all_types_are(inputs, data_type::boolean))
-				throw error(error_types::invalid_arguments, "Not A Boolean", fcl);
+				throw error(error_type::invalid_arguments, "Not A Boolean", fcl);
 
 			return make_boolean(std::find(inputs.begin(), inputs.end(), make_boolean(false)) == inputs.end());
 		}
@@ -44,7 +44,7 @@ namespace stdlib {
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {			
 			auto inputs = utils::parse_arguments(args, 2);
 			if (!utils::all_types_are(inputs, data_type::boolean))
-				throw error(error_types::invalid_arguments, "Not A Boolean", fcl);
+				throw error(error_type::invalid_arguments, "Not A Boolean", fcl);
 
 			return make_boolean(std::find(inputs.begin(), inputs.end(), make_boolean(true)) != inputs.end());
 		}

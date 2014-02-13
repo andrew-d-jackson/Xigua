@@ -17,7 +17,7 @@ namespace xig
 		} else if (in_type == data_type::keyword) {
 			keyword(string_data);
 		} else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data std::string", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data std::string", {});
 		}
 	}
 
@@ -27,7 +27,7 @@ namespace xig
 		if (in_type == data_type::number){
 			number(number_data);
 		} else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data long double", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data long double", {});
 		}
 	}
 
@@ -37,7 +37,7 @@ namespace xig
 		if (in_type == data_type::boolean){
 			boolean(boolean_data);
 		} else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data bool", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data bool", {});
 		}
 	}
 
@@ -51,7 +51,7 @@ namespace xig
 		} else if (in_type == data_type::map) {
 			hash_map(list_data);
 		} else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data std::vector<data>", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data std::vector<data>", {});
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace xig
 		if (in_type == data_type::map){
 			hash_map(map_data);
 		}  else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data std::map<data, data>", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data std::map<data, data>", {});
 		}
 		
 	}
@@ -72,7 +72,7 @@ namespace xig
 		if (in_type == data_type::function){
 			functions(function_data);
 		}  else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data function", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data function", {});
 		}
 	}
 
@@ -82,7 +82,7 @@ namespace xig
 		if (in_type == data_type::container){
 			container(container_data);
 		}  else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::data enviroment", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::data enviroment", {});
 		}
 	}
 
@@ -201,7 +201,7 @@ namespace xig
 		} else if (in_type == data_type::container){
 			data_pointer = std::shared_ptr<void>(new enviroment(env_type::container));
 		} else {
-			throw error(error_types::internal_error, "Wrong Data Passed to data::type", {});
+			throw error(error_type::internal_error, "Wrong Data Passed to data::type", {});
 		}
 	}
 

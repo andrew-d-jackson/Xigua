@@ -37,7 +37,7 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
 
 			auto initial_tuple = args.at(0).as_tuple();
 			std::sort(initial_tuple.begin(), initial_tuple.end());
@@ -53,10 +53,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
 
 			if (args.at(0).as_tuple().size() < 1)
-				throw error(error_types::invalid_arguments, "Not In Range", fcl);
+				throw error(error_type::invalid_arguments, "Not In Range", fcl);
 
 			return args.at(0).as_tuple().at(0);
 		}
@@ -67,10 +67,10 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (args.at(0).type() != data_type::tuple)
-				throw error(error_types::invalid_arguments, "Not A Tuple", fcl);
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
 
 			if (args.at(0).as_tuple().size() < 1)
-				throw error(error_types::invalid_arguments, "Not In Range", fcl);
+				throw error(error_type::invalid_arguments, "Not In Range", fcl);
 
 			return args.at(0).as_tuple().at(args.at(0).as_tuple().size() - 1);
 		}
@@ -81,18 +81,18 @@ namespace stdlib {
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
 			if (!utils::all_types_are(args, data_type::number))
-				throw error(error_types::invalid_arguments, "Not A Number", fcl);
+				throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
 			long double start = args.at(0).as_number();
 			long double end = args.at(1).as_number();
 			long double step = args.at(2).as_number();
 
 			if (start > end && step >= 0)
-				throw error(error_types::invalid_arguments, "Range Invalid", fcl);
+				throw error(error_type::invalid_arguments, "Range Invalid", fcl);
 			else if (start < end && step <= 0)
-				throw error(error_types::invalid_arguments, "Range Invalid", fcl);
+				throw error(error_type::invalid_arguments, "Range Invalid", fcl);
 			else if (step == 0 || start == end)
-				throw error(error_types::invalid_arguments, "Range Invalid", fcl);
+				throw error(error_type::invalid_arguments, "Range Invalid", fcl);
 
 
 			std::vector<data> return_value;
