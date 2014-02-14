@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <functional>
+#include <numeric>
 
 #include "xigua/data.hpp"
 #include "xigua/enviroment.hpp"
@@ -176,6 +177,58 @@ namespace stdlib {
 
 			data temp_function(data_type::process, temp_proc);
 			return evaluate(env, temp_function, fcl);
+		}
+	};
+
+
+	class foldl : public method {
+		int amount_of_arguments() const { return 3; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::function)
+				throw error(error_type::invalid_arguments, "Not A Function", fcl);
+
+			if (args.at(2).type() != data_type::tuple)
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+
+			auto items = args.at(2).as_tuple();
+			auto fn = args.at(0).as_function();
+
+			auto ret = std::accumulate(items.begin(), items.end(), args.at(1),
+				[&](const data &a, const data &b){
+					std::vector<data> fn_args;
+					fn_args.push_back(a);
+					fn_args.push_back(b);
+					return fn.call(fn_args, env, fcl);
+			});
+
+			return ret;
+		}
+	};
+
+
+	class foldr : public method {
+		int amount_of_arguments() const { return 3; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::function)
+				throw error(error_type::invalid_arguments, "Not A Function", fcl);
+
+			if (args.at(2).type() != data_type::tuple)
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+
+			auto items = args.at(2).as_tuple();
+			auto fn = args.at(0).as_function();
+
+			auto ret = std::accumulate(items.rbegin(), items.rend(), args.at(1),
+				[&](const data &a, const data &b){
+					std::vector<data> fn_args;
+					fn_args.push_back(b);
+					fn_args.push_back(a);
+					return fn.call(fn_args, env, fcl);
+			});
+
+			return ret;
 		}
 	};
 

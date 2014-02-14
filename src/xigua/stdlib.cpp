@@ -38,6 +38,10 @@ namespace xig
 
 		enviroment.set("map", make_function(stdlib::map()));
 
+		enviroment.set("foldl", make_function(stdlib::foldl()));
+
+		enviroment.set("foldr", make_function(stdlib::foldr()));
+
 		enviroment.set("filter", make_function(stdlib::filter()));
 
 		enviroment.set("part", make_function(stdlib::partial()));

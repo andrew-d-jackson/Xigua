@@ -113,3 +113,30 @@ TEST(Standard_Library_Core, Partial) {
   );
 }
 
+TEST(Standard_Library_Core, FoldL) {
+  enviroment env = get_global_enviroment();
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[foldl + 1 {1 2 3}]")),
+    make_number(7)
+  );
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[foldl / 10 {2 2}]")),
+    make_number(2.5)
+  );
+}
+
+TEST(Standard_Library_Core, FoldR) {
+  enviroment env = get_global_enviroment();
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[foldr + 1 {1 2 3}]")),
+    make_number(7)
+  );
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[foldr / 10 {2 2}]")),
+    make_number(10)
+  );
+}

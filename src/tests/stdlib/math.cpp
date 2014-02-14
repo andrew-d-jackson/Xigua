@@ -193,12 +193,12 @@ TEST(Standard_Library_Math, Modulo) {
     make_number(2)
   );
 
-  ASSERT_DOUBLE_EQ(
+  EXPECT_DOUBLE_EQ(
     evaluate(env, parser::from_string("[% 6 4.2]")).as_number(),
     1.8
   );
 
-  ASSERT_DOUBLE_EQ(
+  EXPECT_DOUBLE_EQ(
     evaluate(env, parser::from_string("[% 6.2 4]")).as_number(),
     2.2
   );
