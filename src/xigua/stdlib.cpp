@@ -92,6 +92,10 @@ namespace xig
 
 		enviroment.set("last", make_function(stdlib::last()));
 
+		enviroment.set("tail", make_function(stdlib::tail()));
+
+		enviroment.set("init", make_function(stdlib::init()));
+
 		enviroment.set("range", make_function(stdlib::range()));
 
 	//containers

@@ -61,6 +61,25 @@ TEST(Standard_Library_Tuple, Last) {
   );
 }
 
+
+TEST(Standard_Library_Tuple, Tail) {
+  enviroment env = get_global_enviroment();
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[tail {0 2 2 3}]")),
+    make_tuple({make_number(2), make_number(2), make_number(3)})
+  );
+}
+
+TEST(Standard_Library_Tuple, Init) {
+  enviroment env = get_global_enviroment();
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[init {0 2 2 3}]")),
+    make_tuple({make_number(0), make_number(2), make_number(2)})
+  );
+}
+
 TEST(Standard_Library_Tuple, Range) {
   enviroment env = get_global_enviroment();
   

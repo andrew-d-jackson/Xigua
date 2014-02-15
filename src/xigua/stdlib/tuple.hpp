@@ -76,6 +76,41 @@ namespace stdlib {
 		}
 	};
 
+	class tail : public method {
+		int amount_of_arguments() const { return 1; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::tuple)
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+
+			if (args.at(0).as_tuple().size() < 1)
+				throw error(error_type::invalid_arguments, "Not In Range", fcl);
+
+			auto t = args.at(0).as_tuple();
+			auto s = std::vector<data>(t.begin()+1, t.end());
+
+			return make_tuple(s);
+		}
+	};
+
+	class init : public method {
+		int amount_of_arguments() const { return 1; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (args.at(0).type() != data_type::tuple)
+				throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+
+			if (args.at(0).as_tuple().size() < 1)
+				throw error(error_type::invalid_arguments, "Not In Range", fcl);
+
+			auto t = args.at(0).as_tuple();
+			auto s = std::vector<data>(t.begin(), t.end()-1);
+
+			return make_tuple(s);
+		}
+	};
+
+
 	class range : public method {
 		int amount_of_arguments() const { return 3; }
 
