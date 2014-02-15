@@ -40,6 +40,12 @@ namespace xig {
 				methods.insert(std::shared_ptr<T>(new T(in_method)));
 			}
 
+			void merge_with_function(function other) {
+				for (const std::shared_ptr<method> &i : other.methods) {
+					methods.insert(i);
+				}
+			}
+
 			data call(std::vector<data> & args, enviroment & enviroment, std::vector<std::string> function_call_list);
 
 		private:

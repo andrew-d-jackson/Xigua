@@ -30,6 +30,22 @@ TEST(Standard_Library_Core, Fn) {
   );
 }
 
+TEST(Standard_Library_Core, Overload) {
+  enviroment env = get_global_enviroment();
+  evaluate(env, parser::from_string("[= f1 [fn {a b} [4]]]"));
+  evaluate(env, parser::from_string("[= f2 [overload f1 [fn {a} [6]]]]"));
+  
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[f2 1 1]")),
+    make_number(4)
+  );
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[f2 1]")),
+    make_number(6)
+  );
+}
+
 TEST(Standard_Library_Core, Macro) {
   enviroment env = get_global_enviroment();
   evaluate(env, parser::from_string("[= =fn [macro {name args proc} [= name [fn args proc]]]]"));

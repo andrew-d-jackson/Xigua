@@ -20,6 +20,8 @@ namespace xig
 
 		enviroment.set("fn", make_function(stdlib::create_lambda()));
 
+		enviroment.set("overload", make_function(stdlib::overload()));
+
 		enviroment.set("macro", make_function(stdlib::macro()));
 
 		enviroment.set("import", make_function(stdlib::import()));

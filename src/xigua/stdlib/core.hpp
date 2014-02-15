@@ -75,6 +75,21 @@ namespace stdlib {
 		};
 	};
 
+	class overload : public method {
+		int amount_of_arguments() const { return 2; }
+
+		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			if (!utils::all_types_are(args, data_type::function)) {
+				throw error(error_type::invalid_arguments, "Not A Function", fcl);
+			}
+
+			auto f = data(args.at(0)).as_function();
+			f.merge_with_function(args.at(1).as_function());
+
+			return data(data_type::function, f);
+		}
+	};
+
 	class if_expression : public method {
 		int amount_of_arguments() const { return 3; }
 		bool should_evaluate_arguments() const { return false; }
