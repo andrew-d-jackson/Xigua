@@ -30,7 +30,7 @@ TEST(Parser, Types) {
   );
 
   EXPECT_EQ(
-    parser::from_string("{1 2}"),
+    parser::from_string("(1 2)"),
   	make_tuple({make_number(1), make_number(2)})
   );
 }

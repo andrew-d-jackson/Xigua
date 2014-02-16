@@ -30,24 +30,24 @@
 [println [string "x is still " x]] ~ x is still 42
 
 ~ Xigua has lists, or more accuratley Tuples
-~ use { } to make them
+~ use ( ) to make them
 
-[= my-tuple {1 2 3 4}]
+[= my-tuple (1 2 3 4)]
 
 ~ Lambdas are created by using fn like this:
 
-[= greet [fn {name} [println [string "Hello, " name]]]]
+[= greet [fn (name) [println [string "Hello, " name]]]]
 [greet "Peter"] ~ Hello Peter
 
 
-[println "Tuple {1 2 3 4}"]
-[println [string "First " [first {1 2 3 4}]]]
-[println [string "last " [last {1 2 3 4}]]]
-[println [string "at 2 " [at 2 {1 2 3 4}]]]
-[println [string "size " [size {1 2 3 4}]]]
+[println "Tuple (1 2 3 4)"]
+[println [string "First " [first (1 2 3 4)]]]
+[println [string "last " [last (1 2 3 4)]]]
+[println [string "at 2 " [at 2 (1 2 3 4)]]]
+[println [string "size " [size (1 2 3 4)]]]
 
 
-[= mymap #{1 "Hello" 2 "Bye" 3 "Nothing" 4 "Something"}]
+[= mymap {1 "Hello" 2 "Bye" 3 "Nothing" 4 "Something"}]
 [println "HashMap"]
 [println mymap]
 [println [string "at 2 " [at 2 mymap]]]
@@ -55,12 +55,12 @@
 
 
 [= my-var "Let Works"]
-[let #{ my-var  [+ 2 2] }
+[let { my-var  [+ 2 2] }
     [println my-var]]
 [println my-var]
 
-[= add [fn {n} 
-	[let #{my-num n
+[= add [fn (n) 
+	[let {my-num n
 		   second [+ n n]}
 		[+ my-num second]]]]
 [println [add 2]]
@@ -71,7 +71,7 @@
 [println [add20 100 100]]
 
 
-[println [unique [join {20 20 20 10 20 10 40 20 90 99} {30 999}]]]
+[println [unique [join (20 20 20 10 20 10 40 20 90 99) (30 999)]]]
 
 [println [range 0 9 1]]
 

@@ -1,10 +1,10 @@
-[= Y [fn {f}
-    [[fn {x} [x x]]
-     [fn {x}
-         [f [fn {& args}
+[= Y [fn (f)
+    [[fn (x) [x x]]
+     [fn (x)
+         [f [fn (& args)
                 [apply args [x x]]]]]]]]
 
-[= fac [fn {f} [fn {n}
+[= fac [fn (f) [fn (n)
     [if [== 0 n]
         1
         [* n [f [- n 1]]]]]]]

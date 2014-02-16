@@ -1,5 +1,5 @@
 [bench "set" 10000 [= s 2]]
-[bench "fn" 10000 [fn {x} [+ x x]]]
+[bench "fn" 10000 [fn (x) [+ x x]]]
 [bench "if" 10000 [if true 2 2]]
 
 [bench "+" 10000 [+ 2 2]]
@@ -14,11 +14,11 @@
 
 [bench "not" 10000 [not true]]
 
-[bench "join" 10000 [join {1 2} {3 4}]]
-[bench "unique" 10000 [unique {1 2 3 4 5 2 2}]]
-[bench "first" 10000 [first {1 2 3 4 5 2 2}]]
-[bench "last" 10000 [last {1 2 3 4 5 2 2}]]
+[bench "join" 10000 [join (1 2) (3 4)]]
+[bench "unique" 10000 [unique (1 2 3 4 5 2 2)]]
+[bench "first" 10000 [first (1 2 3 4 5 2 2)]]
+[bench "last" 10000 [last (1 2 3 4 5 2 2)]]
 [bench "range" 10000 [range 1 4 2]]
 
-[bench "at" 10000 [at 1 {4 2}]]
-[bench "size" 10000 [size {4 2}]]
+[bench "at" 10000 [at 1 (4 2)]]
+[bench "size" 10000 [size (4 2)]]

@@ -61,23 +61,7 @@ namespace xig {
 				{
 					is_commenting = true;
 				}
-				else if (c == '#' && source_code.at(index + 1) == '{')
-				{
-					if (!is_reading_string) {
-						if (string_buffer_contains_data) {
-							parsed_list.push_back(string_buffer.str());
-							string_buffer.str("");
-							string_buffer_contains_data = false;
-						}
-						parsed_list.push_back(std::string("#{"));
-					}
-					else {
-						string_buffer << c;
-						string_buffer_contains_data = true;
-					}
-					index++;
-				}
-				else if (c == '[' || c == ']' || c == '{' || c == '}')
+				else if (c == '[' || c == ']' || c == '{' || c == '}' || c == '(' || c == ')')
 				{
 
 					if (!is_reading_string) {
@@ -168,13 +152,13 @@ namespace xig {
 		std::vector<data> current_data;
 		for (unsigned int index = 0; index < string_list.size(); ++index)
 		{
-			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{")
+			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "(")
 			{
 				data_type sub_list_type = data_type::process;
-				if (string_list.at(index) == "{"){
+				if (string_list.at(index) == "("){
 					sub_list_type = data_type::tuple;
 				}
-				else if (string_list.at(index) == "#{"){
+				else if (string_list.at(index) == "{"){
 					sub_list_type = data_type::map;
 				}
 
@@ -182,10 +166,10 @@ namespace xig {
 				int internal_lists = 1;
 				while (true) {
 					index++;
-					if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "#{") {
+					if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "(") {
 						internal_lists++;
 					}
-					else if (string_list.at(index) == "]" || string_list.at(index) == "}") {
+					else if (string_list.at(index) == "]" || string_list.at(index) == "}" || string_list.at(index) == ")") {
 						internal_lists--;
 						if (internal_lists == 0) {
 							break;

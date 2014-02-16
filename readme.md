@@ -15,7 +15,7 @@ Hello World
 
 Factorial
 
-    [= factorial [fn {n}
+    [= factorial [fn (n)
        [if [== n 0]
            1
            [* n [factorial [- n 1]]]]]]
@@ -24,10 +24,10 @@ Factorial
 
 Macros
 
-    [= =fn [macro {name args proc} 
+    [= =fn [macro (name args proc) 
                   [= name [fn args proc]]]]
     
-    [=fn add {a b} [+ a b]]
+    [=fn add (a b) [+ a b]]
     
     [println [add 2 2]]
     
