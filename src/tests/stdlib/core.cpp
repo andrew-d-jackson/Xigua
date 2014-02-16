@@ -28,6 +28,18 @@ TEST(Standard_Library_Core, Fn) {
     evaluate(env, parser::from_string("[add 1 1]")),
     make_number(2)
   );
+
+  evaluate(env, parser::from_string("[= multi [fn {a} [1] {a b} [2]]]"));
+
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[multi 1]")),
+    make_number(1)
+  );
+  EXPECT_EQ(
+    evaluate(env, parser::from_string("[multi 1 1]")),
+    make_number(2)
+  );
+
 }
 
 TEST(Standard_Library_Core, Overload) {

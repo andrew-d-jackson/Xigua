@@ -28,51 +28,59 @@ namespace stdlib {
 	class create_lambda : public method {
 		int amount_of_arguments() const { return 2; }
 		bool should_evaluate_arguments() const { return false; }
+		bool has_repeating_arguments() const { return true; }
 
 		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
+			auto arguments = utils::parse_arguments(args, 2);
 			enviroment new_env(env_type::function, &env);
+			function return_fn;
 
-			bool repeating = false;
-			for (auto arg : args.at(0).as_tuple()) {
-				if (arg.type() != data_type::symbol) {
-					throw error(error_type::invalid_arguments, "Not A Symbol In Tuple", fcl);
-				}
-				else if (arg.as_symbol() == "&") {
-					repeating = true;
-				}
-			}
-			int amount_of_args = args.at(0).as_tuple().size() - (int)repeating;
-
-			struct fn : public method {
-				int _amount_of_args;
-				std::vector<data> _args;
-				enviroment _new_env;
-
-				fn(int amount_of_args, std::vector<data> args, enviroment new_env)
-						: _amount_of_args(amount_of_args),
-						  _args(args),
-						  _new_env(new_env){}
-
-				int amount_of_arguments() const { return _amount_of_args; }
-
-				data run(std::vector<data> fn_args, enviroment & fn_env, std::vector<std::string> fn_fcl) {
-					short missing = 0;
-					for (unsigned int i(0); i < _args.at(0).as_tuple().size(); ++i){
-						if (_args.at(0).as_tuple().at(i).as_symbol() != "&") {
-							_new_env.set(_args.at(0).as_tuple().at(i).as_symbol(), fn_args.at(i - missing));
-						} else {
-							missing = 1;
-						}
+			for (int argument(0); argument < arguments.size(); argument+=2) {
+				bool repeating = false;
+				for (auto arg : arguments.at(argument).as_tuple()) {
+					if (arg.type() != data_type::symbol) {
+						throw error(error_type::invalid_arguments, "Not A Symbol In Tuple", fcl);
 					}
-					return evaluate(_new_env, _args.at(1), fn_fcl);
+					else if (arg.as_symbol() == "&") {
+						repeating = true;
+					}
 				}
+				int amount_of_args = arguments.at(argument).as_tuple().size() - (int)repeating;
 
-			} return_function = { amount_of_args, args, new_env };
 
-			data return_data(data_type::function, function(return_function));
+				struct fn : public method {
+					int _amount_of_args;
+					std::vector<data> _args;
+					data _proc;
+					enviroment _new_env;
 
-			return return_data;
-		};
+					fn(int amount_of_args, std::vector<data> args, data proc, enviroment new_env)
+							: _amount_of_args(amount_of_args),
+							  _args(args),
+							  _proc(proc),
+							  _new_env(new_env){}
+
+					int amount_of_arguments() const { return _amount_of_args; }
+
+					data run(std::vector<data> fn_args, enviroment & fn_env, std::vector<std::string> fn_fcl) {
+						short missing = 0;
+						for (unsigned int i(0); i < _args.size(); ++i){
+							if (_args.at(i).as_symbol() != "&") {
+								_new_env.set(_args.at(i).as_symbol(), fn_args.at(i - missing));
+							} else {
+								missing = 1;
+							}
+						}
+						return evaluate(_new_env, _proc, fn_fcl);
+					}
+
+				} return_function = { amount_of_args, arguments.at(argument).as_tuple(), arguments.at(argument+1), new_env };
+
+				return_fn.add_method(return_function);
+
+			}
+			return data(data_type::function, return_fn);
+		}
 	};
 
 	class overload : public method {
