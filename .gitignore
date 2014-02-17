@@ -8,3 +8,6 @@ xiguatest.exe
 repl
 repl.exe
 test.exe
+
+doxygen/html
+doxygen/latex
