@@ -11,6 +11,7 @@ namespace xig {
 	class data;
 	class enviroment;
 
+	//! Abstract class that is the base for writing your own Xigua functions
 	class method {
 	public:
 		virtual data run(std::vector<data>, enviroment &, std::vector<std::string>) = 0;
