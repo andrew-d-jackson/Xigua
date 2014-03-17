@@ -10,43 +10,46 @@
 
 #include "xigua/stdlib/utils.hpp"
 
-
 namespace xig {
 namespace stdlib {
 
-	class benchmark : public method {
-		int amount_of_arguments() const { return 3; }
-		bool should_evaluate_arguments() const { return false; }
+class benchmark : public method {
+  int amount_of_arguments() const { return 3; }
+  bool should_evaluate_arguments() const { return false; }
 
-		data run(std::vector<data> args, enviroment & env, std::vector<std::string> fcl) {
-			if (args.at(0).type() != data_type::string)
-				throw error(error_type::invalid_arguments, "Not A String", fcl);
+  data run(std::vector<data> args, enviroment &env,
+           std::vector<std::string> fcl) {
+    if (args.at(0).type() != data_type::string)
+      throw error(error_type::invalid_arguments, "Not A String", fcl);
 
-			if (args.at(1).type() != data_type::number)
-				throw error(error_type::invalid_arguments, "Not A Number", fcl);
+    if (args.at(1).type() != data_type::number)
+      throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
-			if (args.at(2).type() != data_type::process)
-				throw error(error_type::invalid_arguments, "Not A Process", fcl);
+    if (args.at(2).type() != data_type::process)
+      throw error(error_type::invalid_arguments, "Not A Process", fcl);
 
-  			std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start_time =
+        std::chrono::steady_clock::now();
 
-  			auto times = args.at(1).as_number();
-  			for (long i = 0; i < times; i++) {
-  				evaluate(env, args.at(2), fcl);
-  			}
+    auto times = args.at(1).as_number();
+    for (long i = 0; i < times; i++) {
+      evaluate(env, args.at(2), fcl);
+    }
 
-  			std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
-  			
-  			auto dur = std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(end_time - start_time).count();
-  			auto average = dur / times;
+    std::chrono::steady_clock::time_point end_time =
+        std::chrono::steady_clock::now();
 
-  			std::cout << "Benchmark: " << args.at(0).as_string() << std::endl <<
-  				"Total Time: " << dur << "ms" << std::endl <<
-  				 "Average Time: " << average << "ms" << std::endl;
+    auto dur =
+        std::chrono::duration_cast<std::chrono::duration<int, std::milli> >(
+            end_time - start_time).count();
+    auto average = dur / times;
 
-			return data(data_type::none);
-		}
-	};
+    std::cout << "Benchmark: " << args.at(0).as_string() << std::endl
+              << "Total Time: " << dur << "ms" << std::endl
+              << "Average Time: " << average << "ms" << std::endl;
 
-
-}}
+    return data(data_type::none);
+  }
+};
+}
+}

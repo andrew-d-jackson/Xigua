@@ -1,247 +1,218 @@
 #include "xigua/parser.hpp"
 
-
 namespace xig {
 
+data parser::from_file(std::string file_location, enviroment &env) {
 
-	data parser::from_file(std::string file_location, enviroment &env) {
+  file_location = env.relative_path() + file_location;
+  std::string source_code = read_file(file_location);
 
-		file_location = env.relative_path() + file_location;
-		std::string source_code = read_file(file_location);
+  size_t last_bracket = file_location.find_last_of("/\\");
+  if (last_bracket != file_location.npos) {
+    env.set_relative_path(file_location.substr(0, last_bracket + 1));
+  }
 
-		size_t last_bracket = file_location.find_last_of("/\\");
-		if (last_bracket != file_location.npos) {
-			env.set_relative_path(file_location.substr(0, last_bracket+1));
-		}
+  return from_string(source_code);
+}
 
+data parser::from_string(const std::string source_code) {
 
-		return from_string(source_code);
+  std::vector<std::string> string_list = source_to_string_list(source_code);
+  validate_string_list(string_list);
+  return string_list_to_data_type(string_list);
+}
 
-	}
+std::string parser::read_file(const std::string file_location) {
 
-	data parser::from_string(const std::string source_code) {
+  std::ifstream file_stream(file_location.c_str());
+  if (!((bool)file_stream)) {
+    throw error(error_type::parsing_error,
+                "File Does Not Exist: " + file_location, {});
+  }
+  std::stringstream string_buffer;
+  string_buffer << file_stream.rdbuf();
+  return string_buffer.str();
+}
 
-		std::vector<std::string> string_list = source_to_string_list(source_code);
-		validate_string_list(string_list);
-		return string_list_to_data_type(string_list);
+std::vector<std::string>
+parser::source_to_string_list(const std::string source_code) {
 
-	}
+  std::vector<std::string> parsed_list;
+  bool is_reading_string = false;
+  bool is_commenting = false;
+  std::stringstream string_buffer;
+  bool string_buffer_contains_data = false;
 
-	std::string parser::read_file(const std::string file_location) {
+  for (unsigned int index(0); index < source_code.size(); index++) {
+    char c = source_code.at(index);
+    if (is_commenting) {
+      if (c == '\n')
+        is_commenting = false;
+    } else {
+      if (c == '~' && !is_reading_string) {
+        is_commenting = true;
+      } else if (c == '[' || c == ']' || c == '{' || c == '}' || c == '(' ||
+                 c == ')') {
 
-		std::ifstream file_stream(file_location.c_str());
-		if (!((bool)file_stream)) {
-			throw error(error_type::parsing_error, "File Does Not Exist: " + file_location, {});
-		}
-		std::stringstream string_buffer;
-		string_buffer << file_stream.rdbuf();
-		return string_buffer.str();
+        if (!is_reading_string) {
+          if (string_buffer_contains_data) {
+            parsed_list.push_back(string_buffer.str());
+            string_buffer.str("");
+            string_buffer_contains_data = false;
+          }
+          parsed_list.push_back(std::string(1, c));
+        } else {
+          string_buffer << c;
+          string_buffer_contains_data = true;
+        }
+      } else if (c == ' ' || c == '\n' || c == '\t') {
 
-	}
+        if (!is_reading_string) {
+          if (string_buffer_contains_data) {
+            parsed_list.push_back(string_buffer.str());
+            string_buffer.str("");
+            string_buffer_contains_data = false;
+          }
+        } else {
+          string_buffer << c;
+          string_buffer_contains_data = true;
+        }
 
-	std::vector<std::string> parser::source_to_string_list(const std::string source_code) {
+      } else if (c == '"') {
+        string_buffer << '"';
+        if (is_reading_string) {
+          is_reading_string = false;
+          parsed_list.push_back(string_buffer.str());
+          string_buffer.str("");
+          string_buffer_contains_data = false;
+        } else {
+          is_reading_string = true;
+        }
 
-		std::vector<std::string> parsed_list;
-		bool is_reading_string = false;
-		bool is_commenting = false;
-		std::stringstream string_buffer;
-		bool string_buffer_contains_data = false;
+      } else {
 
-		for (unsigned int index(0); index < source_code.size(); index++)
-		{
-			char c = source_code.at(index);
-			if (is_commenting)
-			{
-				if (c == '\n')
-					is_commenting = false;
-			}
-			else
-			{
-				if (c == '~' && !is_reading_string)
-				{
-					is_commenting = true;
-				}
-				else if (c == '[' || c == ']' || c == '{' || c == '}' || c == '(' || c == ')')
-				{
+        string_buffer << c;
+        string_buffer_contains_data = true;
+      }
+    }
+  }
 
-					if (!is_reading_string) {
-						if (string_buffer_contains_data) {
-							parsed_list.push_back(string_buffer.str());
-							string_buffer.str("");
-							string_buffer_contains_data = false;
-						}
-						parsed_list.push_back(std::string(1, c));
-					}
-					else {
-						string_buffer << c;
-						string_buffer_contains_data = true;
-					}
-				}
-				else if (c == ' ' || c == '\n' || c == '\t') {
+  if (string_buffer_contains_data) {
+    parsed_list.push_back(string_buffer.str());
+  }
 
-					if (!is_reading_string) {
-						if (string_buffer_contains_data) {
-							parsed_list.push_back(string_buffer.str());
-							string_buffer.str("");
-							string_buffer_contains_data = false;
-						}
-					}
-					else {
-						string_buffer << c;
-						string_buffer_contains_data = true;
-					}
+  return parsed_list;
+}
 
-				}
-				else if (c == '"') {
-					string_buffer << '"';
-					if (is_reading_string) {
-						is_reading_string = false;
-						parsed_list.push_back(string_buffer.str());
-						string_buffer.str("");
-						string_buffer_contains_data = false;
-					}
-					else {
-						is_reading_string = true;
-					}
+void parser::validate_string_list(const std::vector<std::string> string_list) {
 
-				}
-				else {
+  int closing = 0;
+  int opening = 0;
 
-					string_buffer << c;
-					string_buffer_contains_data = true;
+  for (auto token : string_list) {
+    if (token == "[")
+      opening++;
+    else if (token == "]")
+      closing++;
+  }
 
-				}
-			}
-		}
+  if (opening != closing)
+    throw xig::error(xig::error_type::unmatching_brackets,
+                     "Amount Of Opening And Closing Brackets Do Not Match", {});
+}
 
-		if (string_buffer_contains_data) {
-			parsed_list.push_back(string_buffer.str());
-		}
+data
+parser::string_list_to_data_type(const std::vector<std::string> string_list) {
+  auto i = parser::string_list_to_data_type(string_list, data_type::process);
+  auto p = i.as_process();
+  if (p.size() == 1)
+    return p.at(0);
+  return i;
+}
 
-		return parsed_list;
+data
+parser::string_list_to_data_type(const std::vector<std::string> string_list,
+                                 const data_type list_type) {
 
-	}
+  std::vector<data> current_data;
+  for (unsigned int index = 0; index < string_list.size(); ++index) {
+    if (string_list.at(index) == "[" || string_list.at(index) == "{" ||
+        string_list.at(index) == "(") {
+      data_type sub_list_type = data_type::process;
+      if (string_list.at(index) == "(") {
+        sub_list_type = data_type::tuple;
+      } else if (string_list.at(index) == "{") {
+        sub_list_type = data_type::map;
+      }
 
-	void parser::validate_string_list(const std::vector<std::string> string_list) {
+      std::vector<std::string> sub_list;
+      int internal_lists = 1;
+      while (true) {
+        index++;
+        if (string_list.at(index) == "[" || string_list.at(index) == "{" ||
+            string_list.at(index) == "(") {
+          internal_lists++;
+        } else if (string_list.at(index) == "]" ||
+                   string_list.at(index) == "}" ||
+                   string_list.at(index) == ")") {
+          internal_lists--;
+          if (internal_lists == 0) {
+            break;
+          }
+        }
+        sub_list.push_back(string_list.at(index));
+      }
+      current_data.push_back(string_list_to_data_type(sub_list, sub_list_type));
+    } else {
+      current_data.push_back(string_to_data_type(string_list.at(index)));
+    }
+  }
+  return data(list_type, current_data);
+}
 
-		int closing = 0;
-		int opening = 0;
+data parser::string_to_data_type(const std::string input_string) {
+  if (is_number(input_string)) {
+    data data(data_type::number, (long double)atof(input_string.c_str()));
+    return data;
+  } else if (input_string[0] == '"') {
+    data data(data_type::string,
+              input_string.substr(1, input_string.size() - 2));
+    return data;
+  } else if (input_string[0] == ':') {
+    data data(data_type::keyword,
+              input_string.substr(1, input_string.size() - 1));
+    return data;
+  } else if (input_string == "true" || input_string == "false") {
+    bool return_value;
+    if (input_string == "true")
+      return_value = true;
+    else
+      return_value = false;
 
-		for (auto token : string_list) {
-			if (token == "[")
-				opening++;
-			else if (token == "]")
-				closing++;
-		}
+    return data(data_type::boolean, return_value);
+  } else {
+    data data(data_type::symbol, input_string);
+    return data;
+  }
+}
 
-		if (opening != closing)
-			throw xig::error(xig::error_type::unmatching_brackets, "Amount Of Opening And Closing Brackets Do Not Match", {});
-	}
+bool parser::is_number(std::string string) {
 
-	data parser::string_list_to_data_type(const std::vector<std::string> string_list) {
-		auto i = parser::string_list_to_data_type(string_list, data_type::process);
-		auto p = i.as_process();
-		if (p.size() == 1)
-			return p.at(0);
-		return i;
-	}	
+  if (string.size() < 1)
+    return false;
 
+  if (string.find_first_of("0123456789") == std::string::npos)
+    return false;
 
-	data parser::string_list_to_data_type(const std::vector<std::string> string_list, const data_type list_type) {
+  if (std::count(string.begin(), string.end(), '.') > 1)
+    return false;
 
-		std::vector<data> current_data;
-		for (unsigned int index = 0; index < string_list.size(); ++index)
-		{
-			if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "(")
-			{
-				data_type sub_list_type = data_type::process;
-				if (string_list.at(index) == "("){
-					sub_list_type = data_type::tuple;
-				}
-				else if (string_list.at(index) == "{"){
-					sub_list_type = data_type::map;
-				}
+  for (auto it = string.begin(); it < string.end(); it++) {
 
-				std::vector<std::string> sub_list;
-				int internal_lists = 1;
-				while (true) {
-					index++;
-					if (string_list.at(index) == "[" || string_list.at(index) == "{" || string_list.at(index) == "(") {
-						internal_lists++;
-					}
-					else if (string_list.at(index) == "]" || string_list.at(index) == "}" || string_list.at(index) == ")") {
-						internal_lists--;
-						if (internal_lists == 0) {
-							break;
-						}
-					}
-					sub_list.push_back(string_list.at(index));
-				}
-				current_data.push_back(string_list_to_data_type(sub_list, sub_list_type));
-			}
-			else
-			{
-				current_data.push_back(string_to_data_type(string_list.at(index)));
-			}
-		}
-		return data(list_type, current_data);
+    if (!(isdigit(*it) || *it == '.' || (*it == '-' && it == string.begin())))
+      return false;
+  }
 
-	}
-
-	data parser::string_to_data_type(const std::string input_string) {
-		if (is_number(input_string))
-		{
-			data data(data_type::number, (long double) atof(input_string.c_str()));
-			return data;
-		}
-		else if (input_string[0] == '"')
-		{
-			data data(data_type::string, input_string.substr(1, input_string.size() - 2));
-			return data;
-		}
-		else if (input_string[0] == ':')
-		{
-			data data(data_type::keyword, input_string.substr(1, input_string.size() - 1));
-			return data;
-		}
-		else if (input_string == "true" || input_string == "false")
-		{
-			bool return_value;
-			if (input_string == "true")
-				return_value = true;
-			else
-				return_value = false;
-
-			return data(data_type::boolean, return_value);
-		}
-		else
-		{
-			data data(data_type::symbol, input_string);
-			return data;
-		}
-
-	}
-
-	bool parser::is_number(std::string string) {
-		
-		if (string.size() < 1)
-			return false;
-		
-		if (string.find_first_of("0123456789") == std::string::npos)
-			return false;
-
-		if (std::count(string.begin(), string.end(), '.') > 1)
-			return false;
-
-		for(auto it = string.begin(); it < string.end(); it++) {
-
-			if (!(isdigit(*it) || *it == '.' || (*it == '-' && it == string.begin())))
-				return false;
-
-		}
-
-		return true;
-		
-	}
-
+  return true;
+}
 }
