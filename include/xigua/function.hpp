@@ -41,16 +41,15 @@ public:
 
 	  auto found = std::find_if(methods.begin(), methods.end(), [&](std::shared_ptr<method> &a){
 		  return (a->amount_of_arguments() == in_method->amount_of_arguments()) &&
-			  (a->has_repeating_arguments() == in_method->has_repeating_arguments());
+			  (a->has_repeating_arguments() == in_method->has_repeating_arguments()) &&
+			  !a->has_process_arguments();
 	  });
 
 	  if (in_method->has_process_arguments() || found == methods.end()) {
 		  methods.push_back(in_method);
 		  std::sort(methods.begin(), methods.end(), method_set_comparator());
 	  }
-	  else {
-		//  *found = in_method;
-	  }
+	  else { }
   }
 
   template <class T> function(T in_method) { add_method(in_method); }
