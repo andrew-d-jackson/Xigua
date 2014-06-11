@@ -5,6 +5,7 @@ namespace xig {
 enviroment::enviroment(env_type in_type) {
   type(in_type);
   my_relative_path = "";
+  my_parent = nullptr;
 }
 
 enviroment::enviroment(env_type in_type, enviroment *parent_enviroment) {
@@ -31,7 +32,7 @@ env_type enviroment::type() const {
   return my_type;
 };
 
-data *enviroment::find(std::string variable_name) {
+data *enviroment::find(std::string variable_name, bool this_only) {
   std::string delimiter = "::";
   size_t pos = 0;
   if ((pos = variable_name.find(delimiter)) != std::string::npos) {
@@ -42,7 +43,7 @@ data *enviroment::find(std::string variable_name) {
 
     auto e = find(var_env);
     if (e == nullptr || e->type() != data_type::container) {
-      if (parent() != nullptr) {
+      if (parent() != nullptr && !this_only) {
         auto data = parent()->find(variable_name);
         return data;
       }
@@ -54,7 +55,7 @@ data *enviroment::find(std::string variable_name) {
   if (defined_variables.find(variable_name) != defined_variables.end())
     return &defined_variables[variable_name];
 
-  if (parent() != nullptr) {
+  if (parent() != nullptr && !this_only) {
     auto data = parent()->find(variable_name);
     return data;
   }

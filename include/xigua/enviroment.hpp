@@ -31,7 +31,7 @@ public:
 
   //! Find a variable in this enviroment, returns a pointer to the a data object
   //! of the variable if found, returns nullptr if not
-  data *find(std::string variable_name);
+  data *find(std::string variable_name, bool this_only = false);
 
   //! Insert a variable into the enviroment, force_here forces the variable to
   //be

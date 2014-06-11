@@ -7,6 +7,7 @@
 #include "xigua/stdlib/tuple.hpp"
 #include "xigua/stdlib/containers.hpp"
 #include "xigua/stdlib/benchmark.hpp"
+#include "xigua/stdlib/function.hpp"
 #include "xigua/stdlib/test.hpp"
 
 namespace xig {
