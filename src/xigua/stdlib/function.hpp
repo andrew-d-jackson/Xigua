@@ -28,72 +28,58 @@ void traverseProcess(data process, std::function<void(data&)> fn) {
 
 struct WrappedFunction : public method {
 public:
-	WrappedFunction(int amount_of_args, bool process_arguments, std::vector<data> args, data proc, enviroment new_env)
-		: amount_of_args(amount_of_args), process_arguments(process_arguments), args(args), proc(proc), new_env(new_env) {}
+	WrappedFunction(int amount_of_args, bool process_args, std::vector<data> args, data proc, enviroment new_env)
+		: amount_of_args(amount_of_args), process_args(process_args), args(args), proc(proc), new_env(new_env) {}
 
 	int amount_of_arguments() const { return amount_of_args; }
-	bool has_process_arguments() const { return process_arguments; }
+	bool has_process_arguments() const { return process_args; }
 
 	bool process_arguments_pass(std::vector<data> fn_args, enviroment &fn_env, std::vector<std::string> fn_fcl) {
-		if (!process_arguments) return true;
-		short missing = 0;
-		for (unsigned int i(0); i < args.size(); ++i) {
-			if (args.at(i).type() == data_type::process) {
-				
-				traverseProcess(args.at(i), [&](data &traversed){
-					if (traversed.type() == data_type::symbol) {
-
-						bool found_in_self = (new_env.find(traversed.as_symbol(), true) != nullptr);
-						bool found_anywhere = (new_env.find(traversed.as_symbol()) != nullptr);
-
-						if ((!found_anywhere) || !(found_anywhere && !found_in_self))  {
-							new_env.set(traversed.as_symbol(), fn_args.at(i - missing));
-							missing--;
-						}
-					}
-				});
-
-				auto result = evaluate(new_env, args.at(i), fn_fcl);
-				if (result.type() != data_type::boolean || !result.as_boolean()){
-					return false;
-				}
-			} else if (args.at(i).as_symbol() != "&") {
-				new_env.set(args.at(i).as_symbol(), fn_args.at(i - missing));
-			} else {
-				missing++;
-			}
-		}
-		return true;
+		if (!process_args) return true;
+        bool ret = true;
+        process_arguments(fn_args, fn_env, [&](data &val){
+            auto result = evaluate(new_env, val, fn_fcl);
+            if (result.type() != data_type::boolean || !result.as_boolean()){
+                ret = false;
+            }
+        });
+		return ret;
 	}
 
 
 	data run(std::vector<data> fn_args, enviroment &fn_env,	std::vector<std::string> fn_fcl) {
-		short missing = 0;
-		for (unsigned int i(0); i < args.size(); ++i) {
-			if (args.at(i).type() == data_type::process) {
-				traverseProcess(args.at(i), [&](data &traversed){
-					if (traversed.type() == data_type::symbol) {
-						bool found_in_self = (new_env.find(traversed.as_symbol(), true) != nullptr);
-						bool found_anywhere = (new_env.find(traversed.as_symbol()) != nullptr);
-
-						if ((!found_anywhere) || !(found_anywhere && !found_in_self))  {
-							new_env.set(traversed.as_symbol(), fn_args.at(i - missing));
-							missing--;
-						}
-					}
-				});
-			} else if (args.at(i).as_symbol() != "&") {
-				new_env.set(args.at(i).as_symbol(), fn_args.at(i - missing));
-			} else {
-				missing++;
-			}
-		}
+        process_arguments(fn_args, fn_env);
 		return evaluate(new_env, proc, fn_fcl);
 	}
 
 private:
+    void process_arguments(std::vector<data> fn_args, enviroment &fn_env, std::function<void(data&)> handle_process = {}) {
+        short missing = 0;
+        for (unsigned int i(0); i < args.size(); ++i) {
+            if (args.at(i).type() == data_type::process) {
+                traverseProcess(args.at(i), [&](data &traversed){
+                    if (traversed.type() == data_type::symbol) {
+                        bool found_in_self = (new_env.find(traversed.as_symbol(), true) != nullptr);
+                        bool found_anywhere = (new_env.find(traversed.as_symbol()) != nullptr);
+                        
+                        if ((!found_anywhere) || !(found_anywhere && !found_in_self))  {
+                            new_env.set(traversed.as_symbol(), fn_args.at(i - missing));
+                            missing--;
+                        }
+                    }
+                });
+                handle_process(args.at(i));
+            } else if (args.at(i).as_symbol() != "&") {
+                new_env.set(args.at(i).as_symbol(), fn_args.at(i - missing));
+            } else {
+                missing++;
+            }
+        }
+    }
+    
+private:
 	int amount_of_args;
-	bool process_arguments;
+	bool process_args;
 	std::vector<data> args;
 	data proc;
 	enviroment new_env;
