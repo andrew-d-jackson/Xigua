@@ -65,8 +65,6 @@ data function::call(std::vector<data> &args, enviroment &enviroment,
         error_message += std::to_string(overload->amount_of_arguments());
         if (overload->has_repeating_arguments())
             error_message += "r";
-        if (overload->has_process_arguments())
-            error_message += "p";
         error_message += " ";
     }
     throw error(error_type::invalid_arguments, error_message, function_call_list);
