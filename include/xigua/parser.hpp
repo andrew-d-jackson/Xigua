@@ -29,6 +29,7 @@ private:
   string_list_to_data_type(const std::vector<std::string> string_list,
                            const data_type list_type);
   static data string_to_data_type(const std::string input_string);
-  static bool is_number(std::string string);
+  static bool is_integer(std::string string);
+  static bool is_decimal(std::string string);
 };
 }

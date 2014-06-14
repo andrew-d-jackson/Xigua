@@ -31,8 +31,11 @@ class type_query_base : public method {
 class is_string : public type_query_base {
   data_type expected_type() const { return data_type::string; }
 };
-class is_number : public type_query_base {
-  data_type expected_type() const { return data_type::number; }
+class is_decimal : public type_query_base {
+  data_type expected_type() const { return data_type::decimal; }
+};
+class is_integer : public type_query_base {
+  data_type expected_type() const { return data_type::integer; }
 };
 class is_boolean : public type_query_base {
   data_type expected_type() const { return data_type::boolean; }

@@ -16,13 +16,13 @@ class at : public method {
 
   data run(std::vector<data> args, enviroment &env,
            std::vector<std::string> fcl) {
-    if (args.at(0).type() == data_type::number &&
+    if (args.at(0).type() == data_type::integer &&
         args.at(1).type() == data_type::tuple) {
-      if (args.at(0).as_number() < 0 ||
-          args.at(0).as_number() > args.at(1).as_tuple().size() - 1)
+      if (args.at(0).as_integer() < 0 ||
+          args.at(0).as_integer() > args.at(1).as_tuple().size() - 1)
         throw error(error_type::invalid_arguments, "Not In Range Of Tuple",
                     fcl);
-      return args.at(1).as_tuple().at((unsigned int)args.at(0).as_number());
+      return args.at(1).as_tuple().at((unsigned int)args.at(0).as_integer());
     } else if (args.at(1).type() == data_type::map) {
       auto map = args.at(1).as_map();
       auto location = map.find(args.at(0));
@@ -45,10 +45,10 @@ class size : public method {
   data run(std::vector<data> args, enviroment &env,
            std::vector<std::string> fcl) {
     if (args.at(0).type() == data_type::tuple)
-      return data(data_type::number, (long double)args.at(0).as_tuple().size());
+      return data(data_type::integer, (long long)args.at(0).as_tuple().size());
 
     if (args.at(0).type() == data_type::map)
-      return data(data_type::number, (long double)args.at(0).as_map().size());
+      return data(data_type::integer, (long long)args.at(0).as_map().size());
 
     throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple", fcl);
     return data(data_type::none);

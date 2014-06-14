@@ -36,13 +36,13 @@ class substring : public method {
     if (args.at(0).type() != data_type::string)
       throw error(error_type::invalid_arguments, "Not A String", fcl);
 
-    if (args.at(1).type() != data_type::number ||
-        args.at(2).type() != data_type::number)
-      throw error(error_type::invalid_arguments, "Not A Number", fcl);
+    if (args.at(1).type() != data_type::integer ||
+        args.at(2).type() != data_type::integer)
+      throw error(error_type::invalid_arguments, "Not A Integer", fcl);
 
     std::string start_string = args.at(0).as_string();
-    int start_pos = (int)args.at(1).as_number();
-    int length = (int)args.at(2).as_number() - start_pos;
+    int start_pos = (int)args.at(1).as_integer();
+    int length = (int)args.at(2).as_integer() - start_pos;
 
     std::string return_string = start_string.substr(start_pos, length + 1);
     return data(data_type::string, return_string);

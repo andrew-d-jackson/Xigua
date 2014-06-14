@@ -121,12 +121,12 @@ class range : public method {
 
   data run(std::vector<data> args, enviroment &env,
            std::vector<std::string> fcl) {
-    if (!utils::all_types_are(args, data_type::number))
-      throw error(error_type::invalid_arguments, "Not A Number", fcl);
+    if (!utils::all_types_are(args, data_type::integer))
+      throw error(error_type::invalid_arguments, "Not A Integer", fcl);
 
-    long double start = args.at(0).as_number();
-    long double end = args.at(1).as_number();
-    long double step = args.at(2).as_number();
+    long long start = args.at(0).as_integer();
+    long long end = args.at(1).as_integer();
+    long long step = args.at(2).as_integer();
 
     if (start > end && step >= 0)
       throw error(error_type::invalid_arguments, "Range Invalid", fcl);
@@ -139,12 +139,12 @@ class range : public method {
 
     if (start > end) {
       while (start > end) {
-        return_value.push_back(data(data_type::number, start));
+        return_value.push_back(data(data_type::integer, start));
         start += step;
       }
     } else if (start < end) {
       while (start < end) {
-        return_value.push_back(data(data_type::number, start));
+        return_value.push_back(data(data_type::integer, start));
         start += step;
       }
     }

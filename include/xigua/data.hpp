@@ -34,7 +34,9 @@ enum class data_type {
   //! spaces/newlines/etc, typically used as a key in a map
   keyword,
   //! Represents a floating point number
-  number,
+  integer,
+  //! Represents a floating point number
+  decimal,
   //! Represents a list containing any number of elements and types, can contain
   //! data of multiple types in the same tuple
   tuple,
@@ -65,6 +67,7 @@ public:
   data(data_type in_type);
   data(data_type in_type, std::string string_data);
   data(data_type in_type, long double number_data);
+  data(data_type in_type, long long number_data);
   data(data_type in_type, bool boolean_data);
   data(data_type in_type, std::vector<data> list_data);
   data(data_type in_type, std::map<data, data> map_data);
@@ -84,9 +87,11 @@ public:
   std::string as_symbol() const;
   //! Get a copy data as a std::string, assumes type is keyword, won't include :
   std::string as_keyword() const;
+  //! Get a copy data as a long double, assumes type is decimal
+  long double as_decimal() const;
   //! Get a copy data as a long double, assumes type is number
-  long double as_number() const;
-  //! Get a copy data as a std::vector of data, assumes type is tuple
+  long long as_integer() const;
+  //! Get a copy data as a std::vector of data, assumes type is integer
   std::vector<data> as_tuple() const;
   //! Get a copy data as a std::map of data as the key and the value, assumes
   // type is map
@@ -106,7 +111,8 @@ protected:
   void string(std::string in_string);
   void symbol(std::string symbol_name);
   void keyword(std::string keyword_name);
-  void number(long double in_number);
+  void decimal(long double in_number);
+  void integer(long long in_number);
   void boolean(bool boolean);
   void tuple(std::vector<data> in_tuple);
   void hash_map(std::map<data, data> in_map);
@@ -120,7 +126,10 @@ protected:
 extern std::string string_representation(const data &in_data);
 
 //! Helper function to make data of type number
-extern data make_number(long double num);
+extern data make_decimal(long double num);
+
+//! Helper function to make data of type number
+extern data make_integer(long long num);
 
 //! Helper function to make data of type string
 extern data make_string(std::string str);

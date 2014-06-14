@@ -19,11 +19,21 @@ data::data(data_type in_type, std::string string_data) {
 
 data::data(data_type in_type, long double number_data) {
   type(in_type);
-  if (in_type == data_type::number) {
-    number(number_data);
+  if (in_type == data_type::decimal) {
+    decimal(number_data);
   } else {
     throw error(error_type::internal_error,
                 "Wrong Data Passed to data::data long double", {});
+  }
+}
+
+data::data(data_type in_type, long long number_data) {
+  type(in_type);
+  if (in_type == data_type::integer) {
+    integer(number_data);
+  } else {
+    throw error(error_type::internal_error,
+                "Wrong Data Passed to data::data long long", {});
   }
 }
 
@@ -82,6 +92,22 @@ data::data(data_type in_type, enviroment container_data) {
 }
 
 bool data::operator==(const data &other) const {
+
+  if ((type() == data_type::decimal || type() == data_type::integer) &&
+      (other.type() == data_type::decimal ||
+       other.type() == data_type::integer)) {
+
+    if (type() == data_type::integer && other.type() == data_type::integer) {
+      return as_integer() == other.as_integer();
+    }
+    auto a =
+        type() == data_type::decimal ? as_decimal() : (long double)as_integer();
+    auto b = other.type() == data_type::decimal
+                 ? other.as_decimal()
+                 : (long double)other.as_integer();
+    return a == b;
+  }
+
   if (type() != other.type())
     return false;
 
@@ -100,8 +126,11 @@ bool data::operator==(const data &other) const {
   if (type() == data_type::keyword)
     return (as_keyword() == other.as_keyword());
 
-  if (type() == data_type::number)
-    return (as_number() == other.as_number());
+  if (type() == data_type::decimal)
+    return (as_decimal() == other.as_decimal());
+
+  if (type() == data_type::integer)
+    return (as_integer() == other.as_integer());
 
   if (type() == data_type::tuple)
     return (as_tuple() == other.as_tuple());
@@ -142,8 +171,11 @@ bool data::operator<(const data &other) const {
   if (type() == data_type::string)
     return (as_string() < other.as_string());
 
-  if (type() == data_type::number)
-    return (as_number() < other.as_number());
+  if (type() == data_type::decimal)
+    return (as_decimal() < other.as_decimal());
+
+  if (type() == data_type::integer)
+    return (as_integer() < other.as_integer());
 
   if (type() == data_type::tuple)
     return (as_tuple() < other.as_tuple());
@@ -175,8 +207,10 @@ void data::type(data_type in_type) {
     data_pointer = std::shared_ptr<void>(new std::string());
   } else if (in_type == data_type::keyword) {
     data_pointer = std::shared_ptr<void>(new std::string());
-  } else if (in_type == data_type::number) {
+  } else if (in_type == data_type::decimal) {
     data_pointer = std::shared_ptr<void>(new long double(0));
+  } else if (in_type == data_type::integer) {
+    data_pointer = std::shared_ptr<void>(new long long(0));
   } else if (in_type == data_type::tuple) {
     data_pointer = std::shared_ptr<void>(new std::vector<data>());
   } else if (in_type == data_type::map) {
@@ -217,12 +251,20 @@ void data::symbol(std::string symbol_name) {
   data_pointer = std::shared_ptr<void>(new std::string(symbol_name));
 }
 
-long double data::as_number() const {
+long double data::as_decimal() const {
   return *(static_cast<long double *>(data_pointer.get()));
 }
 
-void data::number(long double in_number) {
+void data::decimal(long double in_number) {
   data_pointer = std::shared_ptr<void>(new long double(in_number));
+}
+
+long long data::as_integer() const {
+  return *(static_cast<long long *>(data_pointer.get()));
+}
+
+void data::integer(long long in_number) {
+  data_pointer = std::shared_ptr<void>(new long long(in_number));
 }
 
 std::vector<data> data::as_tuple() const {
@@ -295,10 +337,10 @@ std::string string_representation(const data &in_data) {
     } else {
       return_value += "false";
     }
-  } else if (in_data.type() == data_type::number) {
+  } else if (in_data.type() == data_type::decimal) {
     std::stringstream ss;
     ss << std::fixed;
-    ss << in_data.as_number();
+    ss << in_data.as_decimal();
     std::string str = ss.str();
     int s;
     for (s = str.length() - 1; s > 0; s--) {
@@ -310,6 +352,8 @@ std::string string_representation(const data &in_data) {
     if (str[s] == '.')
       str.erase(s, 1);
     return_value += str;
+  } else if (in_data.type() == data_type::integer) {
+    return_value += std::to_string(in_data.as_integer());
   } else if (in_data.type() == data_type::tuple) {
     return_value += "{ ";
     for (auto element : in_data.as_tuple()) {
@@ -337,7 +381,9 @@ std::string string_representation(const data &in_data) {
   return return_value;
 }
 
-data make_number(long double num) { return data(data_type::number, num); }
+data make_decimal(long double num) { return data(data_type::decimal, num); }
+
+data make_integer(long long num) { return data(data_type::integer, num); }
 
 data make_string(std::string str) { return data(data_type::string, str); }
 

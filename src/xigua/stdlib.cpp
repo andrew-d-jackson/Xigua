@@ -88,7 +88,9 @@ enviroment get_global_enviroment() {
 
   enviroment.set("str?", make_function(stdlib::is_string()));
 
-  enviroment.set("num?", make_function(stdlib::is_number()));
+  enviroment.set("float?", make_function(stdlib::is_decimal()));
+
+  enviroment.set("int?", make_function(stdlib::is_integer()));
 
   enviroment.set("tuple?", make_function(stdlib::is_tuple()));
 

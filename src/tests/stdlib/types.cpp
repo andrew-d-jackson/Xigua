@@ -12,7 +12,10 @@ TEST(Standard_Library_Types, Types) {
   EXPECT_EQ(evaluate(env, parser::from_string("[str? \"hello\"]")),
             make_boolean(true));
 
-  EXPECT_EQ(evaluate(env, parser::from_string("[num? 200]")),
+  EXPECT_EQ(evaluate(env, parser::from_string("[int? 200]")),
+            make_boolean(true));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[float? 200.0]")),
             make_boolean(true));
 
   EXPECT_EQ(evaluate(env, parser::from_string("[fn? [fn (x) [x]]]")),

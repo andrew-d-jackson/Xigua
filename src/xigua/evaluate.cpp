@@ -14,7 +14,9 @@ data evaluate(enviroment &env, data input_data,
                        function_call_list);
     }
     return *symbol_value;
-  } else if (input_data.type() == data_type::number) {
+  } else if (input_data.type() == data_type::decimal) {
+    return input_data;
+  } else if (input_data.type() == data_type::integer) {
     return input_data;
   } else if (input_data.type() == data_type::function) {
     return input_data;

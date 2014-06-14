@@ -171,8 +171,11 @@ parser::string_list_to_data_type(const std::vector<std::string> string_list,
 }
 
 data parser::string_to_data_type(const std::string input_string) {
-  if (is_number(input_string)) {
-    data data(data_type::number, (long double)atof(input_string.c_str()));
+  if (is_integer(input_string)) {
+    data data(data_type::integer, (long long)atoi(input_string.c_str()));
+    return data;
+  } else if (is_decimal(input_string)) {
+    data data(data_type::decimal, (long double)atof(input_string.c_str()));
     return data;
   } else if (input_string[0] == '"') {
     data data(data_type::string,
@@ -197,7 +200,7 @@ data parser::string_to_data_type(const std::string input_string) {
   }
 }
 
-bool parser::is_number(std::string string) {
+bool parser::is_decimal(std::string string) {
 
   if (string.size() < 1)
     return false;
@@ -209,8 +212,23 @@ bool parser::is_number(std::string string) {
     return false;
 
   for (auto it = string.begin(); it < string.end(); it++) {
-
     if (!(isdigit(*it) || *it == '.' || (*it == '-' && it == string.begin())))
+      return false;
+  }
+
+  return true;
+}
+
+bool parser::is_integer(std::string string) {
+
+  if (string.size() < 1)
+    return false;
+
+  if (string.find_first_of("0123456789") == std::string::npos)
+    return false;
+
+  for (auto it = string.begin(); it < string.end(); it++) {
+    if (!(isdigit(*it) || (*it == '-' && it == string.begin())))
       return false;
   }
 
