@@ -14,18 +14,6 @@ TEST(Standard_Library_Core, Define) {
   EXPECT_EQ(evaluate(env, parser::from_string("[i]")), make_string("hello"));
 }
 
-TEST(Standard_Library_Core, Fn) {
-  enviroment env = get_global_enviroment();
-  evaluate(env, parser::from_string("[= add [fn (a b) [+ a b]]]"));
-
-  EXPECT_EQ(evaluate(env, parser::from_string("[add 1 1]")), make_number(2));
-
-  evaluate(env, parser::from_string("[= multi [fn (a) [1] (a b) [2]]]"));
-
-  EXPECT_EQ(evaluate(env, parser::from_string("[multi 1]")), make_number(1));
-  EXPECT_EQ(evaluate(env, parser::from_string("[multi 1 1]")), make_number(2));
-}
-
 TEST(Standard_Library_Core, Overload) {
   enviroment env = get_global_enviroment();
   evaluate(env, parser::from_string("[= f1 [fn (a b) [4]]]"));
