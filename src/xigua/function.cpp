@@ -36,58 +36,62 @@ bool method::has_repeating_arguments() const { return false; }
 
 bool method::has_process_arguments() const { return false; }
 
-bool method::process_arguments_pass(std::vector<data> args, enviroment &env, std::vector<std::string> fcl) { return true; }
+bool method::process_arguments_pass(std::vector<data> args, enviroment &env,
+                                    std::vector<std::string> fcl) {
+  return true;
+}
 
 bool method::should_evaluate_arguments() const { return true; }
 
 bool method_set_comparator::operator()(const std::shared_ptr<method> &a,
                                        const std::shared_ptr<method> &b) {
   if (a->amount_of_arguments() < b->amount_of_arguments())
-	  return true;
+    return true;
   if (a->has_repeating_arguments() < b->has_repeating_arguments())
-	  return true;
+    return true;
   if (a->has_process_arguments() < b->has_process_arguments())
-	  return true;
+    return true;
   return false;
 }
 
 data function::call(std::vector<data> &args, enviroment &enviroment,
                     std::vector<std::string> function_call_list) {
 
-  for (auto iterator = methods.rbegin(); iterator != methods.rend(); iterator++) {
-	  if ((unsigned)(*iterator)->amount_of_arguments() == args.size()) {
-		  if ((*iterator)->has_process_arguments()) {
-			  if ((*iterator)->process_arguments_pass(args, enviroment, function_call_list))
-				  return (*iterator)->call(args, enviroment, function_call_list);
-		  }
-		  else {
-			  return (*iterator)->call(args, enviroment, function_call_list);
-		  }
-	  }
-	  else if ((unsigned)(*iterator)->amount_of_arguments() < args.size() && (*iterator)->has_repeating_arguments())
-	  {
-		  if ((*iterator)->has_process_arguments()) {
-			  if ((*iterator)->process_arguments_pass(args, enviroment, function_call_list))
-				  return (*iterator)->call(args, enviroment, function_call_list);
-		  }
-		  else {
-			  return (*iterator)->call(args, enviroment, function_call_list);
-		  }
-	  }
+  for (auto iterator = methods.rbegin(); iterator != methods.rend();
+       iterator++) {
+    if ((unsigned)(*iterator)->amount_of_arguments() == args.size()) {
+      if ((*iterator)->has_process_arguments()) {
+        if ((*iterator)
+                ->process_arguments_pass(args, enviroment, function_call_list))
+          return (*iterator)->call(args, enviroment, function_call_list);
+      } else {
+        return (*iterator)->call(args, enviroment, function_call_list);
+      }
+    } else if ((unsigned)(*iterator)->amount_of_arguments() < args.size() &&
+               (*iterator)->has_repeating_arguments()) {
+      if ((*iterator)->has_process_arguments()) {
+        if ((*iterator)
+                ->process_arguments_pass(args, enviroment, function_call_list))
+          return (*iterator)->call(args, enviroment, function_call_list);
+      } else {
+        return (*iterator)->call(args, enviroment, function_call_list);
+      }
+    }
   }
 
-    std::string error_message("Dosen't match a method overload in the specified function.\nAmount of Args Passed: ");
-    error_message +=  std::to_string(args.size());
-    error_message += "\nAmount of Args In Function: ";
-    for (const auto &overload : methods) {
-        error_message += std::to_string(overload->amount_of_arguments());
-        if (overload->has_repeating_arguments())
-            error_message += "r";
-        if (overload->has_process_arguments())
-            error_message += "p";
-        error_message += " ";
-    }
-    
-    throw error(error_type::invalid_arguments, error_message, function_call_list);
+  std::string error_message("Dosen't match a method overload in the specified "
+                            "function.\nAmount of Args Passed: ");
+  error_message += std::to_string(args.size());
+  error_message += "\nAmount of Args In Function: ";
+  for (const auto &overload : methods) {
+    error_message += std::to_string(overload->amount_of_arguments());
+    if (overload->has_repeating_arguments())
+      error_message += "r";
+    if (overload->has_process_arguments())
+      error_message += "p";
+    error_message += " ";
+  }
+
+  throw error(error_type::invalid_arguments, error_message, function_call_list);
 }
 }
