@@ -6,6 +6,7 @@ set(SOURCE_FILES
 	stdlib/tuple.cpp
 	stdlib/core.cpp
 	stdlib/function.cpp
+	stdlib/types.cpp
 	evaluate.cpp
 	enviroment.cpp
 	data.cpp

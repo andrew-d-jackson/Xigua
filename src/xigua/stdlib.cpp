@@ -8,6 +8,7 @@
 #include "xigua/stdlib/containers.hpp"
 #include "xigua/stdlib/benchmark.hpp"
 #include "xigua/stdlib/function.hpp"
+#include "xigua/stdlib/types.hpp"
 #include "xigua/stdlib/test.hpp"
 
 namespace xig {
@@ -82,6 +83,24 @@ enviroment get_global_enviroment() {
   enviroment.set("and", make_function(stdlib::boolean_and()));
 
   enviroment.set("or", make_function(stdlib::boolean_or()));
+
+  // types
+
+  enviroment.set("str?", make_function(stdlib::is_string()));
+
+  enviroment.set("num?", make_function(stdlib::is_number()));
+
+  enviroment.set("tuple?", make_function(stdlib::is_tuple()));
+
+  enviroment.set("map?", make_function(stdlib::is_map()));
+
+  enviroment.set("bool?", make_function(stdlib::is_boolean()));
+
+  enviroment.set("none?", make_function(stdlib::is_none()));
+
+  enviroment.set("fn?", make_function(stdlib::is_function()));
+
+  enviroment.set("key?", make_function(stdlib::is_keyword()));
 
   // tuple
 

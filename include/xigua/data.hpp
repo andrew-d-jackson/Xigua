@@ -111,6 +111,8 @@ extern data make_symbol(std::string str);
 extern data make_keyword(std::string str);
 //! Helpter function to make data of type boolean
 extern data make_boolean(bool b);
+//! Helpter function to make data of type container
+extern data make_none();
 //! Helpter function to make data of type tuple
 extern data make_tuple(std::vector<data> tuple);
 //! Helpter function to make data of type process

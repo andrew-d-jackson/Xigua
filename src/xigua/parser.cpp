@@ -188,8 +188,9 @@ data parser::string_to_data_type(const std::string input_string) {
       return_value = true;
     else
       return_value = false;
-
     return data(data_type::boolean, return_value);
+  } else if (input_string == "none") {
+    return data(data_type::none);
   } else {
     data data(data_type::symbol, input_string);
     return data;

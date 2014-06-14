@@ -347,6 +347,8 @@ data make_keyword(std::string str) { return data(data_type::keyword, str); }
 
 data make_boolean(bool b) { return data(data_type::boolean, b); }
 
+data make_none() { return data(data_type::none); }
+
 data make_tuple(std::vector<data> tuple) {
   return data(data_type::tuple, tuple);
 }
