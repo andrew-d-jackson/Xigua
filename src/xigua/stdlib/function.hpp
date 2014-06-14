@@ -58,9 +58,13 @@ public:
   }
 
 private:
+  void process_arguments(std::vector<data> fn_args, enviroment &fn_env) {
+    process_arguments(fn_args, fn_env, [](data &val) {});
+  }
+
   void process_arguments(std::vector<data> fn_args, enviroment &fn_env,
-                         std::function<void(data &)> handle_process = {}) {
-    short missing = 0;
+                         std::function<void(data &)> handle_process) {
+    short current_arg = 0;
     for (unsigned int i(0); i < args.size(); ++i) {
       if (args.at(i).type() == data_type::process) {
         traverseProcess(args.at(i), [&](data &traversed) {
@@ -71,16 +75,15 @@ private:
                 (new_env.find(traversed.as_symbol()) != nullptr);
 
             if ((!found_anywhere) || !(found_anywhere && !found_in_self)) {
-              new_env.set(traversed.as_symbol(), fn_args.at(i - missing));
-              missing--;
+              new_env.set(traversed.as_symbol(), fn_args.at(current_arg));
+              current_arg++;
             }
           }
         });
         handle_process(args.at(i));
       } else if (args.at(i).as_symbol() != "&") {
-        new_env.set(args.at(i).as_symbol(), fn_args.at(i - missing));
-      } else {
-        missing++;
+        new_env.set(args.at(i).as_symbol(), fn_args.at(current_arg));
+        current_arg++;
       }
     }
   }
@@ -92,6 +95,26 @@ private:
   data proc;
   enviroment new_env;
 };
+
+int get_amount_of_args(std::vector<data> args, enviroment &env) {
+  short missing = 0;
+  for (unsigned int i(0); i < args.size(); ++i) {
+    if (args.at(i).type() == data_type::process) {
+      traverseProcess(args.at(i), [&](data &traversed) {
+        if (traversed.type() == data_type::symbol) {
+          bool found = (env.find(traversed.as_symbol()) != nullptr);
+          if (!found) {
+            missing--;
+          }
+        }
+      });
+      missing++;
+    } else if (args.at(i).as_symbol() == "&") {
+      missing++;
+    }
+  }
+  return args.size() - missing;
+}
 
 class create_lambda : public method {
   int amount_of_arguments() const { return 2; }
@@ -121,7 +144,7 @@ class create_lambda : public method {
       }
 
       int amount_of_args =
-          arguments.at(argument).as_tuple().size() - (int)repeating;
+          get_amount_of_args(arguments.at(argument).as_tuple(), new_env);
 
       auto return_function = WrappedFunction(
           amount_of_args, process_args, arguments.at(argument).as_tuple(),
