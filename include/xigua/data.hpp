@@ -20,16 +20,34 @@ namespace xig {
 
 //! Enum for the different kinds of Xigua data types
 enum class data_type {
+
+  //! Represents none/nil/nothing, returned by empty function
   none,
+  //! Represents the name of a variable, not an actual data type, just used by
+  //! interpreter
   symbol,
+  //! Represents a true/false value
   boolean,
+  //! Represents a string of charicters, can contain spaces/newlines/etc
   string,
+  //! Represents a string of charicters, usually one word, can't contain
+  //! spaces/newlines/etc, typically used as a key in a map
   keyword,
+  //! Represents a floating point number
   number,
+  //! Represents a list containing any number of elements and types, can contain
+  //! data of multiple types in the same tuple
   tuple,
+  //! Represents a hash map of keys and values, can contain keys/values of
+  // multiple types in the same map
   map,
+  //! Represents a unexecuted process, not an actual data type, just used by
+  //! intepreter
   process,
+  //! Represents a function of a single method or multiple overloads
   function,
+  //! Represents an enviroment containing variables, not an actual data type,
+  //! just used by intepreter
   container
 };
 
@@ -98,33 +116,43 @@ protected:
   void container(enviroment in_container);
 };
 
-//! Get a nice string representation of a piece of data
+//! Get a nice string representation of a data object
 extern std::string string_representation(const data &in_data);
 
-//! Helpter function to make data of type number
+//! Helper function to make data of type number
 extern data make_number(long double num);
-//! Helpter function to make data of type string
+
+//! Helper function to make data of type string
 extern data make_string(std::string str);
-//! Helpter function to make data of type symbol
+
+//! Helper function to make data of type symbol
 extern data make_symbol(std::string str);
-//! Helpter function to make data of type keyword
+
+//! Helper function to make data of type keyword
 extern data make_keyword(std::string str);
-//! Helpter function to make data of type boolean
+
+//! Helper function to make data of type boolean
 extern data make_boolean(bool b);
-//! Helpter function to make data of type container
+
+//! Helper function to make data of type none
 extern data make_none();
-//! Helpter function to make data of type tuple
+
+//! Helper function to make data of type tuple
 extern data make_tuple(std::vector<data> tuple);
-//! Helpter function to make data of type process
+
+//! Helper function to make data of type process
 extern data make_process(std::vector<data> proc);
-//! Helpter function to make data of type map
+
+//! Helper function to make data of type map
 extern data make_map(std::map<data, data> map);
-//! Helpter function to make data of type container from an enviroment
+
+//! Helper function to make data of type container from an enviroment
 extern data make_container(enviroment container);
-//! Helpter function to make data of type blank container
+
+//! Helper function to make data of type blank container
 extern data make_container();
 
-//! Helpter function to make data of type function
+//! Helper function to make data of type function
 template <typename T> extern data make_function(T fn) {
   return data(data_type::function, function(fn));
 }

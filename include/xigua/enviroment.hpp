@@ -30,13 +30,13 @@ public:
   void type(env_type in_type);
 
   //! Find a variable in this enviroment, returns a pointer to the a data object
-  //! of the variable if found, returns nullptr if not
+  //! of the variable if found, returns nullptr if not, if this_only is set to
+  //! true does not search parents
   data *find(std::string variable_name, bool this_only = false);
 
   //! Insert a variable into the enviroment, force_here forces the variable to
-  //be
-  //! in this enviroment even if the type of enviroment would rather put it in
-  //! the enviroments parent
+  //! be in this enviroment even if the type of enviroment would rather put it
+  //! in the enviroments parent
   void set(std::string name, data value, bool force_here = false);
 
   //! Get the enviroments parent

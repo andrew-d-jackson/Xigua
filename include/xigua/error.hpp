@@ -14,8 +14,8 @@ enum class error_type {
   parsing_error,
 };
 
-//! Error class that will be thrown as an exception if somethign goes wrong with
-//Xigua
+//! Error class that will be thrown as an exception if something goes wrong with
+//! Xigua
 class error {
 private:
   error_type my_error_type;
@@ -24,7 +24,7 @@ private:
 
 public:
   //! Construct an error with a type, description to be printed to the end user,
-  //and the function call list
+  // and the function call list
   error(error_type e_type, std::string descripton,
         std::vector<std::string> function_call_list);
 
