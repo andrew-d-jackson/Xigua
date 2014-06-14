@@ -33,4 +33,8 @@ TEST(Standard_Library_Function, ConditionalArgs) {
   EXPECT_EQ(evaluate(env, parser::from_string("[maxi 20 2]")), make_number(20));
   EXPECT_EQ(evaluate(env, parser::from_string("[maxi 20 20]")),
             make_number(20));
+
+  evaluate(env, parser::from_string("[= a [fn ([> x [+ x y]]) [x]]]"));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[a 4 -2]")), make_number(4));
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 #include <functional>
 #include <numeric>
 
@@ -65,6 +66,8 @@ private:
   void process_arguments(std::vector<data> fn_args, enviroment &fn_env,
                          std::function<void(data &)> handle_process) {
     short current_arg = 0;
+    auto vars = std::set<std::string>();
+
     for (unsigned int i(0); i < args.size(); ++i) {
       if (args.at(i).type() == data_type::process) {
         traverseProcess(args.at(i), [&](data &traversed) {
@@ -73,17 +76,25 @@ private:
                 (new_env.find(traversed.as_symbol(), true) != nullptr);
             bool found_anywhere =
                 (new_env.find(traversed.as_symbol()) != nullptr);
+            bool in_vars = (vars.find(traversed.as_symbol()) != vars.end());
 
-            if ((!found_anywhere) || !(found_anywhere && !found_in_self)) {
+            if (((!found_anywhere) || !(found_anywhere && !found_in_self)) &&
+                !in_vars) {
               new_env.set(traversed.as_symbol(), fn_args.at(current_arg));
+              vars.insert(traversed.as_symbol());
               current_arg++;
             }
           }
         });
         handle_process(args.at(i));
       } else if (args.at(i).as_symbol() != "&") {
-        new_env.set(args.at(i).as_symbol(), fn_args.at(current_arg));
-        current_arg++;
+        bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
+        if (!in_vars) {
+          new_env.set(args.at(i).as_symbol(), fn_args.at(current_arg));
+          current_arg++;
+        } else {
+          vars.insert(args.at(i).as_symbol());
+        }
       }
     }
   }
@@ -98,18 +109,27 @@ private:
 
 int get_amount_of_args(std::vector<data> args, enviroment &env) {
   short amount = 0;
+  auto vars = std::set<std::string>();
+
   for (unsigned int i(0); i < args.size(); ++i) {
     if (args.at(i).type() == data_type::process) {
       traverseProcess(args.at(i), [&](data &traversed) {
         if (traversed.type() == data_type::symbol) {
           bool found = (env.find(traversed.as_symbol()) != nullptr);
-          if (!found) {
+          bool in_vars = (vars.find(traversed.as_symbol()) != vars.end());
+          if (!found && !in_vars) {
+            vars.insert(traversed.as_symbol());
             amount++;
           }
         }
       });
     } else if (args.at(i).as_symbol() != "&") {
-      amount++;
+      bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
+      if (!in_vars) {
+        amount++;
+      } else {
+        vars.insert(args.at(i).as_symbol());
+      }
     }
   }
   return amount;
