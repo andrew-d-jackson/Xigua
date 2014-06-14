@@ -52,6 +52,7 @@ public:
       methods.push_back(in_method);
       std::sort(methods.begin(), methods.end(), method_set_comparator());
     } else {
+      (*found) = in_method;
     }
   }
 
