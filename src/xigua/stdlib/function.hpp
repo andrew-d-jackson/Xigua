@@ -97,23 +97,22 @@ private:
 };
 
 int get_amount_of_args(std::vector<data> args, enviroment &env) {
-  short missing = 0;
+  short amount = 0;
   for (unsigned int i(0); i < args.size(); ++i) {
     if (args.at(i).type() == data_type::process) {
       traverseProcess(args.at(i), [&](data &traversed) {
         if (traversed.type() == data_type::symbol) {
           bool found = (env.find(traversed.as_symbol()) != nullptr);
           if (!found) {
-            missing--;
+            amount++;
           }
         }
       });
-      missing++;
-    } else if (args.at(i).as_symbol() == "&") {
-      missing++;
+    } else if (args.at(i).as_symbol() != "&") {
+      amount++;
     }
   }
-  return args.size() - missing;
+  return amount;
 }
 
 class create_lambda : public method {
