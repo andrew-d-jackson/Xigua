@@ -26,7 +26,6 @@ class define : public method {
   }
 };
 
-
 class overload : public method {
   int amount_of_arguments() const { return 2; }
 
@@ -371,6 +370,24 @@ class import_as : public method {
     evaluate(*sub_env, parser::from_file(file_name, *sub_env));
 
     return data(data_type::none);
+  }
+};
+
+class to_integer : public method {
+  int amount_of_arguments() const { return 1; }
+
+  data run(std::vector<data> args, enviroment &env,
+           std::vector<std::string> fcl) {
+    long long ret;
+
+    if (args.at(0).type() == data_type::integer)
+      ret = args.at(0).as_integer();
+    else if (args.at(0).type() == data_type::decimal)
+      ret = (long long)args.at(0).as_decimal();
+    else
+      throw error(error_type::invalid_arguments, "Not A Number", fcl);
+
+    return data(data_type::integer, ret);
   }
 };
 }

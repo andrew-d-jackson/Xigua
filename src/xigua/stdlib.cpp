@@ -48,6 +48,8 @@ enviroment get_global_enviroment() {
 
   enviroment.set("part", make_function(stdlib::partial()));
 
+  enviroment.set("int", make_function(stdlib::to_integer()));
+
   // math
 
   enviroment.set("+", make_function(stdlib::add()));
