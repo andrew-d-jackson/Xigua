@@ -39,13 +39,13 @@ class comparator : public method {
                      ? (*(it + 1)).as_decimal()
                      : (long double)(*(it + 1)).as_integer();
         if (!compare_decimal(a, b))
-          return data(data_type::boolean, false);
+          return data(false);
       } else {
         if (!compare_integer((*it).as_integer(), (*(it + 1)).as_integer()))
-          return data(data_type::boolean, false);
+          return data( false);
       }
     }
-    return data(data_type::boolean, true);
+    return data(true);
   }
 };
 
@@ -78,9 +78,9 @@ class equal_to : public method {
     auto arguments = utils::parse_arguments(args, 2);
     for (auto it = arguments.begin(); it < arguments.end() - 1; it++) {
       if (*it != (*(it + 1)))
-        return data(data_type::boolean, false);
+        return data(false);
     }
-    return data(data_type::boolean, true);
+    return data(true);
   }
 };
 
@@ -109,7 +109,7 @@ class math_operation : public method {
       for (auto it = arguments.begin() + 1; it < arguments.end(); it++) {
         return_value = operate_integer(return_value, it->as_integer());
       }
-      return data(data_type::integer, return_value);
+      return data(return_value);
     }
 
     long double return_value = arguments.at(0).type() == data_type::decimal
@@ -123,7 +123,7 @@ class math_operation : public method {
 
       return_value = operate_decimal(return_value, next_num);
     }
-    return data(data_type::decimal, return_value);
+    return data(return_value);
   }
 };
 

@@ -43,7 +43,7 @@ data evaluate(enviroment &env, data input_data,
     }
 
     if (input_data.as_process().size() == 0) {
-      return data(data_type::none);
+      return make_none();
     } else if (input_data.as_process().at(0).type() == data_type::function) {
       auto process_copy = input_data.as_process();
       auto firstElement = process_copy.begin() + 1;
@@ -53,7 +53,7 @@ data evaluate(enviroment &env, data input_data,
       return input_data.as_process().at(0).as_function().call(
           functionArgs, env, function_call_list);
     } else {
-      data return_value = data(data_type::none);
+      data return_value = make_none();
       for (data item : input_data.as_process())
         return_value = evaluate(env, item, function_call_list);
       return return_value;
@@ -72,9 +72,9 @@ data evaluate(enviroment &env, data input_data,
       new_tuple_data[evaluate(env, first, function_call_list)] =
           evaluate(env, second, function_call_list);
     }
-    return data(data_type::map, new_tuple_data);
+    return make_map(new_tuple_data);
   }
 
-  return data(data_type::none);
+  return make_none();
 }
 }

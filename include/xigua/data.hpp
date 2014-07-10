@@ -63,16 +63,15 @@ protected:
   std::shared_ptr<void> data_pointer;
 
 public:
-  data() {}
-  data(data_type in_type);
+  data();
+  data(long long number);
+  data(long double number);
+  data(bool boolean_data);
+  data(function function_data);
+  data(enviroment container_data);
+  data(std::map<data, data> map_data);
   data(data_type in_type, std::string string_data);
-  data(data_type in_type, long double number_data);
-  data(data_type in_type, long long number_data);
-  data(data_type in_type, bool boolean_data);
   data(data_type in_type, std::vector<data> list_data);
-  data(data_type in_type, std::map<data, data> map_data);
-  data(data_type in_type, function function_data);
-  data(data_type in_type, enviroment container_data);
 
   bool operator==(const data &other) const;
   bool operator!=(const data &other) const;
@@ -162,7 +161,5 @@ extern data make_container(enviroment container);
 extern data make_container();
 
 //! Helper function to make data of type function
-template <typename T> extern data make_function(T fn) {
-  return data(data_type::function, function(fn));
-}
+template <typename T> extern data make_function(T fn) { return function(fn); }
 }

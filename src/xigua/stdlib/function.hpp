@@ -178,7 +178,7 @@ class create_lambda : public method {
 
       return_fn.add_method(return_function);
     }
-    return data(data_type::function, return_fn);
+    return data(return_fn);
   }
 };
 }

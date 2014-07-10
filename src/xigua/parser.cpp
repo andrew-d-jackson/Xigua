@@ -172,10 +172,10 @@ parser::string_list_to_data_type(const std::vector<std::string> string_list,
 
 data parser::string_to_data_type(const std::string input_string) {
   if (is_integer(input_string)) {
-    data data(data_type::integer, (long long)atoi(input_string.c_str()));
+    data data((long long)atoi(input_string.c_str()));
     return data;
   } else if (is_decimal(input_string)) {
-    data data(data_type::decimal, (long double)atof(input_string.c_str()));
+    data data((long double)atof(input_string.c_str()));
     return data;
   } else if (input_string[0] == '"') {
     data data(data_type::string,
@@ -191,9 +191,9 @@ data parser::string_to_data_type(const std::string input_string) {
       return_value = true;
     else
       return_value = false;
-    return data(data_type::boolean, return_value);
+    return data(return_value);
   } else if (input_string == "none") {
-    return data(data_type::none);
+    return make_none();
   } else {
     data data(data_type::symbol, input_string);
     return data;

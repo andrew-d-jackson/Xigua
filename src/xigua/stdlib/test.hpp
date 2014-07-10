@@ -29,7 +29,7 @@ class testeq : public method {
                 << std::endl;
     }
 
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -51,7 +51,7 @@ class testne : public method {
                 << std::endl;
     }
 
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -75,7 +75,7 @@ class testtr : public method {
                 << "****" << std::endl;
     }
 
-    return data(data_type::none);
+    return make_none();
   }
 };
 }

@@ -22,7 +22,7 @@ class define : public method {
   data run(std::vector<data> args, enviroment &env,
            std::vector<std::string> fcl) {
     env.set(args.at(0).as_string(), evaluate(env, args.at(1), fcl));
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -38,7 +38,7 @@ class overload : public method {
     auto f = data(args.at(0)).as_function();
     f.merge_with_function(args.at(1).as_function());
 
-    return data(data_type::function, f);
+    return data(f);
   }
 };
 
@@ -99,7 +99,7 @@ class print_line : public method {
   data run(std::vector<data> args, enviroment &env,
            std::vector<std::string> fcl) {
     std::cout << string_representation(args.at(0)) << std::endl;
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -268,7 +268,7 @@ class partial : public method {
       }
     } return_method = { captured_function, captured_function_args };
 
-    data return_function(data_type::function, function(return_method));
+    data return_function = make_function(return_method);
     return return_function;
   }
 };
@@ -329,7 +329,7 @@ class macro : public method {
       }
     } return_method = { args.at(1), args.at(0).as_tuple() };
 
-    data return_function(data_type::function, function(return_method));
+    data return_function = make_function(return_method);
     return return_function;
   }
 };
@@ -345,7 +345,7 @@ class import : public method {
     auto file_name = args.at(0).as_string();
     evaluate(env, parser::from_file(file_name, env));
 
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -369,7 +369,7 @@ class import_as : public method {
 
     evaluate(*sub_env, parser::from_file(file_name, *sub_env));
 
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -387,7 +387,7 @@ class to_integer : public method {
     else
       throw error(error_type::invalid_arguments, "Not A Number", fcl);
 
-    return data(data_type::integer, ret);
+    return data(ret);
   }
 };
 }

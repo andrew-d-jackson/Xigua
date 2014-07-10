@@ -139,12 +139,12 @@ class range : public method {
 
     if (start > end) {
       while (start > end) {
-        return_value.push_back(data(data_type::integer, start));
+        return_value.push_back(data(start));
         start += step;
       }
     } else if (start < end) {
       while (start < end) {
-        return_value.push_back(data(data_type::integer, start));
+        return_value.push_back(data(start));
         start += step;
       }
     }

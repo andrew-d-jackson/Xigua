@@ -1,7 +1,23 @@
 #include "xigua/data.hpp"
 
 namespace xig {
-data::data(data_type in_type) { type(in_type); }
+
+data::data() { type(data_type::none); }
+
+data::data(long long number) {
+  type(data_type::integer);
+  integer(number);
+}
+
+data::data(long double number) {
+  type(data_type::decimal);
+  decimal(number);
+}
+
+data::data(bool boolean_value) {
+  type(data_type::boolean);
+  boolean(boolean_value);
+}
 
 data::data(data_type in_type, std::string string_data) {
   type(in_type);
@@ -14,36 +30,6 @@ data::data(data_type in_type, std::string string_data) {
   } else {
     throw error(error_type::internal_error,
                 "Wrong Data Passed to data::data std::string", {});
-  }
-}
-
-data::data(data_type in_type, long double number_data) {
-  type(in_type);
-  if (in_type == data_type::decimal) {
-    decimal(number_data);
-  } else {
-    throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data long double", {});
-  }
-}
-
-data::data(data_type in_type, long long number_data) {
-  type(in_type);
-  if (in_type == data_type::integer) {
-    integer(number_data);
-  } else {
-    throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data long long", {});
-  }
-}
-
-data::data(data_type in_type, bool boolean_data) {
-  type(in_type);
-  if (in_type == data_type::boolean) {
-    boolean(boolean_data);
-  } else {
-    throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data bool", {});
   }
 }
 
@@ -61,34 +47,19 @@ data::data(data_type in_type, std::vector<data> list_data) {
   }
 }
 
-data::data(data_type in_type, std::map<data, data> map_data) {
-  type(in_type);
-  if (in_type == data_type::map) {
-    hash_map(map_data);
-  } else {
-    throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data std::map<data, data>", {});
-  }
+data::data(std::map<data, data> map_data) {
+  type(data_type::map);
+  hash_map(map_data);
 }
 
-data::data(data_type in_type, function function_data) {
-  type(in_type);
-  if (in_type == data_type::function) {
-    functions(function_data);
-  } else {
-    throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data function", {});
-  }
+data::data(function function_data) {
+  type(data_type::function);
+  functions(function_data);
 }
 
-data::data(data_type in_type, enviroment container_data) {
-  type(in_type);
-  if (in_type == data_type::container) {
-    container(container_data);
-  } else {
-    throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data enviroment", {});
-  }
+data::data(enviroment container_data) {
+  type(data_type::container);
+  container(container_data);
 }
 
 bool data::operator==(const data &other) const {
@@ -381,9 +352,9 @@ std::string string_representation(const data &in_data) {
   return return_value;
 }
 
-data make_decimal(long double num) { return data(data_type::decimal, num); }
+data make_decimal(long double num) { return num; }
 
-data make_integer(long long num) { return data(data_type::integer, num); }
+data make_integer(long long num) { return num; }
 
 data make_string(std::string str) { return data(data_type::string, str); }
 
@@ -391,9 +362,9 @@ data make_symbol(std::string str) { return data(data_type::symbol, str); }
 
 data make_keyword(std::string str) { return data(data_type::keyword, str); }
 
-data make_boolean(bool b) { return data(data_type::boolean, b); }
+data make_boolean(bool b) { return b; }
 
-data make_none() { return data(data_type::none); }
+data make_none() { return data(); }
 
 data make_tuple(std::vector<data> tuple) {
   return data(data_type::tuple, tuple);
@@ -403,15 +374,9 @@ data make_process(std::vector<data> proc) {
   return data(data_type::process, proc);
 }
 
-extern data make_map(std::map<data, data> map) {
-  return data(data_type::map, map);
-}
+extern data make_map(std::map<data, data> map) { return map; }
 
-extern data make_container(enviroment container) {
-  return data(data_type::container, container);
-}
+extern data make_container(enviroment container) { return container; }
 
-extern data make_container() {
-  return data(data_type::container, enviroment(env_type::container));
-}
+extern data make_container() { return enviroment(env_type::container); }
 }

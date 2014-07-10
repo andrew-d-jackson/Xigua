@@ -48,7 +48,7 @@ class benchmark : public method {
               << "Total Time: " << dur << "ms" << std::endl
               << "Average Time: " << average << "ms" << std::endl;
 
-    return data(data_type::none);
+    return make_none();
   }
 };
 }

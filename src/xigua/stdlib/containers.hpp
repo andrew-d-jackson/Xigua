@@ -37,7 +37,7 @@ class at : public method {
       throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple",
                   fcl);
     }
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -47,13 +47,13 @@ class size : public method {
   data run(std::vector<data> args, enviroment &env,
            std::vector<std::string> fcl) {
     if (args.at(0).type() == data_type::tuple)
-      return data(data_type::integer, (long long)args.at(0).as_tuple().size());
+      return data((long long)args.at(0).as_tuple().size());
 
     if (args.at(0).type() == data_type::map)
-      return data(data_type::integer, (long long)args.at(0).as_map().size());
+      return data((long long)args.at(0).as_map().size());
 
     throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple", fcl);
-    return data(data_type::none);
+    return make_none();
   }
 };
 
@@ -79,7 +79,7 @@ class insert : public method {
     }
 
     throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple", fcl);
-    return data(data_type::none);
+    return make_none();
   }
 };
 }

@@ -24,7 +24,7 @@ class type_query_base : public method {
     if (argument_type == expected_type())
       ret = true;
 
-    return data(data_type::boolean, ret);
+    return data(ret);
   }
 };
 
