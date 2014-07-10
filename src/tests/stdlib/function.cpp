@@ -39,3 +39,27 @@ TEST(Standard_Library_Function, ConditionalArgs) {
 
   EXPECT_EQ(evaluate(env, parser::from_string("[a 4 -2]")), make_integer(4));
 }
+
+TEST(Standard_Library_Function, EqualArgs) {
+  enviroment env = get_global_enviroment();
+  evaluate(env, parser::from_string("[= isOne [fn (1) [true] (x) [false]]]"));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[isOne 1]")),
+            make_boolean(true));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[isOne :pipe]")),
+            make_boolean(false));
+
+  evaluate(env,
+           parser::from_string(
+               "[= isPipe [fn (:pipe) [true] (:pipes) [true] (x) [false]]]"));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[isPipe :pipe]")),
+            make_boolean(true));
+            
+  EXPECT_EQ(evaluate(env, parser::from_string("[isPipe :pipes]")),
+            make_boolean(true));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[isPipe 22]")),
+            make_boolean(false));
+}

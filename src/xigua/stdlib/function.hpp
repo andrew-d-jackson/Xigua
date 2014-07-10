@@ -87,14 +87,19 @@ private:
           }
         });
         handle_process(args.at(i));
-      } else if (args.at(i).as_symbol() != "&") {
-        bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
-        if (!in_vars) {
-          new_env.set(args.at(i).as_symbol(), fn_args.at(current_arg));
-          current_arg++;
-        } else {
-          vars.insert(args.at(i).as_symbol());
+      } else if (args.at(i).type() == data_type::symbol) {
+        if (args.at(i).as_symbol() != "&") {
+          bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
+          if (!in_vars) {
+            new_env.set(args.at(i).as_symbol(), fn_args.at(current_arg));
+            current_arg++;
+          } else {
+            vars.insert(args.at(i).as_symbol());
+          }
         }
+      } else {
+        auto b = make_boolean(args.at(i) == fn_args.at(i));
+        handle_process(b);
       }
     }
   }
@@ -123,13 +128,17 @@ int get_amount_of_args(std::vector<data> args, enviroment &env) {
           }
         }
       });
-    } else if (args.at(i).as_symbol() != "&") {
-      bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
-      if (!in_vars) {
-        amount++;
-      } else {
-        vars.insert(args.at(i).as_symbol());
+    } else if (args.at(i).type() == data_type::symbol) {
+      if (args.at(i).as_symbol() != "&") {
+        bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
+        if (!in_vars) {
+          amount++;
+        } else {
+          vars.insert(args.at(i).as_symbol());
+        }
       }
+    } else {
+      amount++;
     }
   }
   return amount;
@@ -152,13 +161,11 @@ class create_lambda : public method {
       bool process_args = false;
 
       for (auto arg : arguments.at(argument).as_tuple()) {
-        if (arg.type() == data_type::process) {
+        if (arg.type() == data_type::symbol) {
+          if (arg.as_symbol() == "&")
+            repeating = true;
+        } else {
           process_args = true;
-        } else if (arg.type() != data_type::symbol) {
-          throw error(error_type::invalid_arguments,
-                      "Not A Symbol Or Process In Tuple", fcl);
-        } else if (arg.as_symbol() == "&") {
-          repeating = true;
         }
       }
 
