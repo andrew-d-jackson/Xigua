@@ -2,31 +2,31 @@
 
 namespace xig {
 
-data::data() { type(data_type::none); }
+data::data() {
+  my_type = data_type::none;
+  data_pointer = nullptr;
+}
 
 data::data(long long number) {
-  type(data_type::integer);
-  integer(number);
+  my_type = data_type::integer;
+  data_pointer = std::shared_ptr<void>(new long long(number));
 }
 
 data::data(long double number) {
-  type(data_type::decimal);
-  decimal(number);
+  my_type = data_type::decimal;
+  data_pointer = std::shared_ptr<void>(new long double(number));
 }
 
 data::data(bool boolean_value) {
-  type(data_type::boolean);
-  boolean(boolean_value);
+  my_type = data_type::boolean;
+  data_pointer = std::shared_ptr<void>(new bool(boolean_value));
 }
 
 data::data(data_type in_type, std::string string_data) {
-  type(in_type);
-  if (in_type == data_type::string) {
-    string(string_data);
-  } else if (in_type == data_type::symbol) {
-    symbol(string_data);
-  } else if (in_type == data_type::keyword) {
-    keyword(string_data);
+  my_type = in_type;
+  if (in_type == data_type::string || in_type == data_type::symbol ||
+      in_type == data_type::keyword) {
+    data_pointer = std::shared_ptr<void>(new std::string(string_data));
   } else {
     throw error(error_type::internal_error,
                 "Wrong Data Passed to data::data std::string", {});
@@ -34,13 +34,15 @@ data::data(data_type in_type, std::string string_data) {
 }
 
 data::data(data_type in_type, std::vector<data> list_data) {
-  type(in_type);
-  if (in_type == data_type::tuple) {
-    tuple(list_data);
-  } else if (in_type == data_type::process) {
-    proc(list_data);
+  my_type = in_type;
+  if (in_type == data_type::tuple || in_type == data_type::process) {
+    data_pointer = std::shared_ptr<void>(new std::vector<data>(list_data));
   } else if (in_type == data_type::map) {
-    hash_map(list_data);
+    std::map<data, data> temp_map;
+    for (unsigned int i(0); i + 1 < list_data.size(); i += 2) {
+      temp_map[list_data.at(i)] = list_data.at(i + 1);
+    }
+    data_pointer = std::shared_ptr<void>(new std::map<data, data>(temp_map));
   } else {
     throw error(error_type::internal_error,
                 "Wrong Data Passed to data::data std::vector<data>", {});
@@ -48,18 +50,18 @@ data::data(data_type in_type, std::vector<data> list_data) {
 }
 
 data::data(std::map<data, data> map_data) {
-  type(data_type::map);
-  hash_map(map_data);
+  my_type = data_type::map;
+  data_pointer = std::shared_ptr<void>(new std::map<data, data>(map_data));
 }
 
 data::data(function function_data) {
-  type(data_type::function);
-  functions(function_data);
+  my_type = data_type::function;
+  data_pointer = std::shared_ptr<void>(new function(function_data));
 }
 
 data::data(enviroment container_data) {
-  type(data_type::container);
-  container(container_data);
+  my_type = data_type::container;
+  data_pointer = std::shared_ptr<void>(new enviroment(container_data));
 }
 
 bool data::operator==(const data &other) const {
@@ -163,135 +165,99 @@ bool data::operator<(const data &other) const {
   return false;
 }
 
-data_type data::type() const { return my_type; }
-
-void data::type(data_type in_type) {
-  my_type = in_type;
-
-  if (in_type == data_type::none) {
-    data_pointer = nullptr;
-  } else if (in_type == data_type::symbol) {
-    data_pointer = std::shared_ptr<void>(new std::string());
-  } else if (in_type == data_type::boolean) {
-    data_pointer = std::shared_ptr<void>(new bool(false));
-  } else if (in_type == data_type::string) {
-    data_pointer = std::shared_ptr<void>(new std::string());
-  } else if (in_type == data_type::keyword) {
-    data_pointer = std::shared_ptr<void>(new std::string());
-  } else if (in_type == data_type::decimal) {
-    data_pointer = std::shared_ptr<void>(new long double(0));
-  } else if (in_type == data_type::integer) {
-    data_pointer = std::shared_ptr<void>(new long long(0));
-  } else if (in_type == data_type::tuple) {
-    data_pointer = std::shared_ptr<void>(new std::vector<data>());
-  } else if (in_type == data_type::map) {
-    data_pointer = std::shared_ptr<void>(new std::map<data, data>());
-  } else if (in_type == data_type::process) {
-    data_pointer = std::shared_ptr<void>(new std::vector<data>());
-  } else if (in_type == data_type::function) {
-    data_pointer = std::shared_ptr<void>(new function());
-  } else if (in_type == data_type::container) {
-    data_pointer = std::shared_ptr<void>(new enviroment(env_type::container));
-  } else {
-    throw error(error_type::internal_error, "Wrong Data Passed to data::type",
-                {});
-  }
+data::operator bool() const {
+  if (type() == data_type::boolean)
+    return as_boolean();
+  else
+    throw error(error_type::internal_error, "Invalid cast to bool", {});
 }
+
+data::operator long long() const {
+  if (type() == data_type::integer)
+    return as_integer();
+  else
+    throw error(error_type::internal_error, "Invalid cast to long long", {});
+}
+
+data::operator long double() const {
+  if (type() == data_type::decimal)
+    return as_decimal();
+  else
+    throw error(error_type::internal_error, "Invalid cast to long double", {});
+}
+
+data::operator std::vector<data>() const {
+  if (type() == data_type::tuple || type() == data_type::process)
+    return as_tuple();
+  else
+    throw error(error_type::internal_error, "Invalid cast to vector", {});
+}
+
+data::operator std::map<data, data>() const {
+  if (type() == data_type::map)
+    return as_map();
+  else
+    throw error(error_type::internal_error, "Invalid cast to map", {});
+}
+
+data::operator function() const {
+  if (type() == data_type::function)
+    return as_function();
+  else
+    throw error(error_type::internal_error, "Invalid cast to function", {});
+}
+
+data::operator enviroment *() const {
+  if (type() == data_type::container)
+    return as_container();
+  else
+    throw error(error_type::internal_error, "Invalid cast to enviroment", {});
+}
+
+data_type data::type() const { return my_type; }
 
 std::string data::as_string() const {
   return *(static_cast<std::string *>(data_pointer.get()));
-}
-
-void data::string(std::string in_string) {
-  data_pointer = std::shared_ptr<void>(new std::string(in_string));
 }
 
 std::string data::as_keyword() const {
   return *(static_cast<std::string *>(data_pointer.get()));
 }
 
-void data::keyword(std::string in_string) {
-  data_pointer = std::shared_ptr<void>(new std::string(in_string));
-}
-
 std::string data::as_symbol() const {
   return *(static_cast<std::string *>(data_pointer.get()));
-}
-
-void data::symbol(std::string symbol_name) {
-  data_pointer = std::shared_ptr<void>(new std::string(symbol_name));
 }
 
 long double data::as_decimal() const {
   return *(static_cast<long double *>(data_pointer.get()));
 }
 
-void data::decimal(long double in_number) {
-  data_pointer = std::shared_ptr<void>(new long double(in_number));
-}
-
 long long data::as_integer() const {
   return *(static_cast<long long *>(data_pointer.get()));
-}
-
-void data::integer(long long in_number) {
-  data_pointer = std::shared_ptr<void>(new long long(in_number));
 }
 
 std::vector<data> data::as_tuple() const {
   return *(static_cast<std::vector<data> *>(data_pointer.get()));
 }
 
-void data::tuple(std::vector<data> tuple) {
-  data_pointer = std::shared_ptr<void>(new std::vector<data>(tuple));
-}
-
 std::map<data, data> data::as_map() const {
   return *(static_cast<std::map<data, data> *>(data_pointer.get()));
-}
-
-void data::hash_map(std::map<data, data> in_map) {
-  data_pointer = std::shared_ptr<void>(new std::map<data, data>(in_map));
-}
-
-void data::hash_map(std::vector<data> in_list) {
-  std::map<data, data> temp_map;
-  for (unsigned int i(0); i + 1 < in_list.size(); i += 2) {
-    temp_map[in_list.at(i)] = in_list.at(i + 1);
-  }
-  hash_map(temp_map);
 }
 
 std::vector<data> data::as_process() const {
   return *(static_cast<std::vector<data> *>(data_pointer.get()));
 }
 
-void data::proc(std::vector<data> proc) {
-  data_pointer = std::shared_ptr<void>(new std::vector<data>(proc));
-}
-
 bool data::as_boolean() const {
   return *(static_cast<bool *>(data_pointer.get()));
-}
-
-void data::boolean(bool in_boolean) {
-  data_pointer = std::shared_ptr<void>(new bool(in_boolean));
 }
 
 function data::as_function() const {
   return *(static_cast<function *>(data_pointer.get()));
 }
 
-void data::functions(function in_function) {
-  data_pointer = std::shared_ptr<void>(new function(in_function));
-}
-
 enviroment *data::as_container() const {
   return (static_cast<enviroment *>(data_pointer.get()));
-}
-
-void data::container(enviroment in_container) {
-  data_pointer = std::shared_ptr<void>(new enviroment(in_container));
 }
 
 std::string string_representation(const data &in_data) {

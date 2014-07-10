@@ -77,6 +77,15 @@ public:
   bool operator!=(const data &other) const;
   bool operator<(const data &other) const;
 
+  operator bool() const;
+  operator long long() const;
+  operator long double() const;
+  operator std::string() const;
+  operator std::vector<data>() const;
+  operator std::map<data, data>() const;
+  operator function() const;
+  operator enviroment *() const;
+
   //! Get the type of the data
   data_type type() const;
 
@@ -104,21 +113,6 @@ public:
   //! Get a copy data as an enviroment pointer, assumes type is container
   enviroment *as_container() const;
 
-protected:
-  void type(data_type in_type);
-
-  void string(std::string in_string);
-  void symbol(std::string symbol_name);
-  void keyword(std::string keyword_name);
-  void decimal(long double in_number);
-  void integer(long long in_number);
-  void boolean(bool boolean);
-  void tuple(std::vector<data> in_tuple);
-  void hash_map(std::map<data, data> in_map);
-  void hash_map(std::vector<data> in_list);
-  void proc(std::vector<data> in_list);
-  void functions(function in_function);
-  void container(enviroment in_container);
 };
 
 //! Get a nice string representation of a data object
