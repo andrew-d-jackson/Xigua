@@ -31,7 +31,7 @@ class benchmark : public method {
     std::chrono::steady_clock::time_point start_time =
         std::chrono::steady_clock::now();
 
-    auto times = args.at(1).as_integer();
+    long long times = args.at(1);
     for (long i = 0; i < times; i++) {
       evaluate(env, args.at(2), fcl);
     }
@@ -44,7 +44,7 @@ class benchmark : public method {
             end_time - start_time).count();
     auto average = dur / times;
 
-    std::cout << "Benchmark: " << args.at(0).as_string() << std::endl
+    std::cout << "Benchmark: " << std::string(args.at(0)) << std::endl
               << "Total Time: " << dur << "ms" << std::endl
               << "Average Time: " << average << "ms" << std::endl;
 

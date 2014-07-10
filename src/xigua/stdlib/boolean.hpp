@@ -20,7 +20,7 @@ class boolean_not : public method {
     if (args.at(0).type() != data_type::boolean)
       throw error(error_type::invalid_arguments, "Not A Boolean", fcl);
 
-    return data(!(args.at(0).as_boolean()));
+    return data(!args.at(0));
   }
 };
 

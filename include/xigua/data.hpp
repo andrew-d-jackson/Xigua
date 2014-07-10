@@ -112,7 +112,6 @@ public:
   function as_function() const;
   //! Get a copy data as an enviroment pointer, assumes type is container
   enviroment *as_container() const;
-
 };
 
 //! Get a nice string representation of a data object

@@ -172,6 +172,14 @@ data::operator bool() const {
     throw error(error_type::internal_error, "Invalid cast to bool", {});
 }
 
+data::operator std::string() const {
+  if (type() == data_type::string || type() == data_type::symbol ||
+      type() == data_type::keyword)
+    return as_string();
+  else
+    throw error(error_type::internal_error, "Invalid cast to bool", {});
+}
+
 data::operator long long() const {
   if (type() == data_type::integer)
     return as_integer();
