@@ -60,10 +60,12 @@ class enviroment;
 class data {
 protected:
   data_type my_type;
-  std::shared_ptr<void> data_pointer;
+  void* data_pointer;
 
 public:
   data();
+  ~data();
+  data(const data& other);
   data(long long number);
   data(long double number);
   data(bool boolean_data);
@@ -73,6 +75,7 @@ public:
   data(data_type in_type, std::string string_data);
   data(data_type in_type, std::vector<data> list_data);
 
+  data& operator=(const data &other);
   bool operator==(const data &other) const;
   bool operator!=(const data &other) const;
   bool operator<(const data &other) const;
@@ -112,6 +115,10 @@ public:
   function as_function() const;
   //! Get a copy data as an enviroment pointer, assumes type is container
   enviroment *as_container() const;
+
+private:
+	void delete_pointer();
+	void assign_from_other(const data &other);
 };
 
 //! Get a nice string representation of a data object

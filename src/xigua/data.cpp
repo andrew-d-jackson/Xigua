@@ -2,31 +2,110 @@
 
 namespace xig {
 
+void data::delete_pointer() {
+	switch (type()) {
+	case data_type::boolean:
+		delete reinterpret_cast<bool*>(data_pointer);
+		break;
+	case data_type::none:
+		break;
+	case data_type::integer:
+		delete reinterpret_cast<long long*>(data_pointer);
+		break;
+	case data_type::decimal:
+		delete reinterpret_cast<long double*>(data_pointer);
+		break;
+	case data_type::string:
+	case data_type::keyword:
+	case data_type::symbol:
+		delete reinterpret_cast<std::string*>(data_pointer);
+		break;
+	case data_type::tuple:
+	case data_type::process:
+		delete reinterpret_cast<std::vector<data>*>(data_pointer);
+		break;
+	case data_type::map:
+		delete reinterpret_cast<std::map<data, data>*>(data_pointer);
+		break;
+	case data_type::function:
+		delete reinterpret_cast<function*>(data_pointer);
+		break;
+	case data_type::container:
+		delete reinterpret_cast<enviroment*>(data_pointer);
+		break;
+	}
+}
+
+
+void data::assign_from_other(const data& other) {
+	my_type = other.type();
+	switch (other.type()) {
+	case data_type::boolean:
+		data_pointer = new bool(other.as_boolean());
+		break;
+	case data_type::none:
+		data_pointer = nullptr;
+		break;
+	case data_type::integer:
+		data_pointer = new long long(other.as_integer());
+		break;
+	case data_type::decimal:
+		data_pointer = new long double(other.as_decimal());
+		break;
+	case data_type::string:
+	case data_type::keyword:
+	case data_type::symbol:
+		data_pointer = new std::string(other.as_string());
+		break;
+	case data_type::tuple:
+	case data_type::process:
+		data_pointer = new std::vector<data>(other.as_tuple());
+		break;
+	case data_type::map:
+		data_pointer = new std::map<data, data>(other.as_map());
+		break;
+	case data_type::function:
+		data_pointer = new function(other.as_function());
+		break;
+	case data_type::container:
+		data_pointer = new enviroment(*other.as_container());
+		break;
+	}
+}
+
+
+data::~data() {
+	delete_pointer();
+}
 data::data() {
   my_type = data_type::none;
   data_pointer = nullptr;
 }
 
+data::data(const data& other) {
+	assign_from_other(other);
+}
+
 data::data(long long number) {
   my_type = data_type::integer;
-  data_pointer = std::shared_ptr<void>(new long long(number));
+  data_pointer = new long long(number);
 }
 
 data::data(long double number) {
   my_type = data_type::decimal;
-  data_pointer = std::shared_ptr<void>(new long double(number));
+  data_pointer = new long double(number);
 }
 
 data::data(bool boolean_value) {
   my_type = data_type::boolean;
-  data_pointer = std::shared_ptr<void>(new bool(boolean_value));
+  data_pointer = new bool(boolean_value);
 }
 
 data::data(data_type in_type, std::string string_data) {
   my_type = in_type;
   if (in_type == data_type::string || in_type == data_type::symbol ||
       in_type == data_type::keyword) {
-    data_pointer = std::shared_ptr<void>(new std::string(string_data));
+    data_pointer = new std::string(string_data);
   } else {
     throw error(error_type::internal_error,
                 "Wrong Data Passed to data::data std::string", {});
@@ -36,13 +115,13 @@ data::data(data_type in_type, std::string string_data) {
 data::data(data_type in_type, std::vector<data> list_data) {
   my_type = in_type;
   if (in_type == data_type::tuple || in_type == data_type::process) {
-    data_pointer = std::shared_ptr<void>(new std::vector<data>(list_data));
+    data_pointer = new std::vector<data>(list_data);
   } else if (in_type == data_type::map) {
     std::map<data, data> temp_map;
     for (unsigned int i(0); i + 1 < list_data.size(); i += 2) {
       temp_map[list_data.at(i)] = list_data.at(i + 1);
     }
-    data_pointer = std::shared_ptr<void>(new std::map<data, data>(temp_map));
+    data_pointer = new std::map<data, data>(temp_map);
   } else {
     throw error(error_type::internal_error,
                 "Wrong Data Passed to data::data std::vector<data>", {});
@@ -51,18 +130,26 @@ data::data(data_type in_type, std::vector<data> list_data) {
 
 data::data(std::map<data, data> map_data) {
   my_type = data_type::map;
-  data_pointer = std::shared_ptr<void>(new std::map<data, data>(map_data));
+  data_pointer = new std::map<data, data>(map_data);
 }
 
 data::data(function function_data) {
   my_type = data_type::function;
-  data_pointer = std::shared_ptr<void>(new function(function_data));
+  data_pointer = new function(function_data);
 }
 
 data::data(enviroment container_data) {
   my_type = data_type::container;
-  data_pointer = std::shared_ptr<void>(new enviroment(container_data));
+  data_pointer = new enviroment(container_data);
 }
+
+
+data& data::operator=(const data &other){
+	delete_pointer();
+	assign_from_other(other);
+	return *this;
+}
+
 
 bool data::operator==(const data &other) const {
 
@@ -225,47 +312,47 @@ data::operator enviroment *() const {
 data_type data::type() const { return my_type; }
 
 std::string data::as_string() const {
-  return *(static_cast<std::string *>(data_pointer.get()));
+  return *(static_cast<std::string *>(data_pointer));
 }
 
 std::string data::as_keyword() const {
-  return *(static_cast<std::string *>(data_pointer.get()));
+  return *(static_cast<std::string *>(data_pointer));
 }
 
 std::string data::as_symbol() const {
-  return *(static_cast<std::string *>(data_pointer.get()));
+  return *(static_cast<std::string *>(data_pointer));
 }
 
 long double data::as_decimal() const {
-  return *(static_cast<long double *>(data_pointer.get()));
+  return *(static_cast<long double *>(data_pointer));
 }
 
 long long data::as_integer() const {
-  return *(static_cast<long long *>(data_pointer.get()));
+  return *(static_cast<long long *>(data_pointer));
 }
 
 std::vector<data> data::as_tuple() const {
-  return *(static_cast<std::vector<data> *>(data_pointer.get()));
+  return *(static_cast<std::vector<data> *>(data_pointer));
 }
 
 std::map<data, data> data::as_map() const {
-  return *(static_cast<std::map<data, data> *>(data_pointer.get()));
+  return *(static_cast<std::map<data, data> *>(data_pointer));
 }
 
 std::vector<data> data::as_process() const {
-  return *(static_cast<std::vector<data> *>(data_pointer.get()));
+  return *(static_cast<std::vector<data> *>(data_pointer));
 }
 
 bool data::as_boolean() const {
-  return *(static_cast<bool *>(data_pointer.get()));
+  return *(static_cast<bool *>(data_pointer));
 }
 
 function data::as_function() const {
-  return *(static_cast<function *>(data_pointer.get()));
+  return *(static_cast<function *>(data_pointer));
 }
 
 enviroment *data::as_container() const {
-  return (static_cast<enviroment *>(data_pointer.get()));
+  return (static_cast<enviroment *>(data_pointer));
 }
 
 std::string string_representation(const data &in_data) {
