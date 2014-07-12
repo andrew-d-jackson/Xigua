@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <functional>
+#include <iterator>
 #include <numeric>
 
 #include "xigua/data.hpp"
