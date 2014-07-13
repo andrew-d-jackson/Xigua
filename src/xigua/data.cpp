@@ -108,7 +108,7 @@ data::data(data_type in_type, std::string string_data) {
     data_pointer = new std::string(string_data);
   } else {
     throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data std::string", {});
+                "Wrong Data Passed to data::data std::string");
   }
 }
 
@@ -124,7 +124,7 @@ data::data(data_type in_type, std::vector<data> list_data) {
     data_pointer = new std::map<data, data>(temp_map);
   } else {
     throw error(error_type::internal_error,
-                "Wrong Data Passed to data::data std::vector<data>", {});
+                "Wrong Data Passed to data::data std::vector<data>");
   }
 }
 
@@ -256,7 +256,7 @@ data::operator bool() const {
   if (type() == data_type::boolean)
     return as_boolean();
   else
-    throw error(error_type::internal_error, "Invalid cast to bool", {});
+    throw error(error_type::internal_error, "Invalid cast to bool");
 }
 
 data::operator std::string() const {
@@ -264,49 +264,42 @@ data::operator std::string() const {
       type() == data_type::keyword)
     return as_string();
   else
-    throw error(error_type::internal_error, "Invalid cast to bool", {});
+    throw error(error_type::internal_error, "Invalid cast to bool");
 }
 
 data::operator long long() const {
   if (type() == data_type::integer)
     return as_integer();
   else
-    throw error(error_type::internal_error, "Invalid cast to long long", {});
+    throw error(error_type::internal_error, "Invalid cast to long long");
 }
 
 data::operator long double() const {
   if (type() == data_type::decimal)
     return as_decimal();
   else
-    throw error(error_type::internal_error, "Invalid cast to long double", {});
-}
-
-data::operator std::vector<data>() const {
-  if (type() == data_type::tuple || type() == data_type::process)
-    return as_tuple();
-  else
-    throw error(error_type::internal_error, "Invalid cast to vector", {});
+    throw error(error_type::internal_error, "Invalid cast to long double");
 }
 
 data::operator std::map<data, data>() const {
   if (type() == data_type::map)
     return as_map();
   else
-    throw error(error_type::internal_error, "Invalid cast to map", {});
+    throw error(error_type::internal_error, "Invalid cast to map");
 }
 
 data::operator function() const {
   if (type() == data_type::function)
     return as_function();
   else
-    throw error(error_type::internal_error, "Invalid cast to function", {});
+    throw error(error_type::internal_error, "Invalid cast to function");
 }
 
 data::operator enviroment *() const {
   if (type() == data_type::container)
     return as_container();
   else
-    throw error(error_type::internal_error, "Invalid cast to enviroment", {});
+    throw error(error_type::internal_error, "Invalid cast to enviroment");
 }
 
 data_type data::type() const { return my_type; }

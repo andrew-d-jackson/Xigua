@@ -6,11 +6,26 @@
 #include <memory>
 
 #include "xigua/error.hpp"
+#include "xigua/data.hpp"
 
 namespace xig {
 
 class data;
 class enviroment;
+
+struct debug_info {
+	std::vector<std::string> function_call_list;
+	debug_info() { function_call_list = {}; }
+	debug_info(std::vector<std::string> fcl) { function_call_list = fcl; }
+};
+
+struct call_info {
+	std::vector<data> args;
+	enviroment &env;
+	debug_info debug;
+	call_info(std::vector<data> args, enviroment &env, debug_info debug)
+		: args(args), env(env), debug(debug) {}
+};
 
 //! Abstract class that is the base for writing your own Xigua functions
 class method {
@@ -19,8 +34,7 @@ public:
   //! @param args the arguments passed to the function
   //! @param env the enviroment that the method is bieng run in
   //! @param fcl the function call list at the time the method was called
-  virtual data run(std::vector<data> args, enviroment &env,
-                   std::vector<std::string> fcl) = 0;
+	virtual data run(call_info fci) = 0;
 
   //! The amount of arguments this method takes
   virtual int amount_of_arguments() const = 0;
@@ -35,8 +49,7 @@ public:
 
   //! If this method has any conditional arguments, is used to check wether the
   //! conditional arguments are met
-  virtual bool process_arguments_pass(std::vector<data> args, enviroment &env,
-                                      std::vector<std::string> fcl);
+  virtual bool process_arguments_pass(call_info fci);
 
   //! Wether this method should automatically lookup variables and execute
   //! processes, etc. before run() in called, defaults to true, should only be
@@ -44,8 +57,7 @@ public:
   //! passing behaviour
   virtual bool should_evaluate_arguments() const;
 
-  data call(std::vector<data> arguments, enviroment &enviroment,
-            std::vector<std::string> function_call_list);
+  data call(call_info fci);
 };
 
 //! Comparator used to sort methods internally
@@ -82,8 +94,7 @@ public:
   //! @param args the arguments passed to the function
   //! @param env the enviroment that the method is bieng run in
   //! @param fcl the function call list at the time the method was called
-  data call(std::vector<data> &args, enviroment &env,
-            std::vector<std::string> fcl);
+  data call(call_info fci);
 
 private:
   void insert_method(std::shared_ptr<method> in_method) {

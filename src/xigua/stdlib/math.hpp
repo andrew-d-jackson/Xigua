@@ -21,13 +21,12 @@ class comparator : public method {
   virtual bool compare_integer(long long a, long long b) const = 0;
   virtual bool compare_decimal(long double a, long double b) const = 0;
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    auto arguments = utils::parse_arguments(args, 2);
+  data run(call_info fci) {
+    auto arguments = utils::parse_arguments(fci.args, 2);
     for (const auto &arg : arguments)
       if (!(arg.type() == data_type::decimal ||
             arg.type() == data_type::integer))
-        throw error(error_type::invalid_arguments, "Not A Number", fcl);
+        throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
     for (auto it = arguments.begin(); it < arguments.end() - 1; it++) {
       if ((*it).type() == data_type::decimal ||
@@ -73,9 +72,8 @@ class equal_to : public method {
   int amount_of_arguments() const { return 2; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    auto arguments = utils::parse_arguments(args, 2);
+  data run(call_info fci) {
+    auto arguments = utils::parse_arguments(fci.args, 2);
     for (auto it = arguments.begin(); it < arguments.end() - 1; it++) {
       if (*it != (*(it + 1)))
         return data(false);
@@ -94,14 +92,13 @@ class math_operation : public method {
   };
   virtual long double operate_decimal(long double a, long double b) const = 0;
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
+  data run(call_info fci) {
 
-    auto arguments = utils::parse_arguments(args, 2);
+    auto arguments = utils::parse_arguments(fci.args, 2);
     for (const auto &arg : arguments)
       if (!(arg.type() == data_type::decimal ||
             arg.type() == data_type::integer))
-        throw error(error_type::invalid_arguments, "Not A Number", fcl);
+        throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
     if (utils::all_types_are(arguments, data_type::integer) &&
         !always_decimal()) {
@@ -158,24 +155,23 @@ class divide : public math_operation {
 class modulo : public method {
   int amount_of_arguments() const { return 2; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    for (const auto &arg : args)
+  data run(call_info fci) {
+    for (const auto &arg : fci.args)
       if (!(arg.type() == data_type::decimal ||
             arg.type() == data_type::integer))
-        throw error(error_type::invalid_arguments, "Not A Number", fcl);
+        throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
-    if (args.at(0).type() == data_type::decimal ||
-        args.at(1).type() == data_type::decimal) {
-      auto a = args.at(0).type() == data_type::decimal
-                   ? args.at(0).as_decimal()
-                   : (long double)args.at(0).as_integer();
-      auto b = args.at(1).type() == data_type::decimal
-                   ? args.at(1).as_decimal()
-                   : (long double)args.at(1).as_integer();
+    if (fci.args.at(0).type() == data_type::decimal ||
+        fci.args.at(1).type() == data_type::decimal) {
+      auto a = fci.args.at(0).type() == data_type::decimal
+                   ? fci.args.at(0).as_decimal()
+                   : (long double)fci.args.at(0).as_integer();
+      auto b = fci.args.at(1).type() == data_type::decimal
+                   ? fci.args.at(1).as_decimal()
+                   : (long double)fci.args.at(1).as_integer();
       return make_decimal(std::fmod(a, b));
     } else {
-      return make_integer(args.at(0).as_integer() % args.at(1).as_integer());
+      return make_integer(fci.args.at(0).as_integer() % fci.args.at(1).as_integer());
     }
   }
 };

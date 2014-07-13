@@ -1,12 +1,18 @@
 #include "xigua/error.hpp"
+#include "xigua/function.hpp"
 
 namespace xig {
 
-error::error(error_type e_type, std::string descripton,
-             std::vector<std::string> function_call_list) {
-  this->my_error_type = e_type;
-  this->descripton = descripton;
-  this->function_call_list = function_call_list;
+error::error(error_type e_type, std::string descripton, debug_info debug) {
+	this->my_error_type = e_type;
+	this->descripton = descripton;
+	this->function_call_list = debug.function_call_list;
+}
+
+error::error(error_type e_type, std::string descripton) {
+	this->my_error_type = e_type;
+	this->descripton = descripton;
+	this->function_call_list = {};
 }
 
 error_type error::get_error_type() const {

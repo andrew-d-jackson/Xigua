@@ -17,23 +17,22 @@ class benchmark : public method {
   int amount_of_arguments() const { return 3; }
   bool should_evaluate_arguments() const { return false; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (args.at(0).type() != data_type::string)
-      throw error(error_type::invalid_arguments, "Not A String", fcl);
+  data run(call_info fci) {
+    if (fci.args.at(0).type() != data_type::string)
+      throw error(error_type::invalid_arguments, "Not A String", fci.debug);
 
-    if (args.at(1).type() != data_type::integer)
-      throw error(error_type::invalid_arguments, "Not A integer", fcl);
+    if (fci.args.at(1).type() != data_type::integer)
+      throw error(error_type::invalid_arguments, "Not A integer", fci.debug);
 
-    if (args.at(2).type() != data_type::process)
-      throw error(error_type::invalid_arguments, "Not A Process", fcl);
+    if (fci.args.at(2).type() != data_type::process)
+      throw error(error_type::invalid_arguments, "Not A Process", fci.debug);
 
     std::chrono::steady_clock::time_point start_time =
         std::chrono::steady_clock::now();
 
-    long long times = args.at(1);
+    long long times = fci.args.at(1);
     for (long i = 0; i < times; i++) {
-      evaluate(env, args.at(2), fcl);
+      evaluate(fci.env, fci.args.at(2), fci.debug);
     }
 
     std::chrono::steady_clock::time_point end_time =
@@ -44,7 +43,7 @@ class benchmark : public method {
             end_time - start_time).count();
     auto average = dur / times;
 
-    std::cout << "Benchmark: " << std::string(args.at(0)) << std::endl
+    std::cout << "Benchmark: " << std::string(fci.args.at(0)) << std::endl
               << "Total Time: " << dur << "ms" << std::endl
               << "Average Time: " << average << "ms" << std::endl;
 

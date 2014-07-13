@@ -38,13 +38,12 @@ public:
   int amount_of_arguments() const { return amount_of_args; }
   bool has_process_arguments() const { return process_args; }
 
-  bool process_arguments_pass(std::vector<data> fn_args, enviroment &fn_env,
-                              std::vector<std::string> fn_fcl) {
+  bool process_arguments_pass(call_info fn_fci) {
     if (!process_args)
       return true;
     bool ret = true;
-    process_arguments(fn_args, fn_env, [&](data &val) {
-      auto result = evaluate(new_env, val, fn_fcl);
+	process_arguments(fn_fci.args, fn_fci.env, [&](data &val) {
+		auto result = evaluate(new_env, val, fn_fci.debug);
       if (result.type() != data_type::boolean || !result.as_boolean()) {
         ret = false;
       }
@@ -52,10 +51,9 @@ public:
     return ret;
   }
 
-  data run(std::vector<data> fn_args, enviroment &fn_env,
-           std::vector<std::string> fn_fcl) {
-    process_arguments(fn_args, fn_env);
-    return evaluate(new_env, proc, fn_fcl);
+  data run(call_info fn_fci) {
+	  process_arguments(fn_fci.args, fn_fci.env);
+	  return evaluate(new_env, proc, fn_fci.debug);
   }
 
 private:
@@ -149,11 +147,10 @@ class create_lambda : public method {
   bool should_evaluate_arguments() const { return false; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
+  data run(call_info fci) {
 
-    auto arguments = utils::parse_arguments(args, 2);
-    enviroment new_env(env_type::function, &env);
+	  auto arguments = utils::parse_arguments(fci.args, 2);
+	  enviroment new_env(env_type::function, &fci.env);
     function return_fn;
 
     for (int argument(0); argument < arguments.size(); argument += 2) {

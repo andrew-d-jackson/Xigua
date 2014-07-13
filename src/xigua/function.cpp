@@ -1,43 +1,40 @@
 #include "xigua/function.hpp"
-
-#include "xigua/evaluate.hpp"
 #include "xigua/data.hpp"
+#include "xigua/evaluate.hpp"
 
 namespace xig {
 
-data method::call(std::vector<data> arguments, enviroment &enviroment,
-                  std::vector<std::string> function_call_list) {
+  data method::call(call_info fci) {
 
   if (should_evaluate_arguments()) {
-    for (auto &item : arguments) {
+    for (auto &item : fci.args) {
       if (item.type() == data_type::process ||
           item.type() == data_type::symbol || item.type() == data_type::tuple ||
           item.type() == data_type::map)
-        item = evaluate(enviroment, item, function_call_list);
+		  item = evaluate(fci.env, item, fci.debug);
     }
   }
 
   if (has_repeating_arguments()) {
-    std::vector<data> new_args(arguments.begin(),
-                               arguments.begin() + amount_of_arguments());
+    std::vector<data> new_args(fci.args.begin(),
+							   fci.args.begin() + amount_of_arguments());
     data repeating_args(
         data_type::tuple,
-        std::vector<data>(arguments.begin() + amount_of_arguments(),
-                          arguments.end()));
+		std::vector<data>(fci.args.begin() + amount_of_arguments(),
+						  fci.args.end()));
     new_args.push_back(repeating_args);
 
-    arguments = new_args;
+	fci.args = new_args;
   }
 
-  return run(arguments, enviroment, function_call_list);
+  return run(fci);
 }
 
 bool method::has_repeating_arguments() const { return false; }
 
 bool method::has_process_arguments() const { return false; }
 
-bool method::process_arguments_pass(std::vector<data> args, enviroment &env,
-                                    std::vector<std::string> fcl) {
+bool method::process_arguments_pass(call_info fci) {
   return true;
 }
 
@@ -54,34 +51,34 @@ bool method_set_comparator::operator()(const std::shared_ptr<method> &a,
   return false;
 }
 
-data function::call(std::vector<data> &args, enviroment &enviroment,
-                    std::vector<std::string> function_call_list) {
+data function::call(call_info fci) {
 
   for (auto iterator = methods.rbegin(); iterator != methods.rend();
        iterator++) {
-    if ((unsigned)(*iterator)->amount_of_arguments() == args.size()) {
+	if ((unsigned)(*iterator)->amount_of_arguments() == fci.args.size()) {
       if ((*iterator)->has_process_arguments()) {
         if ((*iterator)
-                ->process_arguments_pass(args, enviroment, function_call_list))
-          return (*iterator)->call(args, enviroment, function_call_list);
+			->process_arguments_pass(fci))
+			return (*iterator)->call(fci);
       } else {
-        return (*iterator)->call(args, enviroment, function_call_list);
+		  return (*iterator)->call(fci);
       }
-    } else if ((unsigned)(*iterator)->amount_of_arguments() < args.size() &&
+	}
+	else if ((unsigned)(*iterator)->amount_of_arguments() < fci.args.size() &&
                (*iterator)->has_repeating_arguments()) {
       if ((*iterator)->has_process_arguments()) {
         if ((*iterator)
-                ->process_arguments_pass(args, enviroment, function_call_list))
-          return (*iterator)->call(args, enviroment, function_call_list);
+			->process_arguments_pass(fci))
+			return (*iterator)->call(fci);
       } else {
-        return (*iterator)->call(args, enviroment, function_call_list);
+		  return (*iterator)->call(fci);
       }
     }
   }
 
   std::string error_message("Dosen't match a method overload in the specified "
                             "function.\nAmount of Args Passed: ");
-  error_message += std::to_string(args.size());
+  error_message += std::to_string(fci.args.size());
   error_message += "\nAmount of Args In Function: ";
   for (const auto &overload : methods) {
     error_message += std::to_string(overload->amount_of_arguments());
@@ -92,6 +89,6 @@ data function::call(std::vector<data> &args, enviroment &enviroment,
     error_message += " ";
   }
 
-  throw error(error_type::invalid_arguments, error_message, function_call_list);
+  throw error(error_type::invalid_arguments, error_message, fci.debug);
 }
 }

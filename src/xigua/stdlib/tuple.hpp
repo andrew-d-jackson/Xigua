@@ -16,9 +16,8 @@ class join : public method {
   int amount_of_arguments() const { return 2; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    auto arguments = utils::parse_arguments(args, 2);
+  data run(call_info fci) {
+    auto arguments = utils::parse_arguments(fci.args, 2);
     std::vector<data> return_value;
     for (auto argument : arguments) {
       if (argument.type() == data_type::tuple) {
@@ -35,12 +34,11 @@ class join : public method {
 class unique : public method {
   int amount_of_arguments() const { return 1; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (args.at(0).type() != data_type::tuple)
-      throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+  data run(call_info fci) {
+    if (fci.args.at(0).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-    auto initial_tuple = args.at(0).as_tuple();
+    auto initial_tuple = fci.args.at(0).as_tuple();
     std::sort(initial_tuple.begin(), initial_tuple.end());
     auto unique_iterator =
         std::unique(initial_tuple.begin(), initial_tuple.end());
@@ -53,45 +51,42 @@ class unique : public method {
 class first : public method {
   int amount_of_arguments() const { return 1; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (args.at(0).type() != data_type::tuple)
-      throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+  data run(call_info fci) {
+    if (fci.args.at(0).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-    if (args.at(0).as_tuple().size() < 1)
-      throw error(error_type::invalid_arguments, "Not In Range", fcl);
+    if (fci.args.at(0).as_tuple().size() < 1)
+      throw error(error_type::invalid_arguments, "Not In Range", fci.debug);
 
-    return args.at(0).as_tuple().at(0);
+    return fci.args.at(0).as_tuple().at(0);
   }
 };
 
 class last : public method {
   int amount_of_arguments() const { return 1; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (args.at(0).type() != data_type::tuple)
-      throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+  data run(call_info fci) {
+    if (fci.args.at(0).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-    if (args.at(0).as_tuple().size() < 1)
-      throw error(error_type::invalid_arguments, "Not In Range", fcl);
+    if (fci.args.at(0).as_tuple().size() < 1)
+      throw error(error_type::invalid_arguments, "Not In Range", fci.debug);
 
-    return args.at(0).as_tuple().at(args.at(0).as_tuple().size() - 1);
+    return fci.args.at(0).as_tuple().at(fci.args.at(0).as_tuple().size() - 1);
   }
 };
 
 class tail : public method {
   int amount_of_arguments() const { return 1; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (args.at(0).type() != data_type::tuple)
-      throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+  data run(call_info fci) {
+    if (fci.args.at(0).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-    if (args.at(0).as_tuple().size() < 1)
-      throw error(error_type::invalid_arguments, "Not In Range", fcl);
+    if (fci.args.at(0).as_tuple().size() < 1)
+      throw error(error_type::invalid_arguments, "Not In Range", fci.debug);
 
-    auto t = args.at(0).as_tuple();
+    auto t = fci.args.at(0).as_tuple();
     auto s = std::vector<data>(t.begin() + 1, t.end());
 
     return make_tuple(s);
@@ -101,15 +96,14 @@ class tail : public method {
 class init : public method {
   int amount_of_arguments() const { return 1; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (args.at(0).type() != data_type::tuple)
-      throw error(error_type::invalid_arguments, "Not A Tuple", fcl);
+  data run(call_info fci) {
+    if (fci.args.at(0).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-    if (args.at(0).as_tuple().size() < 1)
-      throw error(error_type::invalid_arguments, "Not In Range", fcl);
+    if (fci.args.at(0).as_tuple().size() < 1)
+      throw error(error_type::invalid_arguments, "Not In Range", fci.debug);
 
-    auto t = args.at(0).as_tuple();
+    auto t = fci.args.at(0).as_tuple();
     auto s = std::vector<data>(t.begin(), t.end() - 1);
 
     return make_tuple(s);
@@ -119,21 +113,20 @@ class init : public method {
 class range : public method {
   int amount_of_arguments() const { return 3; }
 
-  data run(std::vector<data> args, enviroment &env,
-           std::vector<std::string> fcl) {
-    if (!utils::all_types_are(args, data_type::integer))
-      throw error(error_type::invalid_arguments, "Not A Integer", fcl);
+  data run(call_info fci) {
+    if (!utils::all_types_are(fci.args, data_type::integer))
+      throw error(error_type::invalid_arguments, "Not A Integer", fci.debug);
 
-    long long start = args.at(0).as_integer();
-    long long end = args.at(1).as_integer();
-    long long step = args.at(2).as_integer();
+    long long start = fci.args.at(0).as_integer();
+    long long end = fci.args.at(1).as_integer();
+    long long step = fci.args.at(2).as_integer();
 
     if (start > end && step >= 0)
-      throw error(error_type::invalid_arguments, "Range Invalid", fcl);
+      throw error(error_type::invalid_arguments, "Range Invalid", fci.debug);
     else if (start < end && step <= 0)
-      throw error(error_type::invalid_arguments, "Range Invalid", fcl);
+      throw error(error_type::invalid_arguments, "Range Invalid", fci.debug);
     else if (step == 0 || start == end)
-      throw error(error_type::invalid_arguments, "Range Invalid", fcl);
+      throw error(error_type::invalid_arguments, "Range Invalid", fci.debug);
 
     std::vector<data> return_value;
 

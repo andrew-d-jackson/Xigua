@@ -27,7 +27,7 @@ std::string parser::read_file(const std::string file_location) {
   std::ifstream file_stream(file_location.c_str());
   if (!((bool)file_stream)) {
     throw error(error_type::parsing_error,
-                "File Does Not Exist: " + file_location, {});
+                "File Does Not Exist: " + file_location);
   }
   std::stringstream string_buffer;
   string_buffer << file_stream.rdbuf();
@@ -118,7 +118,7 @@ void parser::validate_string_list(const std::vector<std::string> string_list) {
 
   if (opening != closing)
     throw xig::error(xig::error_type::unmatching_brackets,
-                     "Amount Of Opening And Closing Brackets Do Not Match", {});
+                     "Amount Of Opening And Closing Brackets Do Not Match");
 }
 
 data

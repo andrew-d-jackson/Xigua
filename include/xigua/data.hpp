@@ -54,6 +54,7 @@ enum class data_type {
 };
 
 class data;
+class function;
 class enviroment;
 
 //! Generic class that holds all Xigua data types
@@ -84,7 +85,6 @@ public:
   operator long long() const;
   operator long double() const;
   operator std::string() const;
-  operator std::vector<data>() const;
   operator std::map<data, data>() const;
   operator function() const;
   operator enviroment *() const;
