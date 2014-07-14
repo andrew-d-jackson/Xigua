@@ -26,37 +26,50 @@ data lookupSymbol(enviroment &env, data input_data, debug_info debug) {
   return *symbol_value;
 }
 
-data handleProcess(enviroment &env, data input_data, debug_info debug) {
-  if (input_data.as_process().size() == 0)
-    return make_none();
-
-  // if first arg is symbol or process, evaluate it
-  switch (input_data.as_process().at(0).type()) {
+data processSymbolProcess(enviroment &env, data input_data, int loc,
+                          debug_info debug) {
+  switch (input_data.as_process().at(loc).type()) {
   case data_type::symbol:
     debug.function_call_list.push_back(
-        input_data.as_process().at(0).as_symbol());
+        input_data.as_process().at(loc).as_symbol());
   case data_type::process: {
     std::vector<data> new_proc_data = input_data.as_process();
-    new_proc_data.at(0) = evaluate(env, input_data.as_process().at(0), debug);
+    new_proc_data.at(loc) =
+        evaluate(env, input_data.as_process().at(loc), debug);
     input_data = data(data_type::process, new_proc_data);
     break;
   }
   default:
     break;
   }
+  return input_data;
+}
 
-  switch (input_data.as_process().at(0).type()) {
-  case data_type::function: {
+data handleProcess(enviroment &env, data input_data, debug_info debug) {
+  if (input_data.as_process().size() == 0)
+    return make_none();
+
+  // if first arg is symbol or process, evaluate it
+  processSymbolProcess(env, input_data, 0, debug);
+
+  if (input_data.as_process().at(0).type() == data_type::function) {
     auto process_copy = input_data.as_process();
     auto firstElement = process_copy.begin() + 1;
     auto lastElement = process_copy.end();
     std::vector<data> functionArgs(firstElement, lastElement);
 
     return input_data.as_process().at(0).as_function().call(
-        { functionArgs, env, debug });
+        {functionArgs, env, debug});
   }
-  default:
-    break;
+
+  if (input_data.as_process().size() == 3) {
+    input_data = processSymbolProcess(env, input_data, 1, debug);
+    if (input_data.as_process().at(1).type() == data_type::function) {
+      std::vector<data> functionArgs = {input_data.as_process().at(0),
+                                        input_data.as_process().at(2)};
+      return input_data.as_process().at(1).as_function().call(
+          {functionArgs, env, debug});
+    }
   }
 
   data return_value = make_none();
