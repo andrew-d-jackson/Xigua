@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "xigua/error.hpp"
-#include "xigua/data.hpp"
 
 namespace xig {
 

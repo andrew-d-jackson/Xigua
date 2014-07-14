@@ -54,7 +54,6 @@ enum class data_type {
 };
 
 class data;
-class function;
 class enviroment;
 
 //! Generic class that holds all Xigua data types

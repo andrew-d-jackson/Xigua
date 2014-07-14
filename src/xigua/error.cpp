@@ -1,4 +1,5 @@
 #include "xigua/error.hpp"
+#include "xigua/data.hpp"
 #include "xigua/function.hpp"
 
 namespace xig {
