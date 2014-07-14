@@ -3,88 +3,82 @@
 namespace xig {
 
 void data::delete_pointer() {
-	switch (type()) {
-	case data_type::boolean:
-		delete reinterpret_cast<bool*>(data_pointer);
-		break;
-	case data_type::none:
-		break;
-	case data_type::integer:
-		delete reinterpret_cast<long long*>(data_pointer);
-		break;
-	case data_type::decimal:
-		delete reinterpret_cast<long double*>(data_pointer);
-		break;
-	case data_type::string:
-	case data_type::keyword:
-	case data_type::symbol:
-		delete reinterpret_cast<std::string*>(data_pointer);
-		break;
-	case data_type::tuple:
-	case data_type::process:
-		delete reinterpret_cast<std::vector<data>*>(data_pointer);
-		break;
-	case data_type::map:
-		delete reinterpret_cast<std::map<data, data>*>(data_pointer);
-		break;
-	case data_type::function:
-		delete reinterpret_cast<function*>(data_pointer);
-		break;
-	case data_type::container:
-		delete reinterpret_cast<enviroment*>(data_pointer);
-		break;
-	}
+  switch (type()) {
+  case data_type::boolean:
+    delete reinterpret_cast<bool *>(data_pointer);
+    break;
+  case data_type::none:
+    break;
+  case data_type::integer:
+    delete reinterpret_cast<long long *>(data_pointer);
+    break;
+  case data_type::decimal:
+    delete reinterpret_cast<long double *>(data_pointer);
+    break;
+  case data_type::string:
+  case data_type::keyword:
+  case data_type::symbol:
+    delete reinterpret_cast<std::string *>(data_pointer);
+    break;
+  case data_type::tuple:
+  case data_type::process:
+    delete reinterpret_cast<std::vector<data> *>(data_pointer);
+    break;
+  case data_type::map:
+    delete reinterpret_cast<std::map<data, data> *>(data_pointer);
+    break;
+  case data_type::function:
+    delete reinterpret_cast<function *>(data_pointer);
+    break;
+  case data_type::container:
+    delete reinterpret_cast<enviroment *>(data_pointer);
+    break;
+  }
 }
 
-
-void data::assign_from_other(const data& other) {
-	my_type = other.type();
-	switch (other.type()) {
-	case data_type::boolean:
-		data_pointer = new bool(other.as_boolean());
-		break;
-	case data_type::none:
-		data_pointer = nullptr;
-		break;
-	case data_type::integer:
-		data_pointer = new long long(other.as_integer());
-		break;
-	case data_type::decimal:
-		data_pointer = new long double(other.as_decimal());
-		break;
-	case data_type::string:
-	case data_type::keyword:
-	case data_type::symbol:
-		data_pointer = new std::string(other.as_string());
-		break;
-	case data_type::tuple:
-	case data_type::process:
-		data_pointer = new std::vector<data>(other.as_tuple());
-		break;
-	case data_type::map:
-		data_pointer = new std::map<data, data>(other.as_map());
-		break;
-	case data_type::function:
-		data_pointer = new function(other.as_function());
-		break;
-	case data_type::container:
-		data_pointer = new enviroment(*other.as_container());
-		break;
-	}
+void data::assign_from_other(const data &other) {
+  my_type = other.type();
+  switch (other.type()) {
+  case data_type::boolean:
+    data_pointer = new bool(other.as_boolean());
+    break;
+  case data_type::none:
+    data_pointer = nullptr;
+    break;
+  case data_type::integer:
+    data_pointer = new long long(other.as_integer());
+    break;
+  case data_type::decimal:
+    data_pointer = new long double(other.as_decimal());
+    break;
+  case data_type::string:
+  case data_type::keyword:
+  case data_type::symbol:
+    data_pointer = new std::string(other.as_string());
+    break;
+  case data_type::tuple:
+  case data_type::process:
+    data_pointer = new std::vector<data>(other.as_tuple());
+    break;
+  case data_type::map:
+    data_pointer = new std::map<data, data>(other.as_map());
+    break;
+  case data_type::function:
+    data_pointer = new function(other.as_function());
+    break;
+  case data_type::container:
+    data_pointer = new enviroment(*other.as_container());
+    break;
+  }
 }
 
-
-data::~data() {
-	delete_pointer();
-}
+data::~data() { delete_pointer(); }
 data::data() {
   my_type = data_type::none;
   data_pointer = nullptr;
 }
 
-data::data(const data& other) {
-	assign_from_other(other);
-}
+data::data(const data &other) { assign_from_other(other); }
 
 data::data(long long number) {
   my_type = data_type::integer;
@@ -143,13 +137,11 @@ data::data(enviroment container_data) {
   data_pointer = new enviroment(container_data);
 }
 
-
-data& data::operator=(const data &other){
-	delete_pointer();
-	assign_from_other(other);
-	return *this;
+data &data::operator=(const data &other) {
+  delete_pointer();
+  assign_from_other(other);
+  return *this;
 }
-
 
 bool data::operator==(const data &other) const {
 
@@ -336,9 +328,7 @@ std::vector<data> data::as_process() const {
   return *(static_cast<std::vector<data> *>(data_pointer));
 }
 
-bool data::as_boolean() const {
-  return *(static_cast<bool *>(data_pointer));
-}
+bool data::as_boolean() const { return *(static_cast<bool *>(data_pointer)); }
 
 function data::as_function() const {
   return *(static_cast<function *>(data_pointer));

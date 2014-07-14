@@ -4,8 +4,6 @@
 #include <string>
 #include <iostream>
 
-
-
 namespace xig {
 
 //! Enum for the different types of errors
@@ -29,8 +27,8 @@ private:
 public:
   //! Construct an error with a type, description to be printed to the end user,
   // and the function call list
-	error(error_type e_type, std::string descripton, debug_info debug);
-	error(error_type e_type, std::string descripton);
+  error(error_type e_type, std::string descripton, debug_info debug);
+  error(error_type e_type, std::string descripton);
 
   //! Get the errors type
   error_type get_error_type() const;

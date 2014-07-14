@@ -21,7 +21,8 @@ class define : public method {
   bool should_evaluate_arguments() const { return false; }
 
   data run(call_info fci) {
-	  fci.env.set(fci.args.at(0).as_string(), evaluate(fci.env, fci.args.at(1), fci.debug));
+    fci.env.set(fci.args.at(0).as_string(),
+                evaluate(fci.env, fci.args.at(1), fci.debug));
     return make_none();
   }
 };
@@ -46,10 +47,10 @@ class if_expression : public method {
   bool should_evaluate_arguments() const { return false; }
 
   data run(call_info fci) {
-	  if (evaluate(fci.env, fci.args.at(0), fci.debug).as_boolean())
-		  return evaluate(fci.env, fci.args.at(1), fci.debug);
+    if (evaluate(fci.env, fci.args.at(0), fci.debug).as_boolean())
+      return evaluate(fci.env, fci.args.at(1), fci.debug);
     else
-		return evaluate(fci.env, fci.args.at(2), fci.debug);
+      return evaluate(fci.env, fci.args.at(2), fci.debug);
   }
 };
 
@@ -59,23 +60,23 @@ class let_expression : public method {
 
   data run(call_info fci) {
     if (fci.args.at(0).type() != data_type::map)
-		throw error(error_type::invalid_arguments, "Not A HashMap", fci.debug);
+      throw error(error_type::invalid_arguments, "Not A HashMap", fci.debug);
 
-	if (fci.args.at(1).type() != data_type::process)
-		throw error(error_type::invalid_arguments, "Not A Process", fci.debug);
+    if (fci.args.at(1).type() != data_type::process)
+      throw error(error_type::invalid_arguments, "Not A Process", fci.debug);
 
     enviroment container_enviroment(env_type::let, &fci.env);
-	for (auto map_pair : fci.args.at(0).as_map()) {
+    for (auto map_pair : fci.args.at(0).as_map()) {
       if (map_pair.first.type() != data_type::symbol)
         throw xig::error(xig::error_type::invalid_arguments, "Not A Symbol",
-		fci.debug);
+                         fci.debug);
 
       container_enviroment.set(
           map_pair.first.as_symbol(),
-		  evaluate(container_enviroment, map_pair.second, fci.debug), true);
+          evaluate(container_enviroment, map_pair.second, fci.debug), true);
     }
 
-	return evaluate(container_enviroment, fci.args.at(1), fci.debug);
+    return evaluate(container_enviroment, fci.args.at(1), fci.debug);
   }
 };
 
@@ -103,14 +104,14 @@ class map : public method {
   bool has_repeating_arguments() const { return true; }
 
   data run(call_info fci) {
-	  auto arguments = utils::parse_arguments(fci.args, 2);
+    auto arguments = utils::parse_arguments(fci.args, 2);
 
     if (arguments.size() > 2) {
       unsigned tuple_sizes = arguments.at(0).as_tuple().size();
       for (unsigned int i(1); i < arguments.size() - 1; i++) {
         if (arguments.at(i).as_tuple().size() != tuple_sizes)
           throw error(error_type::invalid_arguments,
-		  "Tuple Lengths Are Different", fci.debug);
+                      "Tuple Lengths Are Different", fci.debug);
       }
     }
 
@@ -121,7 +122,7 @@ class map : public method {
         temp_proc.push_back(arguments.at(j).as_tuple().at(i));
 
       data temp_function(data_type::process, temp_proc);
-	  return_values.push_back(evaluate(fci.env, temp_function, fci.debug));
+      return_values.push_back(evaluate(fci.env, temp_function, fci.debug));
     }
 
     return data(data_type::tuple, return_values);
@@ -132,19 +133,19 @@ class apply : public method {
   int amount_of_arguments() const { return 2; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::function)
-		  throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
+    if (fci.args.at(0).type() != data_type::function)
+      throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
 
-	  if (fci.args.at(1).type() != data_type::tuple)
-		  throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
+    if (fci.args.at(1).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-	  std::vector<data> temp_proc = { fci.args.at(0) };
+    std::vector<data> temp_proc = { fci.args.at(0) };
 
-	  for (auto data : fci.args.at(1).as_tuple())
+    for (auto data : fci.args.at(1).as_tuple())
       temp_proc.push_back(data);
 
     data temp_function(data_type::process, temp_proc);
-	return evaluate(fci.env, temp_function, fci.debug);
+    return evaluate(fci.env, temp_function, fci.debug);
   }
 };
 
@@ -152,21 +153,21 @@ class foldl : public method {
   int amount_of_arguments() const { return 3; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::function)
-		  throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
+    if (fci.args.at(0).type() != data_type::function)
+      throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
 
-	  if (fci.args.at(2).type() != data_type::tuple)
-		throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
+    if (fci.args.at(2).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-	  auto items = fci.args.at(2).as_tuple();
-	  auto fn = fci.args.at(0).as_function();
+    auto items = fci.args.at(2).as_tuple();
+    auto fn = fci.args.at(0).as_function();
 
-	auto ret = std::accumulate(items.begin(), items.end(), fci.args.at(1),
-		[&](const data &a, const data &b) {
-		std::vector<data> fn_args;
-		fn_args.push_back(a);
-		fn_args.push_back(b);
-		return fn.call({fn_args, fci.env, fci.debug});
+    auto ret = std::accumulate(items.begin(), items.end(), fci.args.at(1),
+                               [&](const data &a, const data &b) {
+      std::vector<data> fn_args;
+      fn_args.push_back(a);
+      fn_args.push_back(b);
+      return fn.call({ fn_args, fci.env, fci.debug });
     });
 
     return ret;
@@ -177,21 +178,21 @@ class foldr : public method {
   int amount_of_arguments() const { return 3; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::function)
-		throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
+    if (fci.args.at(0).type() != data_type::function)
+      throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
 
-	  if (fci.args.at(2).type() != data_type::tuple)
-		throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
+    if (fci.args.at(2).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-	  auto items = fci.args.at(2).as_tuple();
-	  auto fn = fci.args.at(0).as_function();
+    auto items = fci.args.at(2).as_tuple();
+    auto fn = fci.args.at(0).as_function();
 
     auto ret = std::accumulate(items.rbegin(), items.rend(), fci.args.at(1),
-		[&](const data &a, const data &b) {
-		std::vector<data> fn_args;
-		fn_args.push_back(b);
-		fn_args.push_back(a);
-		return fn.call({fn_args, fci.env, fci.debug});
+                               [&](const data &a, const data &b) {
+      std::vector<data> fn_args;
+      fn_args.push_back(b);
+      fn_args.push_back(a);
+      return fn.call({ fn_args, fci.env, fci.debug });
     });
 
     return ret;
@@ -202,11 +203,11 @@ class filter : public method {
   int amount_of_arguments() const { return 2; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::function)
-		  throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
+    if (fci.args.at(0).type() != data_type::function)
+      throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
 
-	  if (fci.args.at(1).type() != data_type::tuple)
-		  throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
+    if (fci.args.at(1).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
     auto fn = fci.args.at(0).as_function();
     auto original = fci.args.at(1).as_tuple();
@@ -215,7 +216,7 @@ class filter : public method {
                  [&](const data &i) {
       std::vector<data> a;
       a.push_back(i);
-	  return (make_boolean(true) == fn.call({ a, fci.env, fci.debug }));
+      return (make_boolean(true) == fn.call({ a, fci.env, fci.debug }));
     });
 
     return make_tuple(ret);
@@ -228,9 +229,9 @@ class partial : public method {
 
   data run(call_info fci) {
     if (fci.args.at(0).type() != data_type::function)
-		throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
+      throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
 
-	auto arguments = utils::parse_arguments(fci.args, 2);
+    auto arguments = utils::parse_arguments(fci.args, 2);
 
     data captured_function = arguments.at(0);
     std::vector<data> captured_function_args(arguments.begin() + 1,
@@ -246,13 +247,13 @@ class partial : public method {
       int amount_of_arguments() const { return 0; }
       bool has_repeating_arguments() const { return true; }
 
-	  data run(call_info fn_fci) {
-		  auto fn_arguments = utils::parse_arguments(fn_fci.args, 0);
+      data run(call_info fn_fci) {
+        auto fn_arguments = utils::parse_arguments(fn_fci.args, 0);
         std::vector<data> final_args = _captured_function_args;
         final_args.insert(final_args.end(), fn_arguments.begin(),
                           fn_arguments.end());
-		return _captured_function.as_function().call({ final_args, fn_fci.env,
-			fn_fci.debug });
+        return _captured_function.as_function().call(
+            { final_args, fn_fci.env, fn_fci.debug });
       }
     } return_method = { captured_function, captured_function_args };
 
@@ -266,15 +267,15 @@ class macro : public method {
   bool should_evaluate_arguments() const { return false; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::tuple)
-		  throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
+    if (fci.args.at(0).type() != data_type::tuple)
+      throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-	  if (fci.args.at(1).type() != data_type::process)
-		  throw error(error_type::invalid_arguments, "Not A Process", fci.debug);
+    if (fci.args.at(1).type() != data_type::process)
+      throw error(error_type::invalid_arguments, "Not A Process", fci.debug);
 
-	  for (const auto &i : fci.args.at(0).as_tuple()) {
+    for (const auto &i : fci.args.at(0).as_tuple()) {
       if (i.type() != data_type::symbol)
-		  throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
+        throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
     }
 
     struct fn : public method {
@@ -309,11 +310,11 @@ class macro : public method {
         return list;
       }
 
-	  data run(call_info fn_fci) {
-		auto new_proc = replace(_captured_proc.as_process(), fn_fci.args);
-		return evaluate(fn_fci.env, make_process(new_proc), fn_fci.debug);
+      data run(call_info fn_fci) {
+        auto new_proc = replace(_captured_proc.as_process(), fn_fci.args);
+        return evaluate(fn_fci.env, make_process(new_proc), fn_fci.debug);
       }
-	} return_method = { fci.args.at(1), fci.args.at(0).as_tuple() };
+    } return_method = { fci.args.at(1), fci.args.at(0).as_tuple() };
 
     data return_function = make_function(return_method);
     return return_function;
@@ -324,11 +325,11 @@ class import : public method {
   int amount_of_arguments() const { return 1; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::string)
-		throw error(error_type::invalid_arguments, "Not A Sring", fci.debug);
+    if (fci.args.at(0).type() != data_type::string)
+      throw error(error_type::invalid_arguments, "Not A Sring", fci.debug);
 
-	auto file_name = fci.args.at(0).as_string();
-	evaluate(fci.env, parser::from_file(file_name, fci.env));
+    auto file_name = fci.args.at(0).as_string();
+    evaluate(fci.env, parser::from_file(file_name, fci.env));
 
     return make_none();
   }
@@ -339,17 +340,18 @@ class import_as : public method {
   bool should_evaluate_arguments() const { return false; }
 
   data run(call_info fci) {
-	  if (fci.args.at(0).type() != data_type::symbol)
-		  throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
+    if (fci.args.at(0).type() != data_type::symbol)
+      throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
 
-	  if (fci.args.at(1).type() != data_type::string)
-		  throw error(error_type::invalid_arguments, "Not A Sring", fci.debug);
+    if (fci.args.at(1).type() != data_type::string)
+      throw error(error_type::invalid_arguments, "Not A Sring", fci.debug);
 
-	  auto file_name = fci.args.at(1).as_string();
-	  auto import_name = fci.args.at(0).as_symbol();
+    auto file_name = fci.args.at(1).as_string();
+    auto import_name = fci.args.at(0).as_symbol();
 
-	fci.env.set(import_name, make_container(enviroment(env_type::container, &fci.env)));
-	auto sub_env = fci.env.find(import_name)->as_container();
+    fci.env.set(import_name,
+                make_container(enviroment(env_type::container, &fci.env)));
+    auto sub_env = fci.env.find(import_name)->as_container();
 
     evaluate(*sub_env, parser::from_file(file_name, *sub_env));
 
@@ -363,12 +365,12 @@ class to_integer : public method {
   data run(call_info fci) {
     long long ret;
 
-	if (fci.args.at(0).type() == data_type::integer)
-		ret = fci.args.at(0).as_integer();
-	else if (fci.args.at(0).type() == data_type::decimal)
-		ret = (long long)fci.args.at(0).as_decimal();
+    if (fci.args.at(0).type() == data_type::integer)
+      ret = fci.args.at(0).as_integer();
+    else if (fci.args.at(0).type() == data_type::decimal)
+      ret = (long long)fci.args.at(0).as_decimal();
     else
-		throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
+      throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
     return data(ret);
   }

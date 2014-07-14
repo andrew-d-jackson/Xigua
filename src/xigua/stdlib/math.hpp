@@ -41,7 +41,7 @@ class comparator : public method {
           return data(false);
       } else {
         if (!compare_integer((*it).as_integer(), (*(it + 1)).as_integer()))
-          return data( false);
+          return data(false);
       }
     }
     return data(true);
@@ -171,7 +171,8 @@ class modulo : public method {
                    : (long double)fci.args.at(1).as_integer();
       return make_decimal(std::fmod(a, b));
     } else {
-      return make_integer(fci.args.at(0).as_integer() % fci.args.at(1).as_integer());
+      return make_integer(fci.args.at(0).as_integer() %
+                          fci.args.at(1).as_integer());
     }
   }
 };

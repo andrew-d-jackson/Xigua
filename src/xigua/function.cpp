@@ -4,27 +4,27 @@
 
 namespace xig {
 
-  data method::call(call_info fci) {
+data method::call(call_info fci) {
 
   if (should_evaluate_arguments()) {
     for (auto &item : fci.args) {
       if (item.type() == data_type::process ||
           item.type() == data_type::symbol || item.type() == data_type::tuple ||
           item.type() == data_type::map)
-		  item = evaluate(fci.env, item, fci.debug);
+        item = evaluate(fci.env, item, fci.debug);
     }
   }
 
   if (has_repeating_arguments()) {
     std::vector<data> new_args(fci.args.begin(),
-							   fci.args.begin() + amount_of_arguments());
+                               fci.args.begin() + amount_of_arguments());
     data repeating_args(
         data_type::tuple,
-		std::vector<data>(fci.args.begin() + amount_of_arguments(),
-						  fci.args.end()));
+        std::vector<data>(fci.args.begin() + amount_of_arguments(),
+                          fci.args.end()));
     new_args.push_back(repeating_args);
 
-	fci.args = new_args;
+    fci.args = new_args;
   }
 
   return run(fci);
@@ -34,9 +34,7 @@ bool method::has_repeating_arguments() const { return false; }
 
 bool method::has_process_arguments() const { return false; }
 
-bool method::process_arguments_pass(call_info fci) {
-  return true;
-}
+bool method::process_arguments_pass(call_info fci) { return true; }
 
 bool method::should_evaluate_arguments() const { return true; }
 
@@ -55,23 +53,20 @@ data function::call(call_info fci) {
 
   for (auto iterator = methods.rbegin(); iterator != methods.rend();
        iterator++) {
-	if ((unsigned)(*iterator)->amount_of_arguments() == fci.args.size()) {
+    if ((unsigned)(*iterator)->amount_of_arguments() == fci.args.size()) {
       if ((*iterator)->has_process_arguments()) {
-        if ((*iterator)
-			->process_arguments_pass(fci))
-			return (*iterator)->call(fci);
+        if ((*iterator)->process_arguments_pass(fci))
+          return (*iterator)->call(fci);
       } else {
-		  return (*iterator)->call(fci);
+        return (*iterator)->call(fci);
       }
-	}
-	else if ((unsigned)(*iterator)->amount_of_arguments() < fci.args.size() &&
+    } else if ((unsigned)(*iterator)->amount_of_arguments() < fci.args.size() &&
                (*iterator)->has_repeating_arguments()) {
       if ((*iterator)->has_process_arguments()) {
-        if ((*iterator)
-			->process_arguments_pass(fci))
-			return (*iterator)->call(fci);
+        if ((*iterator)->process_arguments_pass(fci))
+          return (*iterator)->call(fci);
       } else {
-		  return (*iterator)->call(fci);
+        return (*iterator)->call(fci);
       }
     }
   }

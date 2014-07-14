@@ -42,8 +42,8 @@ public:
     if (!process_args)
       return true;
     bool ret = true;
-	process_arguments(fn_fci.args, fn_fci.env, [&](data &val) {
-		auto result = evaluate(new_env, val, fn_fci.debug);
+    process_arguments(fn_fci.args, fn_fci.env, [&](data &val) {
+      auto result = evaluate(new_env, val, fn_fci.debug);
       if (result.type() != data_type::boolean || !result.as_boolean()) {
         ret = false;
       }
@@ -52,8 +52,8 @@ public:
   }
 
   data run(call_info fn_fci) {
-	  process_arguments(fn_fci.args, fn_fci.env);
-	  return evaluate(new_env, proc, fn_fci.debug);
+    process_arguments(fn_fci.args, fn_fci.env);
+    return evaluate(new_env, proc, fn_fci.debug);
   }
 
 private:
@@ -149,8 +149,8 @@ class create_lambda : public method {
 
   data run(call_info fci) {
 
-	  auto arguments = utils::parse_arguments(fci.args, 2);
-	  enviroment new_env(env_type::function, &fci.env);
+    auto arguments = utils::parse_arguments(fci.args, 2);
+    enviroment new_env(env_type::function, &fci.env);
     function return_fn;
 
     for (int argument(0); argument < arguments.size(); argument += 2) {

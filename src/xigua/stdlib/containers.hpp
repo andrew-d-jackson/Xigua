@@ -23,7 +23,8 @@ class at : public method {
           fci.args.at(0).as_integer() > fci.args.at(1).as_tuple().size() - 1)
         throw error(error_type::invalid_arguments, "Not In Range Of Tuple",
                     fci.debug);
-      return fci.args.at(1).as_tuple().at((unsigned int)fci.args.at(0).as_integer());
+      return fci.args.at(1).as_tuple().at(
+          (unsigned int)fci.args.at(0).as_integer());
     } else if (fci.args.at(1).type() == data_type::map) {
       auto map = fci.args.at(1).as_map();
       auto location = map.find(fci.args.at(0));
@@ -50,7 +51,8 @@ class size : public method {
     if (fci.args.at(0).type() == data_type::map)
       return data((long long)fci.args.at(0).as_map().size());
 
-    throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple", fci.debug);
+    throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple",
+                fci.debug);
     return make_none();
   }
 };
@@ -75,7 +77,8 @@ class insert : public method {
       return make_map(new_map);
     }
 
-    throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple", fci.debug);
+    throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple",
+                fci.debug);
     return make_none();
   }
 };

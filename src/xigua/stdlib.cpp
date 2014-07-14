@@ -1,8 +1,6 @@
 #include "xigua/stdlib.hpp"
 
-
 #include "xigua/stdlib/core.hpp"
-
 
 #include "xigua/stdlib/math.hpp"
 #include "xigua/stdlib/boolean.hpp"
@@ -17,7 +15,7 @@
 namespace xig {
 enviroment get_global_enviroment() {
   enviroment enviroment(env_type::container);
-  
+
   // core
   enviroment.set("=", make_function(stdlib::define()));
 
@@ -52,7 +50,7 @@ enviroment get_global_enviroment() {
   enviroment.set("part", make_function(stdlib::partial()));
 
   enviroment.set("int", make_function(stdlib::to_integer()));
-  
+
   // math
 
   enviroment.set("+", make_function(stdlib::add()));
@@ -144,7 +142,7 @@ enviroment get_global_enviroment() {
   // benchmark
 
   enviroment.set("bench", make_function(stdlib::benchmark()));
-  
+
   return enviroment;
 }
 }

@@ -14,17 +14,19 @@ class data;
 class enviroment;
 
 struct debug_info {
-	std::vector<std::string> function_call_list;
-	debug_info() { function_call_list = {}; }
-	debug_info(std::vector<std::string> fcl) { function_call_list = fcl; }
+  std::vector<std::string> function_call_list;
+  debug_info() {
+    function_call_list = {};
+  }
+  debug_info(std::vector<std::string> fcl) { function_call_list = fcl; }
 };
 
 struct call_info {
-	std::vector<data> args;
-	enviroment &env;
-	debug_info debug;
-	call_info(std::vector<data> args, enviroment &env, debug_info debug)
-		: args(args), env(env), debug(debug) {}
+  std::vector<data> args;
+  enviroment &env;
+  debug_info debug;
+  call_info(std::vector<data> args, enviroment &env, debug_info debug)
+      : args(args), env(env), debug(debug) {}
 };
 
 //! Abstract class that is the base for writing your own Xigua functions
@@ -34,7 +36,7 @@ public:
   //! @param args the arguments passed to the function
   //! @param env the enviroment that the method is bieng run in
   //! @param fcl the function call list at the time the method was called
-	virtual data run(call_info fci) = 0;
+  virtual data run(call_info fci) = 0;
 
   //! The amount of arguments this method takes
   virtual int amount_of_arguments() const = 0;

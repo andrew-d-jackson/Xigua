@@ -17,7 +17,7 @@ class type_query_base : public method {
   virtual data_type expected_type() const = 0;
 
   data run(call_info fci) {
-	  auto argument_type = fci.args.at(0).type();
+    auto argument_type = fci.args.at(0).type();
 
     bool ret = false;
     if (argument_type == expected_type())
