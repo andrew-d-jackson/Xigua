@@ -50,7 +50,7 @@ data handleProcess(enviroment &env, data input_data, debug_info debug) {
     return make_none();
 
   // if first arg is symbol or process, evaluate it
-  processSymbolProcess(env, input_data, 0, debug);
+  input_data = processSymbolProcess(env, input_data, 0, debug);
 
   if (input_data.as_process().at(0).type() == data_type::function) {
     auto process_copy = input_data.as_process();
