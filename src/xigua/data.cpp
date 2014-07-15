@@ -5,33 +5,33 @@ namespace xig {
 void data::delete_pointer() {
   switch (type()) {
   case data_type::boolean:
-    delete reinterpret_cast<bool *>(data_pointer);
+    delete static_cast<bool *>(data_pointer);
     break;
   case data_type::none:
     break;
   case data_type::integer:
-    delete reinterpret_cast<long long *>(data_pointer);
+    delete static_cast<long long *>(data_pointer);
     break;
   case data_type::decimal:
-    delete reinterpret_cast<long double *>(data_pointer);
+    delete static_cast<long double *>(data_pointer);
     break;
   case data_type::string:
   case data_type::keyword:
   case data_type::symbol:
-    delete reinterpret_cast<std::string *>(data_pointer);
+    delete static_cast<std::string *>(data_pointer);
     break;
   case data_type::tuple:
   case data_type::process:
-    delete reinterpret_cast<std::vector<data> *>(data_pointer);
+    delete static_cast<std::vector<data> *>(data_pointer);
     break;
   case data_type::map:
-    delete reinterpret_cast<std::map<data, data> *>(data_pointer);
+    delete static_cast<std::map<data, data> *>(data_pointer);
     break;
   case data_type::function:
-    delete reinterpret_cast<function *>(data_pointer);
+    delete static_cast<function *>(data_pointer);
     break;
   case data_type::container:
-    delete reinterpret_cast<enviroment *>(data_pointer);
+    delete static_cast<enviroment *>(data_pointer);
     break;
   }
 }
