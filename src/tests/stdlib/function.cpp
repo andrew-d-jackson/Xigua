@@ -50,13 +50,16 @@ TEST(Standard_Library_Function, EqualArgs) {
   EXPECT_EQ(evaluate(env, parser::from_string("[isOne :pipe]")),
             make_boolean(false));
 
+  EXPECT_EQ(evaluate(env, parser::from_string("[isOne [- 2 1]]")),
+            make_boolean(true));
+
   evaluate(env,
            parser::from_string(
                "[= isPipe [fn (:pipe) [true] (:pipes) [true] (x) [false]]]"));
 
   EXPECT_EQ(evaluate(env, parser::from_string("[isPipe :pipe]")),
             make_boolean(true));
-            
+
   EXPECT_EQ(evaluate(env, parser::from_string("[isPipe :pipes]")),
             make_boolean(true));
 

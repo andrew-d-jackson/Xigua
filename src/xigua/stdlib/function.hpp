@@ -96,7 +96,7 @@ private:
           }
         }
       } else {
-        auto b = make_boolean(args.at(i) == fn_args.at(i));
+        auto b = make_boolean(args.at(i) == evaluate(new_env, fn_args.at(i)));
         handle_process(b);
       }
     }
