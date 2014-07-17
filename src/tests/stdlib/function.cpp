@@ -66,3 +66,15 @@ TEST(Standard_Library_Function, EqualArgs) {
   EXPECT_EQ(evaluate(env, parser::from_string("[isPipe 22]")),
             make_boolean(false));
 }
+
+TEST(Standard_Library_Function, Recursion) {
+  enviroment env = get_global_enviroment();
+
+  evaluate(env, parser::from_string(
+                    "[= fac1 [fn (0) [1] (n) [* n [fac1 [- n 1]]]]]"));
+  evaluate(env, parser::from_string(
+                    "[= fac2 [fn (0) [1] (n) [* [fac2 [- n 1]] n]]]"));
+
+  EXPECT_EQ(evaluate(env, parser::from_string("[fac1 5]")), make_integer(120));
+  EXPECT_EQ(evaluate(env, parser::from_string("[fac2 5]")), make_integer(120));
+}

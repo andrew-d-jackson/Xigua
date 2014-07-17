@@ -176,12 +176,12 @@ bool wrapped_function::process_arguments_pass(call_info fci) {
 
   if (!has_proc_args)
     return true;
-  auto execute_env = env;
+  auto execute_env = enviroment(env_type::function, &fci.env);
   return process_args_pass(parameters, fci.args, execute_env, fci.debug);
 }
 
 data wrapped_function::run(call_info fci) {
-  auto execute_env = env;
+  auto execute_env = enviroment(env_type::function, &fci.env);
   assign_args_to_env(parameters, fci.args, execute_env);
   return evaluate(execute_env, proc, fci.debug);
 }
