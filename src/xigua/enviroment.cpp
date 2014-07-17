@@ -89,4 +89,13 @@ std::string enviroment::relative_path() const {
 void enviroment::set_relative_path(std::string path) {
   my_relative_path = path;
 }
+
+void enviroment::print_all_vars() {
+  std::cout << " -------------------- " << std::endl;
+  for (auto i : defined_variables) {
+    std::cout << i.first << "  =>  "
+              << string_representation(i.second) << std::endl;
+  }
+  std::cout << " -------------------- " << std::endl;
+}
 }

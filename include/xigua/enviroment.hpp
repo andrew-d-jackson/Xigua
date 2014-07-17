@@ -49,6 +49,8 @@ public:
   //! Set the relative path
   void set_relative_path(std::string path);
 
+  void print_all_vars();
+
 private:
   std::map<std::string, data> defined_variables;
   enviroment *my_parent;
