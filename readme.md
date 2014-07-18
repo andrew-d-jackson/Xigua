@@ -15,28 +15,26 @@ Hello World
 
 Factorial
 
-    [= factorial [fn (n)
-       [if [== n 0]
-           1
-           [* n [factorial [- n 1]]]]]]
-    
+    [= fac [fn (1) [1]
+               (n) [n * [fac [n - 1]]]]]
+
     [println [factorial 5]]
 
 Macros
 
-    [= =fn [macro (name args proc) 
+    [= =fn [macro (name args proc)
                   [= name [fn args proc]]]]
-    
+
     [=fn add (a b) [+ a b]]
-    
+
     [println [add 2 2]]
-    
+
 Lots more examples can be found in the repo under examples/
 
 Compiling
 ---
 
-Xigua has been tested on Windows 8.1 using Nuwen's MinGW distro and Visual Studio 2013 and on OS X 10.9 using the default compiler. It will probably work on all platforms with a C++11 platform but I can't confirm. The project currently uses CMake to generate makefiles, with the flag XIGUA_BUILD_SHELL (defaults to ON) to build the shell/interpreter/repl and the flag XIGUA_BUILD_TESTS (defaults to OFF) to build the unit tests. The CMake process is pretty generic, just use the CMake GUI if you don't know how to use it. The project uses googletest to test but it isn't required if you don't build the tests. 
+Xigua has been tested on Windows 8.1 using Nuwen's MinGW distro and Visual Studio 2013 and on OS X 10.9 using the default compiler. It will probably work on all platforms with a C++11 platform but I can't confirm. The project currently uses CMake to generate makefiles, with the flag XIGUA_BUILD_SHELL (defaults to ON) to build the shell/interpreter/repl and the flag XIGUA_BUILD_TESTS (defaults to OFF) to build the unit tests. The CMake process is pretty generic, just use the CMake GUI if you don't know how to use it. The project uses googletest to test but it isn't required if you don't build the tests.
 
 Using The Shell/Intepreter/REPL
 ---
