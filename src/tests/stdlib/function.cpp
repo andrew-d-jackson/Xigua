@@ -38,6 +38,14 @@ TEST(Standard_Library_Function, ConditionalArgs) {
   evaluate(env, parser::from_string("[= a [fn ([> x [+ x y]]) [x]]]"));
 
   EXPECT_EQ(evaluate(env, parser::from_string("[a 4 -2]")), make_integer(4));
+
+  evaluate(env,
+           parser::from_string(
+               "[= first-two? [fn ([== [first b] 2]) [true] (c) [false]]]"));
+  EXPECT_EQ(evaluate(env, parser::from_string("[first-two? 4]")),
+            make_boolean(false));
+  EXPECT_EQ(evaluate(env, parser::from_string("[first-two? (2 3 5)]")),
+            make_boolean(true));
 }
 
 TEST(Standard_Library_Function, EqualArgs) {
