@@ -55,8 +55,11 @@ data function::call(call_info fci) {
        iterator++) {
     if ((unsigned)(*iterator)->amount_of_arguments() == fci.args.size()) {
       if ((*iterator)->has_process_arguments()) {
-        if ((*iterator)->process_arguments_pass(fci))
-          return (*iterator)->call(fci);
+        try {
+          if ((*iterator)->process_arguments_pass(fci))
+            return (*iterator)->call(fci);
+        } catch (error e) {
+        }
       } else {
         return (*iterator)->call(fci);
       }
