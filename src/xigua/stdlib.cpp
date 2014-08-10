@@ -1,7 +1,7 @@
 #include "xigua/stdlib.hpp"
 
+/*
 #include "xigua/stdlib/core.hpp"
-
 #include "xigua/stdlib/math.hpp"
 #include "xigua/stdlib/boolean.hpp"
 #include "xigua/stdlib/string.hpp"
@@ -11,12 +11,13 @@
 #include "xigua/stdlib/function.hpp"
 #include "xigua/stdlib/types.hpp"
 #include "xigua/stdlib/test.hpp"
-
+*/
 namespace xig {
 enviroment get_global_enviroment() {
   enviroment enviroment(env_type::container);
 
   // core
+  /*
   enviroment.set("=", make_function(stdlib::define()));
 
   enviroment.set("fn", make_function(stdlib::create_lambda()));
@@ -142,7 +143,7 @@ enviroment get_global_enviroment() {
   // benchmark
 
   enviroment.set("bench", make_function(stdlib::benchmark()));
-
+  */
   return enviroment;
 }
 }

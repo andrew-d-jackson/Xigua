@@ -2,7 +2,7 @@
 
 namespace xig {
 
-data parser::from_file(std::string file_location, enviroment &env) {
+data_ptr parser::from_file(std::string file_location, enviroment &env) {
 
   file_location = env.relative_path() + file_location;
   std::string source_code = read_file(file_location);
@@ -15,7 +15,7 @@ data parser::from_file(std::string file_location, enviroment &env) {
   return from_string(source_code);
 }
 
-data parser::from_string(const std::string source_code) {
+data_ptr parser::from_string(const std::string source_code) {
 
   std::vector<std::string> string_list = source_to_string_list(source_code);
   validate_string_list(string_list);
@@ -121,20 +121,20 @@ void parser::validate_string_list(const std::vector<std::string> string_list) {
                      "Amount Of Opening And Closing Brackets Do Not Match");
 }
 
-data
+data_ptr
 parser::string_list_to_data_type(const std::vector<std::string> string_list) {
   auto i = parser::string_list_to_data_type(string_list, data_type::process);
-  auto p = i.as_process();
+  auto p = i->as_process().as_std_vector();
   if (p.size() == 1)
     return p.at(0);
   return i;
 }
 
-data
+data_ptr
 parser::string_list_to_data_type(const std::vector<std::string> string_list,
                                  const data_type list_type) {
 
-  std::vector<data> current_data;
+  std::vector<data_ptr> current_data;
   for (unsigned int index = 0; index < string_list.size(); ++index) {
     if (string_list.at(index) == "[" || string_list.at(index) == "{" ||
         string_list.at(index) == "(") {
@@ -167,36 +167,40 @@ parser::string_list_to_data_type(const std::vector<std::string> string_list,
       current_data.push_back(string_to_data_type(string_list.at(index)));
     }
   }
-  return data(list_type, current_data);
+
+  switch (list_type) {
+  case data_type::process:
+    return make_process(current_data);
+  case data_type::tuple:
+    return make_tuple(current_data);
+  case data_type::map:
+    return make_map(current_data);
+  default:
+	  throw;
+  }
 }
 
-data parser::string_to_data_type(const std::string input_string) {
+data_ptr parser::string_to_data_type(const std::string input_string) {
   if (is_integer(input_string)) {
-    data data((long long)atoi(input_string.c_str()));
-    return data;
+    return make_integer((long long)atoi(input_string.c_str()));
   } else if (is_decimal(input_string)) {
-    data data((long double)atof(input_string.c_str()));
-    return data;
+    return make_decimal((long double)atof(input_string.c_str()));
   } else if (input_string[0] == '"') {
-    data data(data_type::string,
-              input_string.substr(1, input_string.size() - 2));
-    return data;
+    return make_string(input_string.substr(1, input_string.size() - 2));
   } else if (input_string[0] == ':') {
-    data data(data_type::keyword,
-              input_string.substr(1, input_string.size() - 1));
-    return data;
+    return make_keyword(input_string.substr(1, input_string.size() - 1));
   } else if (input_string == "true" || input_string == "false") {
     bool return_value;
     if (input_string == "true")
       return_value = true;
     else
       return_value = false;
-    return data(return_value);
+    return make_boolean(return_value);
   } else if (input_string == "none") {
     return make_none();
   } else {
-    data data(data_type::symbol, input_string);
-    return data;
+    auto ret = make_symbol(input_string);
+    return ret;
   }
 }
 

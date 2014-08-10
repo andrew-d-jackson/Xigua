@@ -4,24 +4,24 @@
 
 namespace xig {
 
-data method::call(call_info fci) {
+data_ptr method::call(call_info fci) {
 
   if (should_evaluate_arguments()) {
     for (auto &item : fci.args) {
-      if (item.type() == data_type::process ||
-          item.type() == data_type::symbol || item.type() == data_type::tuple ||
-          item.type() == data_type::map)
+      if (item->type() == data_type::process ||
+          item->type() == data_type::symbol ||
+          item->type() == data_type::tuple || item->type() == data_type::map)
         item = evaluate(fci.env, item, fci.debug);
     }
   }
 
   if (has_repeating_arguments()) {
-    std::vector<data> new_args(fci.args.begin(),
-                               fci.args.begin() + amount_of_arguments());
-    data repeating_args(
-        data_type::tuple,
-        std::vector<data>(fci.args.begin() + amount_of_arguments(),
-                          fci.args.end()));
+    std::vector<data_ptr> new_args(fci.args.begin(),
+                                   fci.args.begin() + amount_of_arguments());
+
+    auto repeating_args = xig::make_tuple(std::vector<data_ptr>(
+        fci.args.begin() + amount_of_arguments(), fci.args.end()));
+
     new_args.push_back(repeating_args);
 
     fci.args = new_args;
@@ -49,7 +49,7 @@ bool method_set_comparator::operator()(const std::shared_ptr<method> &a,
   return false;
 }
 
-data function::call(call_info fci) {
+data_ptr function::call(call_info fci) const {
 
   for (auto iterator = methods.rbegin(); iterator != methods.rend();
        iterator++) {
@@ -58,7 +58,8 @@ data function::call(call_info fci) {
         try {
           if ((*iterator)->process_arguments_pass(fci))
             return (*iterator)->call(fci);
-        } catch (error e) {
+        }
+        catch (error e) {
         }
       } else {
         return (*iterator)->call(fci);

@@ -18,10 +18,10 @@ class join : public method {
 
   data run(call_info fci) {
     auto arguments = utils::parse_arguments(fci.args, 2);
-    std::vector<data> return_value;
+    std::vector<data_ptr> return_value;
     for (auto argument : arguments) {
-      if (argument.type() == data_type::tuple) {
-        for (auto element : argument.as_tuple())
+      if (argument->type() == data_type::tuple) {
+        for (auto element : argument->as_tuple().as_std_vector())
           return_value.push_back(element);
       } else {
         return_value.push_back(argument);

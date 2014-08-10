@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "xigua/error.hpp"
+#include "xigua/data.hpp"
 
 namespace xig {
 
@@ -21,10 +22,10 @@ struct debug_info {
 };
 
 struct call_info {
-  std::vector<data> args;
+  std::vector<data_ptr> args;
   enviroment &env;
   debug_info debug;
-  call_info(std::vector<data> args, enviroment &env, debug_info debug)
+  call_info(std::vector<data_ptr> args, enviroment &env, debug_info debug)
       : args(args), env(env), debug(debug) {}
 };
 
@@ -35,7 +36,7 @@ public:
   //! @param args the arguments passed to the function
   //! @param env the enviroment that the method is bieng run in
   //! @param fcl the function call list at the time the method was called
-  virtual data run(call_info fci) = 0;
+  virtual data_ptr run(call_info fci) = 0;
 
   //! The amount of arguments this method takes
   virtual int amount_of_arguments() const = 0;
@@ -58,7 +59,7 @@ public:
   //! passing behaviour
   virtual bool should_evaluate_arguments() const;
 
-  data call(call_info fci);
+  data_ptr call(call_info fci);
 };
 
 //! Comparator used to sort methods internally
@@ -70,9 +71,28 @@ struct method_set_comparator {
 //! Class that repressents a function containing one or more methods
 //! (overloads), when a function is called it decided what method overload is
 //! run
-class function {
+class function : public data {
 public:
   function() {};
+
+  virtual ~function();
+
+  virtual data_type type() const { return data_type::function; }
+  virtual const function &as_function() const {
+	  return *this;
+  }
+  virtual bool operator<(const data &other) const {
+	  if (type() == other.type())
+		  return methods < other.as_function().methods;
+	  return type() < other.type();
+  }
+
+  virtual bool operator==(const data &other) const {
+	  if (type() == other.type())
+		  return methods == other.as_function().methods;
+	  return false;
+  }
+
 
   //! Constructs a function from a class that inherits method
   //! @param in_method class inheriting method that is the method
@@ -95,7 +115,7 @@ public:
   //! @param args the arguments passed to the function
   //! @param env the enviroment that the method is bieng run in
   //! @param fcl the function call list at the time the method was called
-  data call(call_info fci);
+  data_ptr call(call_info fci) const;
 
 private:
   void insert_method(std::shared_ptr<method> in_method) {

@@ -13,7 +13,7 @@ enviroment::enviroment(env_type in_type, enviroment *parent_enviroment) {
   my_relative_path = "";
 
   if (in_type != env_type::container) {
-    if (parent_enviroment->type() != env_type::container) {
+    if (parent_enviroment->enviroment_type() != env_type::container) {
       defined_variables = (*parent_enviroment).defined_variables;
       my_parent = parent_enviroment->parent();
     } else {
@@ -28,11 +28,11 @@ void enviroment::type(env_type in_type) {
   my_type = in_type;
 };
 
-env_type enviroment::type() const {
+env_type enviroment::enviroment_type() const {
   return my_type;
 };
 
-data *enviroment::find(std::string variable_name, bool this_only) {
+data_ptr enviroment::find(std::string variable_name, bool this_only) const {
   std::string delimiter = "::";
   size_t pos = 0;
   if ((pos = variable_name.find(delimiter)) != std::string::npos) {
@@ -42,28 +42,29 @@ data *enviroment::find(std::string variable_name, bool this_only) {
     new_var_name.erase(0, pos + delimiter.length());
 
     auto e = find(var_env);
-    if (e == nullptr || e->type() != data_type::container) {
+    if (!e || e->type() != data_type::enviroment) {
       if (parent() != nullptr && !this_only) {
         auto data = parent()->find(variable_name);
         return data;
       }
-      return nullptr;
+      return data_ptr(nullptr);
     }
-    return e->as_container()->find(new_var_name);
+	return e->as_enviroment().find(new_var_name);
   }
 
   if (defined_variables.find(variable_name) != defined_variables.end())
-    return &defined_variables[variable_name];
+	  return defined_variables.find(variable_name)->second;
 
   if (parent() != nullptr && !this_only) {
     auto data = parent()->find(variable_name);
     return data;
   }
 
-  return nullptr;
+  return data_ptr(nullptr);
+  ;
 }
 
-void enviroment::set(std::string name, data value, bool force_here) {
+void enviroment::set(std::string name, data_ptr value, bool force_here) {
   if (force_here) {
     defined_variables[name] = value;
   } else if (my_type == env_type::container || my_type == env_type::function) {
@@ -93,8 +94,8 @@ void enviroment::set_relative_path(std::string path) {
 void enviroment::print_all_vars() {
   std::cout << " -------------------- " << std::endl;
   for (auto i : defined_variables) {
-    std::cout << i.first << "  =>  "
-              << string_representation(i.second) << std::endl;
+    std::cout << i.first << "  =>  " << string_representation(i.second)
+              << std::endl;
   }
   std::cout << " -------------------- " << std::endl;
 }

@@ -9,35 +9,46 @@ namespace xig {
 class data;
 
 //! Enum for the different kinds of Xigua enviroment types
-enum class env_type {
-  container,
-  function,
-  macro,
-  let
-};
+enum class env_type { container, function, macro, let };
 
 //! Class that holds Xigua variables
-class enviroment {
+class enviroment : public data {
 public:
   //! Construct Enviroment with no parent
   enviroment(env_type in_type);
   //! Construct Enviroment with parent
   enviroment(env_type in_type, enviroment *parent);
 
+  virtual ~enviroment() {}
+
+  virtual data_type type() const { return data_type::enviroment; }
+  virtual const enviroment &as_enviroment() const { return *this; }
+  virtual bool operator<(const data &other) const {
+    if (type() == other.type())
+      return defined_variables < other.as_enviroment().defined_variables;
+    return type() < other.type();
+  }
+
+  virtual bool operator==(const data &other) const {
+    if (type() == other.type())
+      return defined_variables == other.as_enviroment().defined_variables;
+    return false;
+  }
+
   //! Get the type of this enviroment
-  env_type type() const;
+  env_type enviroment_type() const;
   //! Set the type of this enviroment
   void type(env_type in_type);
 
   //! Find a variable in this enviroment, returns a pointer to the a data object
   //! of the variable if found, returns nullptr if not, if this_only is set to
   //! true does not search parents
-  data *find(std::string variable_name, bool this_only = false);
+  data_ptr find(std::string variable_name, bool this_only = false) const;
 
   //! Insert a variable into the enviroment, force_here forces the variable to
   //! be in this enviroment even if the type of enviroment would rather put it
   //! in the enviroments parent
-  void set(std::string name, data value, bool force_here = false);
+  void set(std::string name, data_ptr value, bool force_here = false);
 
   //! Get the enviroments parent
   enviroment *parent() const;
@@ -52,7 +63,7 @@ public:
   void print_all_vars();
 
 private:
-  std::map<std::string, data> defined_variables;
+  std::map<std::string, data_ptr> defined_variables;
   enviroment *my_parent;
   env_type my_type;
   std::string my_relative_path;
