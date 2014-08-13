@@ -18,8 +18,11 @@ public:
   virtual ~map() {}
 
   virtual data_type type() const { return data_type::map; };
-
   virtual const map &as_map() const { return *this; }
+
+  auto begin() const -> decltype(value.cbegin()) { return value.cbegin(); }
+  auto end() const -> decltype(value.cend()) { return value.cend(); }
+  auto size() const -> decltype(value.size()) { return value.size(); }
 
   operator std::map<data_ptr, data_ptr>() const { return value; }
   std::map<data_ptr, data_ptr> as_std_map() const { return value; }

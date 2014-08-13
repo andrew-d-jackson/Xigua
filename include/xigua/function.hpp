@@ -74,7 +74,7 @@ class function : public data {
 public:
   function() {};
 
-  virtual ~function();
+  virtual ~function() {};
 
   virtual data_type type() const { return data_type::function; }
   virtual const function &as_function() const { return *this; }
@@ -134,4 +134,8 @@ private:
 
   std::vector<std::shared_ptr<method>> methods;
 };
+
+template <typename T> extern data_ptr make_function(T fn) {
+  return std::make_shared<function>(fn);
+}
 }

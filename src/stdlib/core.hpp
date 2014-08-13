@@ -20,8 +20,8 @@ class define : public method {
   int amount_of_arguments() const { return 2; }
   bool should_evaluate_arguments() const { return false; }
 
-  data run(call_info fci) {
-    fci.env.set(fci.args.at(0).as_string(),
+  data_ptr run(call_info fci) {
+    fci.env.set(fci.args.at(0)->as_string(),
                 evaluate(fci.env, fci.args.at(1), fci.debug));
     return make_none();
   }
@@ -35,8 +35,8 @@ class overload : public method {
       throw error(error_type::invalid_arguments, "Not A Function", fci.debug);
     }
 
-    auto f = data(fci.args.at(0)).as_function();
-    f.merge_with_function(fci.args.at(1).as_function());
+    auto f = fci.args.at(0)->as_function();
+    f.merge_with_function(fci.args.at(1)->as_function());
 
     return data(f);
   }
@@ -46,7 +46,7 @@ class if_expression : public method {
   int amount_of_arguments() const { return 3; }
   bool should_evaluate_arguments() const { return false; }
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
     if (evaluate(fci.env, fci.args.at(0), fci.debug).as_boolean())
       return evaluate(fci.env, fci.args.at(1), fci.debug);
     else

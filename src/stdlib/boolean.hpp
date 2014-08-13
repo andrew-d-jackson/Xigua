@@ -15,11 +15,11 @@ namespace stdlib {
 class boolean_not : public method {
   int amount_of_arguments() const { return 1; }
 
-  data run(call_info fci) {
-    if (fci.args.at(0).type() != data_type::boolean)
+  data_ptr run(call_info fci) {
+    if (fci.args.at(0)->type() != data_type::boolean)
       throw error(error_type::invalid_arguments, "Not A Boolean", fci.debug);
 
-    return data(!fci.args.at(0));
+    return make_boolean(!fci.args.at(0)->as_boolean());
   }
 };
 
@@ -27,13 +27,16 @@ class boolean_and : public method {
   int amount_of_arguments() const { return 2; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
     auto inputs = utils::parse_arguments(fci.args, 2);
     if (!utils::all_types_are(inputs, data_type::boolean))
       throw error(error_type::invalid_arguments, "Not A Boolean", fci.debug);
 
-    return make_boolean(std::find(inputs.begin(), inputs.end(),
-                                  make_boolean(false)) == inputs.end());
+    for (auto &i : inputs) {
+      if (!i->as_boolean())
+        return make_boolean(false);
+    }
+    return make_boolean(true);
   }
 };
 
@@ -41,13 +44,16 @@ class boolean_or : public method {
   int amount_of_arguments() const { return 2; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
     auto inputs = utils::parse_arguments(fci.args, 2);
     if (!utils::all_types_are(inputs, data_type::boolean))
       throw error(error_type::invalid_arguments, "Not A Boolean", fci.debug);
 
-    return make_boolean(std::find(inputs.begin(), inputs.end(),
-                                  make_boolean(true)) != inputs.end());
+    for (auto &i : inputs) {
+      if (i->as_boolean())
+        return make_boolean(true);
+    }
+    return make_boolean(false);
   }
 };
 }

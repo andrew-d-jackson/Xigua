@@ -20,9 +20,10 @@ public:
   operator std::vector<data_ptr>() const { return value; }
   std::vector<data_ptr> as_std_vector() const { return value; }
 
-  auto begin() -> decltype(value.cbegin()) const { return value.cbegin(); }
-  auto end() -> decltype(value.cend()) const { return value.cend(); }
+  auto begin() const -> decltype(value.cbegin()) { return value.cbegin(); }
+  auto end() const -> decltype(value.cend()) { return value.cend(); }
   const data_ptr &at(std::size_t pos) const { return value.at(pos); }
+  auto size() const -> decltype(value.size()) { return value.size(); }
 
   virtual bool operator<(const data &other) const {
     if (type() == other.type())

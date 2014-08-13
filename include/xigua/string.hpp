@@ -20,8 +20,8 @@ public:
   operator std::string() const { return value; }
   std::string as_std_string() const { return value; }
 
-  auto begin() -> decltype(value.cbegin()) const { return value.cbegin(); }
-  auto end() -> decltype(value.cend()) const { return value.cend(); }
+  auto begin() const -> decltype(value.cbegin()) { return value.cbegin(); }
+  auto end() const -> decltype(value.cend()) { return value.cend(); }
 
   virtual bool operator<(const data &other) const {
     if (type() == other.type())
