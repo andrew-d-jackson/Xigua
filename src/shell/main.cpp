@@ -8,8 +8,7 @@ int main(int argc, char *argv[]) {
     xig::enviroment enviroment = xig::get_global_enviroment();
     try {
       xig::evaluate(enviroment, xig::parser::from_file(argv[1], enviroment));
-    }
-    catch (xig::error e) {
+    } catch (xig::error e) {
       e.print_default_message();
     }
   } else {
@@ -23,8 +22,7 @@ int main(int argc, char *argv[]) {
         std::cout << xig::string_representation(xig::evaluate(
                          enviroment, xig::parser::from_string(input)))
                   << std::endl;
-      }
-      catch (xig::error e) {
+      } catch (xig::error e) {
         e.print_default_message();
       }
     }
