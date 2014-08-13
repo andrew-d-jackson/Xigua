@@ -10,14 +10,13 @@
 
 namespace xig {
 
-class keyword : public string {
+class keyword : public base_string {
 public:
-  using string::string;
+  using base_string::base_string;
   virtual ~keyword() {}
 
   virtual data_type type() const { return data_type::keyword; };
   virtual const keyword &as_keyword() const { return *this; }
-  virtual const string &as_string() const { throw; }
 };
 
 extern data_ptr make_keyword(std::string str);

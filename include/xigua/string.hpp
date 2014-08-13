@@ -9,17 +9,13 @@
 
 namespace xig {
 
-class string : public data {
+class base_string : public data {
 private:
   std::string value;
 
 public:
-  string(std::string value) : value(value) {}
-  virtual ~string() {}
-
-  virtual data_type type() const { return data_type::string; };
-
-  virtual const string &as_string() const { return *this; }
+  base_string(std::string value) : value(value) {}
+  virtual ~base_string() {}
 
   operator std::string() const { return value; }
   std::string as_std_string() const { return value; }
@@ -29,15 +25,24 @@ public:
 
   virtual bool operator<(const data &other) const {
     if (type() == other.type())
-      return (value < other.as_string().value);
+      return (value < static_cast<const base_string &>(other).value);
     return type() < other.type();
   }
 
   virtual bool operator==(const data &other) const {
     if (type() == other.type())
-      return (value == other.as_string().value);
+      return (value == static_cast<const base_string &>(other).value);
     return false;
   }
+};
+
+class string : public base_string {
+public:
+  using base_string::base_string;
+  virtual ~string() {}
+
+  virtual data_type type() const { return data_type::string; }
+  virtual const string &as_string() const { return *this; }
 };
 
 extern data_ptr make_string(std::string str);

@@ -11,14 +11,13 @@
 
 namespace xig {
 
-class process : public tuple {
+class process : public base_tuple {
 public:
-  using tuple::tuple;
+  using base_tuple::base_tuple;
   virtual ~process() {}
 
-  virtual data_type type() const { return data_type::process; };
+  virtual data_type type() const { return data_type::process; }
   virtual const process &as_process() const { return *this; }
-  virtual const tuple &as_tuple() const { throw; }
 };
 
 extern data_ptr make_process(std::vector<data_ptr> val);

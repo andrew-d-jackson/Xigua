@@ -10,14 +10,13 @@
 
 namespace xig {
 
-class symbol : public string {
+class symbol : public base_string {
 public:
-  using string::string;
+  using base_string::base_string;
   virtual ~symbol() {}
 
   virtual data_type type() const { return data_type::symbol; };
   virtual const symbol &as_symbol() const { return *this; }
-  virtual const string &as_string() const { throw; }
 };
 
 extern data_ptr make_symbol(std::string str);
