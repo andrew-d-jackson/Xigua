@@ -68,14 +68,3 @@ public:
 
 extern std::string string_representation(const data_ptr &d);
 }
-
-#include "xigua/none.hpp"
-#include "xigua/boolean.hpp"
-#include "xigua/integer.hpp"
-#include "xigua/decimal.hpp"
-#include "xigua/tuple.hpp"
-#include "xigua/process.hpp"
-#include "xigua/string.hpp"
-#include "xigua/keyword.hpp"
-#include "xigua/symbol.hpp"
-#include "xigua/map.hpp"

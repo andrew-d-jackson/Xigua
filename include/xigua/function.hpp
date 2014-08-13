@@ -7,6 +7,7 @@
 
 #include "xigua/error.hpp"
 #include "xigua/data.hpp"
+#include "xigua/types.hpp"
 
 namespace xig {
 
@@ -15,9 +16,7 @@ class enviroment;
 
 struct debug_info {
   std::vector<std::string> function_call_list;
-  debug_info() {
-    function_call_list = {};
-  }
+  debug_info() { function_call_list = {}; }
   debug_info(std::vector<std::string> fcl) { function_call_list = fcl; }
 };
 
@@ -78,21 +77,18 @@ public:
   virtual ~function();
 
   virtual data_type type() const { return data_type::function; }
-  virtual const function &as_function() const {
-	  return *this;
-  }
+  virtual const function &as_function() const { return *this; }
   virtual bool operator<(const data &other) const {
-	  if (type() == other.type())
-		  return methods < other.as_function().methods;
-	  return type() < other.type();
+    if (type() == other.type())
+      return methods < other.as_function().methods;
+    return type() < other.type();
   }
 
   virtual bool operator==(const data &other) const {
-	  if (type() == other.type())
-		  return methods == other.as_function().methods;
-	  return false;
+    if (type() == other.type())
+      return methods == other.as_function().methods;
+    return false;
   }
-
 
   //! Constructs a function from a class that inherits method
   //! @param in_method class inheriting method that is the method
@@ -136,6 +132,6 @@ private:
     }
   }
 
-  std::vector<std::shared_ptr<method> > methods;
+  std::vector<std::shared_ptr<method>> methods;
 };
 }

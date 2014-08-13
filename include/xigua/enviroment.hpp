@@ -4,6 +4,7 @@
 #include <map>
 
 #include "xigua/data.hpp"
+#include "xigua/types.hpp"
 
 namespace xig {
 class data;

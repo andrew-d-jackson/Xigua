@@ -6,35 +6,18 @@
 
 #include "xigua/data.hpp"
 #include "xigua/error.hpp"
+#include "xigua/string.hpp"
 
 namespace xig {
 
-class symbol : public data {
-private:
-  std::string value;
-
+class symbol : public string {
 public:
-  symbol(std::string value) : value(value) {}
+  using string::string;
   virtual ~symbol() {}
 
   virtual data_type type() const { return data_type::symbol; };
-
   virtual const symbol &as_symbol() const { return *this; }
-
-  operator std::string() const { return value; }
-  std::string as_std_string() const { return value; }
-
-  virtual bool operator<(const data &other) const {
-    if (type() == other.type())
-      return (value < other.as_symbol().value);
-    return type() < other.type();
-  }
-
-  virtual bool operator==(const data &other) const {
-    if (type() == other.type())
-      return (value == other.as_symbol().value);
-    return false;
-  }
+  virtual const string &as_string() const { throw; }
 };
 
 extern data_ptr make_symbol(std::string str);

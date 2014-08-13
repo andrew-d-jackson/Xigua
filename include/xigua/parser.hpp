@@ -9,6 +9,7 @@
 #include "xigua/data.hpp"
 #include "xigua/error.hpp"
 #include "xigua/enviroment.hpp"
+#include "xigua/types.hpp"
 
 namespace xig {
 

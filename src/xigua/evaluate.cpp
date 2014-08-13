@@ -1,4 +1,5 @@
 #include "xigua/evaluate.hpp"
+#include "xigua/types.hpp"
 
 namespace xig {
 
@@ -76,8 +77,8 @@ data_ptr handleProcess(enviroment &env, data_ptr input_data, debug_info debug) {
       std::vector<data_ptr> functionArgs = {
           input_data->as_process().as_std_vector().at(0),
           input_data->as_process().as_std_vector().at(2)};
-	  return input_data->as_process().as_std_vector().at(1)->as_function().call(
-		  call_info(functionArgs, env, debug));
+      return input_data->as_process().as_std_vector().at(1)->as_function().call(
+          call_info(functionArgs, env, debug));
     }
   }
 

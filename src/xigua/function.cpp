@@ -58,8 +58,7 @@ data_ptr function::call(call_info fci) const {
         try {
           if ((*iterator)->process_arguments_pass(fci))
             return (*iterator)->call(fci);
-        }
-        catch (error e) {
+        } catch (error e) {
         }
       } else {
         return (*iterator)->call(fci);

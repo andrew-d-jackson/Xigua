@@ -25,9 +25,7 @@ public:
 
   auto begin() -> decltype(value.cbegin()) const { return value.cbegin(); }
   auto end() -> decltype(value.cend()) const { return value.cend(); }
-  auto at(std::size_t pos) -> decltype(value.at(pos)) const {
-    return value.at(pos);
-  }
+  const data_ptr &at(std::size_t pos) const { return value.at(pos); }
 
   virtual bool operator<(const data &other) const {
     if (type() == other.type())

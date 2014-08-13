@@ -7,3 +7,4 @@
 #include "xigua/function.hpp"
 #include "xigua/parser.hpp"
 #include "xigua/stdlib.hpp"
+#include "xigua/types.hpp"

@@ -1,4 +1,5 @@
 #include "xigua/data.hpp"
+#include "xigua/types.hpp"
 
 namespace xig {
 std::string string_representation(const data_ptr &d) {
