@@ -1,18 +1,20 @@
 #include "xigua/stdlib.hpp"
 
 /*
-#include "xigua/stdlib/core.hpp"
-#include "xigua/stdlib/math.hpp"
-#include "xigua/stdlib/boolean.hpp"
-#include "xigua/stdlib/string.hpp"
-#include "xigua/stdlib/tuple.hpp"
-#include "xigua/stdlib/containers.hpp"
-#include "xigua/stdlib/benchmark.hpp"
-#include "xigua/stdlib/function.hpp"
-#include "xigua/stdlib/types.hpp"
-#include "xigua/stdlib/test.hpp"
+#include "stdlib/core.hpp"
+#include "stdlib/math.hpp"
+#include "stdlib/boolean.hpp"
+#include "stdlib/string.hpp"
+#include "stdlib/tuple.hpp"
+#include "stdlib/containers.hpp"
+#include "stdlib/benchmark.hpp"
+#include "stdlib/function.hpp"
+#include "stdlib/types.hpp"
+#include "stdlib/test.hpp"
 */
 namespace xig {
+namespace stdlib {
+
 enviroment get_global_enviroment() {
   enviroment enviroment(env_type::container);
 
@@ -145,5 +147,6 @@ enviroment get_global_enviroment() {
   enviroment.set("bench", make_function(stdlib::benchmark()));
   */
   return enviroment;
+}
 }
 }

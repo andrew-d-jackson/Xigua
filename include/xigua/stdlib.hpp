@@ -5,5 +5,7 @@
 #include "xigua/function.hpp"
 
 namespace xig {
+namespace stdlib {
 extern enviroment get_global_enviroment();
+}
 }

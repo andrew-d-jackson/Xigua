@@ -9,7 +9,7 @@
 #include "xigua/enviroment.hpp"
 #include "xigua/error.hpp"
 #include "xigua/evaluate.hpp"
-#include "xigua/stdlib/utils.hpp"
+#include "stdlib/utils.hpp"
 
 namespace xig {
 namespace stdlib {

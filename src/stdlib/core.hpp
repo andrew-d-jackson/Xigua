@@ -11,7 +11,7 @@
 #include "xigua/evaluate.hpp"
 #include "xigua/parser.hpp"
 
-#include "xigua/stdlib/utils.hpp"
+#include "stdlib/utils.hpp"
 
 namespace xig {
 namespace stdlib {
@@ -117,7 +117,7 @@ class map : public method {
 
     std::vector<data> return_values;
     for (unsigned int i(0); i < arguments.at(1).as_tuple().size(); i++) {
-      std::vector<data> temp_proc = { arguments.at(arguments.size() - 1) };
+      std::vector<data> temp_proc = {arguments.at(arguments.size() - 1)};
       for (unsigned int j(0); j < arguments.size() - 1; j++)
         temp_proc.push_back(arguments.at(j).as_tuple().at(i));
 
@@ -139,7 +139,7 @@ class apply : public method {
     if (fci.args.at(1).type() != data_type::tuple)
       throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-    std::vector<data> temp_proc = { fci.args.at(0) };
+    std::vector<data> temp_proc = {fci.args.at(0)};
 
     for (auto data : fci.args.at(1).as_tuple())
       temp_proc.push_back(data);
@@ -167,7 +167,7 @@ class foldl : public method {
       std::vector<data> fn_args;
       fn_args.push_back(a);
       fn_args.push_back(b);
-      return fn.call({ fn_args, fci.env, fci.debug });
+      return fn.call({fn_args, fci.env, fci.debug});
     });
 
     return ret;
@@ -192,7 +192,7 @@ class foldr : public method {
       std::vector<data> fn_args;
       fn_args.push_back(b);
       fn_args.push_back(a);
-      return fn.call({ fn_args, fci.env, fci.debug });
+      return fn.call({fn_args, fci.env, fci.debug});
     });
 
     return ret;
@@ -216,7 +216,7 @@ class filter : public method {
                  [&](const data &i) {
       std::vector<data> a;
       a.push_back(i);
-      return (make_boolean(true) == fn.call({ a, fci.env, fci.debug }));
+      return (make_boolean(true) == fn.call({a, fci.env, fci.debug}));
     });
 
     return make_tuple(ret);
@@ -253,9 +253,9 @@ class partial : public method {
         final_args.insert(final_args.end(), fn_arguments.begin(),
                           fn_arguments.end());
         return _captured_function.as_function().call(
-            { final_args, fn_fci.env, fn_fci.debug });
+            {final_args, fn_fci.env, fn_fci.debug});
       }
-    } return_method = { captured_function, captured_function_args };
+    } return_method = {captured_function, captured_function_args};
 
     data return_function = make_function(return_method);
     return return_function;
@@ -314,7 +314,7 @@ class macro : public method {
         auto new_proc = replace(_captured_proc.as_process(), fn_fci.args);
         return evaluate(fn_fci.env, make_process(new_proc), fn_fci.debug);
       }
-    } return_method = { fci.args.at(1), fci.args.at(0).as_tuple() };
+    } return_method = {fci.args.at(1), fci.args.at(0).as_tuple()};
 
     data return_function = make_function(return_method);
     return return_function;

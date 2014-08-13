@@ -2,10 +2,11 @@
 #include <string>
 
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 int main(int argc, char *argv[]) {
   if (argc > 1) {
-    xig::enviroment enviroment = xig::get_global_enviroment();
+    xig::enviroment enviroment = xig::stdlib::get_global_enviroment();
     try {
       xig::evaluate(enviroment, xig::parser::from_file(argv[1], enviroment));
     } catch (xig::error e) {
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]) {
     }
   } else {
     std::cout << "Xigua REPL" << std::endl;
-    xig::enviroment enviroment = xig::get_global_enviroment();
+    xig::enviroment enviroment = xig::stdlib::get_global_enviroment();
     std::string input;
     while (std::getline(std::cin, input)) {
       if (input == "exit")

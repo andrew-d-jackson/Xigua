@@ -8,7 +8,7 @@
 #include "xigua/evaluate.hpp"
 #include "xigua/error.hpp"
 
-#include "xigua/stdlib/utils.hpp"
+#include "stdlib/utils.hpp"
 
 namespace xig {
 namespace stdlib {
@@ -39,7 +39,7 @@ class benchmark : public method {
         std::chrono::steady_clock::now();
 
     auto dur =
-        std::chrono::duration_cast<std::chrono::duration<int, std::milli> >(
+        std::chrono::duration_cast<std::chrono::duration<int, std::milli>>(
             end_time - start_time).count();
     auto average = dur / times;
 

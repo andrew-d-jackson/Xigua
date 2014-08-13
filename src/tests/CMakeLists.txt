@@ -17,6 +17,6 @@ set(SOURCE_FILES
 
 
 add_executable(unit_tests ${SOURCE_FILES})
-target_link_libraries(unit_tests xigua gtest)
+target_link_libraries(unit_tests xigua xigua_stdlib gtest)
 
 add_test(unit_tests ${CMAKE_BINARY_DIR}/unit_tests)
