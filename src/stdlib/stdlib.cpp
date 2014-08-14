@@ -1,16 +1,16 @@
 #include "xigua/stdlib.hpp"
 
 /*
-#include "stdlib/core.hpp"
-#include "stdlib/math.hpp"
 #include "stdlib/string.hpp"
 #include "stdlib/tuple.hpp"
-#include "stdlib/function.hpp"
 #include "stdlib/types.hpp"
 #include "stdlib/test.hpp"
 */
+#include "stdlib/math.hpp"
 #include "stdlib/boolean.hpp"
 #include "stdlib/containers.hpp"
+#include "stdlib/core.hpp"
+#include "stdlib/function.hpp"
 #include "stdlib/benchmark.hpp"
 
 namespace xig {
@@ -20,7 +20,7 @@ enviroment get_global_enviroment() {
   enviroment enviroment(env_type::container);
 
   // core
-  /*
+
   enviroment.set("=", make_function(stdlib::define()));
 
   enviroment.set("fn", make_function(stdlib::create_lambda()));
@@ -76,15 +76,15 @@ enviroment get_global_enviroment() {
   enviroment.set("==", make_function(stdlib::equal_to()));
 
   enviroment.set("%", make_function(stdlib::modulo()));
+  /*
+      // string
 
-  // string
+      enviroment.set("string", make_function(stdlib::concatinate()));
 
-  enviroment.set("string", make_function(stdlib::concatinate()));
+      enviroment.set("substr", make_function(stdlib::substring()));
 
-  enviroment.set("substr", make_function(stdlib::substring()));
-
-  // boolean
-*/
+      // boolean
+    */
   enviroment.set("not", make_function(stdlib::boolean_not()));
 
   enviroment.set("and", make_function(stdlib::boolean_and()));

@@ -21,30 +21,31 @@ class comparator : public method {
   virtual bool compare_integer(long long a, long long b) const = 0;
   virtual bool compare_decimal(long double a, long double b) const = 0;
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
     auto arguments = utils::parse_arguments(fci.args, 2);
     for (const auto &arg : arguments)
-      if (!(arg.type() == data_type::decimal ||
-            arg.type() == data_type::integer))
+      if (!(arg->type() == data_type::decimal ||
+            arg->type() == data_type::integer))
         throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
     for (auto it = arguments.begin(); it < arguments.end() - 1; it++) {
-      if ((*it).type() == data_type::decimal ||
-          (*(it + 1)).type() == data_type::decimal) {
-        auto a = (*it).type() == data_type::decimal
-                     ? (*it).as_decimal()
-                     : (long double)(*it).as_integer();
-        auto b = (*(it + 1)).type() == data_type::decimal
-                     ? (*(it + 1)).as_decimal()
-                     : (long double)(*(it + 1)).as_integer();
+      if ((*it)->type() == data_type::decimal ||
+          (*(it + 1))->type() == data_type::decimal) {
+        auto a = (*it)->type() == data_type::decimal
+                     ? (*it)->as_decimal().as_double()
+                     : (long double)(*it)->as_integer().as_int();
+        auto b = (*(it + 1))->type() == data_type::decimal
+                     ? (*(it + 1))->as_decimal().as_double()
+                     : (long double)(*(it + 1))->as_integer().as_int();
         if (!compare_decimal(a, b))
-          return data(false);
+          return make_boolean(false);
       } else {
-        if (!compare_integer((*it).as_integer(), (*(it + 1)).as_integer()))
-          return data(false);
+        if (!compare_integer((*it)->as_integer().as_int(),
+                             (*(it + 1))->as_integer().as_int()))
+          return make_boolean(false);
       }
     }
-    return data(true);
+    return make_boolean(true);
   }
 };
 
@@ -72,13 +73,13 @@ class equal_to : public method {
   int amount_of_arguments() const { return 2; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
     auto arguments = utils::parse_arguments(fci.args, 2);
     for (auto it = arguments.begin(); it < arguments.end() - 1; it++) {
-      if (*it != (*(it + 1)))
-        return data(false);
+      if (*(*it) != *(*(it + 1)))
+        return make_boolean(false);
     }
-    return data(true);
+    return make_boolean(true);
   }
 };
 
@@ -92,35 +93,37 @@ class math_operation : public method {
   };
   virtual long double operate_decimal(long double a, long double b) const = 0;
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
 
     auto arguments = utils::parse_arguments(fci.args, 2);
     for (const auto &arg : arguments)
-      if (!(arg.type() == data_type::decimal ||
-            arg.type() == data_type::integer))
+      if (!(arg->type() == data_type::decimal ||
+            arg->type() == data_type::integer))
         throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
     if (utils::all_types_are(arguments, data_type::integer) &&
         !always_decimal()) {
-      long long return_value = arguments.at(0).as_integer();
+      long long return_value = arguments.at(0)->as_integer().as_int();
       for (auto it = arguments.begin() + 1; it < arguments.end(); it++) {
-        return_value = operate_integer(return_value, it->as_integer());
+        return_value =
+            operate_integer(return_value, (*it)->as_integer().as_int());
       }
-      return data(return_value);
+      return make_integer(return_value);
     }
 
-    long double return_value = arguments.at(0).type() == data_type::decimal
-                                   ? arguments.at(0).as_decimal()
-                                   : (long double)arguments.at(0).as_integer();
+    long double return_value =
+        arguments.at(0)->type() == data_type::decimal
+            ? arguments.at(0)->as_decimal().as_double()
+            : (long double)arguments.at(0)->as_integer().as_int();
 
     for (auto it = arguments.begin() + 1; it < arguments.end(); it++) {
-      long double next_num = it->type() == data_type::decimal
-                                 ? it->as_decimal()
-                                 : (long double)it->as_integer();
+      long double next_num = (*it)->type() == data_type::decimal
+                                 ? (*it)->as_decimal().as_double()
+                                 : (long double)(*it)->as_integer().as_int();
 
       return_value = operate_decimal(return_value, next_num);
     }
-    return data(return_value);
+    return make_decimal(return_value);
   }
 };
 
@@ -155,24 +158,24 @@ class divide : public math_operation {
 class modulo : public method {
   int amount_of_arguments() const { return 2; }
 
-  data run(call_info fci) {
+  data_ptr run(call_info fci) {
     for (const auto &arg : fci.args)
-      if (!(arg.type() == data_type::decimal ||
-            arg.type() == data_type::integer))
+      if (!(arg->type() == data_type::decimal ||
+            arg->type() == data_type::integer))
         throw error(error_type::invalid_arguments, "Not A Number", fci.debug);
 
-    if (fci.args.at(0).type() == data_type::decimal ||
-        fci.args.at(1).type() == data_type::decimal) {
-      auto a = fci.args.at(0).type() == data_type::decimal
-                   ? fci.args.at(0).as_decimal()
-                   : (long double)fci.args.at(0).as_integer();
-      auto b = fci.args.at(1).type() == data_type::decimal
-                   ? fci.args.at(1).as_decimal()
-                   : (long double)fci.args.at(1).as_integer();
+    if (fci.args.at(0)->type() == data_type::decimal ||
+        fci.args.at(1)->type() == data_type::decimal) {
+      auto a = fci.args.at(0)->type() == data_type::decimal
+                   ? fci.args.at(0)->as_decimal().as_double()
+                   : (long double)fci.args.at(0)->as_integer().as_int();
+      auto b = fci.args.at(1)->type() == data_type::decimal
+                   ? fci.args.at(1)->as_decimal().as_double()
+                   : (long double)fci.args.at(1)->as_integer().as_int();
       return make_decimal(std::fmod(a, b));
     } else {
-      return make_integer(fci.args.at(0).as_integer() %
-                          fci.args.at(1).as_integer());
+      return make_integer(fci.args.at(0)->as_integer().as_int() %
+                          fci.args.at(1)->as_integer().as_int());
     }
   }
 };
