@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <memory>
 
 #include "xigua/data.hpp"
@@ -32,8 +33,12 @@ public:
   }
 
   virtual bool operator==(const data &other) const {
-    if (type() == other.type())
-      return (value == static_cast<const base_tuple &>(other).value);
+    if (type() == other.type()) {
+      const auto &otherValue = static_cast<const base_tuple &>(other).value;
+      return std::equal(
+          value.begin(), value.end(), otherValue.begin(),
+          [](const data_ptr &a, const data_ptr &b) { return *a == *b; });
+    }
     return false;
   }
 };

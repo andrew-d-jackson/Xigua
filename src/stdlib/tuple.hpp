@@ -39,9 +39,11 @@ class unique : public method {
       throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
     auto initial_tuple = fci.args.at(0)->as_tuple().as_std_vector();
-    std::sort(initial_tuple.begin(), initial_tuple.end());
-    auto unique_iterator =
-        std::unique(initial_tuple.begin(), initial_tuple.end());
+    std::sort(initial_tuple.begin(), initial_tuple.end(),
+              [](const data_ptr &a, const data_ptr &b) { return *a < *b; });
+    auto unique_iterator = std::unique(
+        initial_tuple.begin(), initial_tuple.end(),
+        [](const data_ptr &a, const data_ptr &b) { return *a == *b; });
     std::vector<data_ptr> return_value(initial_tuple.begin(), unique_iterator);
 
     return make_tuple(return_value);

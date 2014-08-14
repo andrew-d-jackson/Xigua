@@ -9,6 +9,9 @@
 
 namespace xig {
 
+extern bool map_equality(const std::map<data_ptr, data_ptr> &a,
+                         const std::map<data_ptr, data_ptr> &b);
+
 class map : public data {
 private:
   std::map<data_ptr, data_ptr> value;
@@ -35,7 +38,7 @@ public:
 
   virtual bool operator==(const data &other) const {
     if (type() == other.type())
-      return (value == other.as_map().value);
+      return map_equality(value, other.as_map().value);
     return false;
   }
 };

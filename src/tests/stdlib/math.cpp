@@ -33,7 +33,7 @@ TEST(Standard_Library_Math, Subtract) {
   EXPECT_EQ(*evaluate(env, parser::from_string("[- -2 3]")), *make_integer(-5));
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[- -2.2 -2.2]")),
-            *make_integer(0));
+            *make_decimal(0));
 }
 
 TEST(Standard_Library_Math, Multiply) {
@@ -53,7 +53,7 @@ TEST(Standard_Library_Math, Multiply) {
 TEST(Standard_Library_Math, Divide) {
   enviroment env = stdlib::get_global_enviroment();
 
-  EXPECT_EQ(*evaluate(env, parser::from_string("[/ 10 2]")), *make_integer(5));
+  EXPECT_EQ(*evaluate(env, parser::from_string("[/ 10 2]")), *make_decimal(5));
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[/ 10 4]")),
             *make_decimal(2.5));
@@ -65,7 +65,7 @@ TEST(Standard_Library_Math, Chained_Equations) {
   enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[+ [/ 10 2] 2]")),
-            *make_integer(7));
+            *make_decimal(7));
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[/ [* 5 [- 4 2]] [+ 2 2]]")),
             *make_decimal(2.5));
@@ -128,5 +128,5 @@ TEST(Standard_Library_Math, Modulo) {
       2.2);
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[% 6.2 4.2]")),
-            *make_integer(2));
+            *make_decimal(2));
 }

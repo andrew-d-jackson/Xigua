@@ -29,11 +29,7 @@ public:
     return type() < other.type();
   }
 
-  virtual bool operator==(const data &other) const {
-    if (type() == other.type())
-      return (value == other.as_decimal().value);
-    return false;
-  }
+  virtual bool operator==(const data &other) const;
 };
 
 extern data_ptr make_decimal(long double num);
