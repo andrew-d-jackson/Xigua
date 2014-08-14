@@ -1,10 +1,11 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
 TEST(Standard_Library_Boolean, Not) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[not true]")),
             *make_boolean(false));
@@ -17,7 +18,7 @@ TEST(Standard_Library_Boolean, Not) {
 }
 
 TEST(Standard_Library_Boolean, And) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[and true true]")),
             *make_boolean(true));
@@ -39,7 +40,7 @@ TEST(Standard_Library_Boolean, And) {
 }
 
 TEST(Standard_Library_Boolean, Or) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[or true true]")),
             *make_boolean(true));

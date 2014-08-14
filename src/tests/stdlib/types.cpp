@@ -1,10 +1,11 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
 TEST(Standard_Library_Types, Types) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[bool? false]")),
             *make_boolean(true));

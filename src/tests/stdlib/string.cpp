@@ -1,10 +1,11 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
 TEST(Standard_Library_String, Concatinate) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(
       *evaluate(env, parser::from_string("[string \"hello \" \"world\"]")),
@@ -21,7 +22,7 @@ TEST(Standard_Library_String, Concatinate) {
 }
 
 TEST(Standard_Library_String, SubString) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[substr \"hello world\" 1 3]")),
             *make_string("ell"));

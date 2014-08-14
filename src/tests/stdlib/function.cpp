@@ -1,10 +1,11 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
 TEST(Standard_Library_Function, Fn) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
   evaluate(env, parser::from_string("[= add [fn (a b) [+ a b]]]"));
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[add 1 1]")), *make_integer(2));
@@ -17,7 +18,7 @@ TEST(Standard_Library_Function, Fn) {
 }
 
 TEST(Standard_Library_Function, ConditionalArgs) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
   evaluate(env, parser::from_string("[= equal [fn ([== a b]) [a]]]"));
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[equal 1 1]")),
@@ -53,7 +54,7 @@ TEST(Standard_Library_Function, ConditionalArgs) {
 }
 
 TEST(Standard_Library_Function, EqualArgs) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
   evaluate(env, parser::from_string("[= isOne [fn (1) [true] (x) [false]]]"));
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[isOne 1]")),
@@ -80,13 +81,13 @@ TEST(Standard_Library_Function, EqualArgs) {
 }
 
 TEST(Standard_Library_Function, Recursion) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   evaluate(env, parser::from_string(
                     "[= fac1 [fn (0) [1] (n) [* n [fac1 [- n 1]]]]]"));
   evaluate(env, parser::from_string(
                     "[= fac2 [fn (0) [1] (n) [* [fac2 [- n 1]] n]]]"));
 
-  EXPECT_EQ(*evaluate(env, parser::from_string("[fac1 5]")), make_integer(120));
-  EXPECT_EQ(*evaluate(env, parser::from_string("[fac2 5]")), make_integer(120));
+  EXPECT_EQ(*evaluate(env, parser::from_string("[fac1 5]")), *make_integer(120));
+  EXPECT_EQ(*evaluate(env, parser::from_string("[fac2 5]")), *make_integer(120));
 }

@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 

@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
@@ -16,8 +17,8 @@ TEST(Enviroment, Parent) {
   enviroment child(env_type::container, &parent);
   EXPECT_TRUE(child.has_parent());
   EXPECT_EQ(child.parent(), &parent);
-  parent.set("test_value", *make_integer(2));
+  parent.set("test_value", make_integer(2));
   EXPECT_EQ(*child.find("test_value"), *make_integer(2));
-  child.set("test_value", *make_integer(3));
+  child.set("test_value", make_integer(3));
   EXPECT_EQ(*child.find("test_value"), *make_integer(3));
 }

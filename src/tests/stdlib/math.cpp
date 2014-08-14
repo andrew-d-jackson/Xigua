@@ -1,10 +1,11 @@
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
 TEST(Standard_Library_Math, Add) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[+ 2 2]")), *make_integer(4));
 
@@ -20,7 +21,7 @@ TEST(Standard_Library_Math, Add) {
 }
 
 TEST(Standard_Library_Math, Subtract) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[- 10 2]")), *make_integer(8));
 
@@ -36,7 +37,7 @@ TEST(Standard_Library_Math, Subtract) {
 }
 
 TEST(Standard_Library_Math, Multiply) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[* 10 2]")), *make_integer(20));
 
@@ -50,7 +51,7 @@ TEST(Standard_Library_Math, Multiply) {
 }
 
 TEST(Standard_Library_Math, Divide) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[/ 10 2]")), *make_integer(5));
 
@@ -61,7 +62,7 @@ TEST(Standard_Library_Math, Divide) {
 }
 
 TEST(Standard_Library_Math, Chained_Equations) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[+ [/ 10 2] 2]")),
             *make_integer(7));
@@ -71,7 +72,7 @@ TEST(Standard_Library_Math, Chained_Equations) {
 }
 
 TEST(Standard_Library_Math, Equality) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[== 2 2]")),
             *make_boolean(true));
@@ -86,7 +87,7 @@ TEST(Standard_Library_Math, Equality) {
 }
 
 TEST(Standard_Library_Math, Less_Than) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[< 2 4]")),
             *make_boolean(true));
@@ -99,7 +100,7 @@ TEST(Standard_Library_Math, Less_Than) {
 }
 
 TEST(Standard_Library_Math, Greater_Than) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[> 2 4]")),
             *make_boolean(false));
@@ -112,7 +113,7 @@ TEST(Standard_Library_Math, Greater_Than) {
 }
 
 TEST(Standard_Library_Math, Modulo) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[% 2 4]")), *make_integer(2));
 

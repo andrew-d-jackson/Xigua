@@ -2,11 +2,12 @@
 
 #include "gtest/gtest.h"
 #include "xigua/xigua.hpp"
+#include "xigua/stdlib.hpp"
 
 using namespace xig;
 
 TEST(Standard_Library_Conatiners, At) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[at 2 (0 1 2 3 4 5)]")),
             *make_integer(2));
@@ -20,7 +21,7 @@ TEST(Standard_Library_Conatiners, At) {
 }
 
 TEST(Standard_Library_Conatiners, Size) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[size (0 1 2 3 4 5)]")),
             *make_integer(6));
@@ -30,12 +31,12 @@ TEST(Standard_Library_Conatiners, Size) {
 }
 
 TEST(Standard_Library_Conatiners, Insert) {
-  enviroment env = get_global_enviroment();
+  enviroment env = stdlib::get_global_enviroment();
 
   EXPECT_EQ(*evaluate(env, parser::from_string("[insert (1 2) 3]")),
             *make_tuple({make_integer(1), make_integer(2), make_integer(3)}));
 
-  auto expected_map = std::map<data, data>();
+  auto expected_map = std::map<data_ptr, data_ptr>();
   expected_map[make_integer(1)] = make_integer(2);
   expected_map[make_integer(3)] = make_integer(4);
   EXPECT_EQ(*evaluate(env, parser::from_string("[insert {1 2} 3 4]")),
