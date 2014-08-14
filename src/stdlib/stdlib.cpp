@@ -1,11 +1,9 @@
 #include "xigua/stdlib.hpp"
 
-/*
-#include "stdlib/string.hpp"
 #include "stdlib/tuple.hpp"
+#include "stdlib/string.hpp"
 #include "stdlib/types.hpp"
 #include "stdlib/test.hpp"
-*/
 #include "stdlib/math.hpp"
 #include "stdlib/boolean.hpp"
 #include "stdlib/containers.hpp"
@@ -76,75 +74,73 @@ enviroment get_global_enviroment() {
   enviroment.set("==", make_function(stdlib::equal_to()));
 
   enviroment.set("%", make_function(stdlib::modulo()));
-  /*
-      // string
 
-      enviroment.set("string", make_function(stdlib::concatinate()));
+  // string
 
-      enviroment.set("substr", make_function(stdlib::substring()));
+  enviroment.set("string", make_function(stdlib::concatinate()));
 
-      // boolean
-    */
+  enviroment.set("substr", make_function(stdlib::substring()));
+
+  // boolean
+
   enviroment.set("not", make_function(stdlib::boolean_not()));
 
   enviroment.set("and", make_function(stdlib::boolean_and()));
 
   enviroment.set("or", make_function(stdlib::boolean_or()));
-  /*
-    // types
+  // types
 
-    enviroment.set("str?", make_function(stdlib::is_string()));
+  enviroment.set("str?", make_function(stdlib::is_string()));
 
-    enviroment.set("float?", make_function(stdlib::is_decimal()));
+  enviroment.set("float?", make_function(stdlib::is_decimal()));
 
-    enviroment.set("int?", make_function(stdlib::is_integer()));
+  enviroment.set("int?", make_function(stdlib::is_integer()));
 
-    enviroment.set("tuple?", make_function(stdlib::is_tuple()));
+  enviroment.set("tuple?", make_function(stdlib::is_tuple()));
 
-    enviroment.set("map?", make_function(stdlib::is_map()));
+  enviroment.set("map?", make_function(stdlib::is_map()));
 
-    enviroment.set("bool?", make_function(stdlib::is_boolean()));
+  enviroment.set("bool?", make_function(stdlib::is_boolean()));
 
-    enviroment.set("none?", make_function(stdlib::is_none()));
+  enviroment.set("none?", make_function(stdlib::is_none()));
 
-    enviroment.set("fn?", make_function(stdlib::is_function()));
+  enviroment.set("fn?", make_function(stdlib::is_function()));
 
-    enviroment.set("key?", make_function(stdlib::is_keyword()));
+  enviroment.set("key?", make_function(stdlib::is_keyword()));
 
-    // tuple
+  // tuple
 
-    enviroment.set("join", make_function(stdlib::join()));
+  enviroment.set("join", make_function(stdlib::join()));
 
-    enviroment.set("unique", make_function(stdlib::unique()));
+  enviroment.set("unique", make_function(stdlib::unique()));
 
-    enviroment.set("first", make_function(stdlib::first()));
+  enviroment.set("first", make_function(stdlib::first()));
 
-    enviroment.set("last", make_function(stdlib::last()));
+  enviroment.set("last", make_function(stdlib::last()));
 
-    enviroment.set("tail", make_function(stdlib::tail()));
+  enviroment.set("tail", make_function(stdlib::tail()));
 
-    enviroment.set("init", make_function(stdlib::init()));
+  enviroment.set("init", make_function(stdlib::init()));
 
-    enviroment.set("range", make_function(stdlib::range()));
+  enviroment.set("range", make_function(stdlib::range()));
 
-    // containers
-  */
+  // containers
   enviroment.set("at", make_function(stdlib::at()));
 
   enviroment.set("size", make_function(stdlib::size()));
 
   enviroment.set("insert", make_function(stdlib::insert()));
-  /*
-    // testing
 
-    enviroment.set("test-eq", make_function(stdlib::testeq()));
+  // testing
 
-    enviroment.set("test-ne", make_function(stdlib::testne()));
+  enviroment.set("test-eq", make_function(stdlib::testeq()));
 
-    enviroment.set("test-tr", make_function(stdlib::testtr()));
+  enviroment.set("test-ne", make_function(stdlib::testne()));
 
-    // benchmark
-  */
+  enviroment.set("test-tr", make_function(stdlib::testtr()));
+
+  // benchmark
+
   enviroment.set("bench", make_function(stdlib::benchmark()));
 
   return enviroment;
