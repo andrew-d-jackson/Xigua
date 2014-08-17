@@ -59,6 +59,7 @@ data_ptr find_in_parent(const enviroment &me, const std::string &variable_name) 
 	if (me.has_parent()) {
 		return me.parent()->find(variable_name);
 	}
+	return data_ptr(nullptr);
 }
 
 data_ptr enviroment::find(std::string variable_name) const {
@@ -67,7 +68,7 @@ data_ptr enviroment::find(std::string variable_name) const {
 		auto found_var = find_with_delimiter(*this, defined_variables, variable_name);
 		if (found_var)
 			return found_var;
-		parent()->find(variable_name);
+		return parent()->find(variable_name);
 	}
 
 	auto found_in_me = find_in_map(defined_variables, variable_name);

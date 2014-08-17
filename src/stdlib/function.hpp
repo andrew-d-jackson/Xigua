@@ -153,12 +153,13 @@ int get_amount_of_args(std::vector<data_ptr> args, enviroment &env) {
     if (args.at(i)->type() == data_type::process) {
       traverseProcess(args.at(i), [&](const data_ptr &traversed) {
         if (traversed->type() == data_type::symbol) {
+		  auto var_name = traversed->as_symbol().as_std_string();
           bool found =
-              (env.find(traversed->as_symbol().as_std_string()) != nullptr);
+			  (env.find(var_name) != nullptr);
           bool in_vars =
-              (vars.find(traversed->as_symbol().as_std_string()) != vars.end());
+			  (vars.find(var_name) != vars.end());
           if (!found && !in_vars) {
-            vars.insert(traversed->as_symbol().as_std_string());
+			  vars.insert(var_name);
             amount++;
           }
         }
