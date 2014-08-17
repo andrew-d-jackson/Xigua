@@ -73,9 +73,9 @@ class let_expression : public method {
         throw xig::error(xig::error_type::invalid_arguments, "Not A Symbol",
                          fci.debug);
 
-      container_enviroment.set(
+      container_enviroment.set_here(
           map_pair.first->as_symbol(),
-          evaluate(container_enviroment, map_pair.second, fci.debug), true);
+          evaluate(container_enviroment, map_pair.second, fci.debug));
     }
 
     return evaluate(container_enviroment, fci.args.at(1), fci.debug);

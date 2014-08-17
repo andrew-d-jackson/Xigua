@@ -67,7 +67,7 @@ void assign_process_to_env(const data_ptr &current_param,
   traverseProcess(current_param, [&](const data_ptr &traversed) {
     if (traversed->type() == data_type::symbol) {
       bool found_in_self =
-          (env.find(traversed->as_symbol().as_std_string(), true) != nullptr);
+          (env.find_here(traversed->as_symbol().as_std_string()) != nullptr);
       bool found_anywhere =
           (env.find(traversed->as_symbol().as_std_string()) != nullptr);
       bool in_vars =

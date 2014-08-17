@@ -3,13 +3,13 @@
 namespace xig {
 
 enviroment::enviroment(env_type in_type) {
-  type(in_type);
+  my_type = in_type;
   my_relative_path = "";
   my_parent = nullptr;
 }
 
 enviroment::enviroment(env_type in_type, enviroment *parent_enviroment) {
-  type(in_type);
+  my_type = in_type;
   my_relative_path = "";
 
   if (in_type != env_type::container) {
@@ -24,15 +24,22 @@ enviroment::enviroment(env_type in_type, enviroment *parent_enviroment) {
   }
 }
 
-void enviroment::type(env_type in_type) {
-  my_type = in_type;
-};
+data_type enviroment::type() const { return data_type::enviroment; }
+
+const enviroment &enviroment::as_enviroment() const { return *this; }
 
 env_type enviroment::enviroment_type() const {
   return my_type;
 };
 
-data_ptr enviroment::find(std::string variable_name, bool this_only) const {
+
+data_ptr enviroment::find_here(std::string variable_name) const {
+	auto found_position = defined_variables.find(variable_name);
+	if (found_position != defined_variables.end())
+		return found_position->second;
+}
+
+data_ptr enviroment::find(std::string variable_name) const {
   std::string delimiter = "::";
   size_t pos = 0;
   if ((pos = variable_name.find(delimiter)) != std::string::npos) {
@@ -43,7 +50,7 @@ data_ptr enviroment::find(std::string variable_name, bool this_only) const {
 
     auto e = find(var_env);
     if (!e || e->type() != data_type::enviroment) {
-      if (parent() != nullptr && !this_only) {
+      if (parent() != nullptr) {
         auto data = parent()->find(variable_name);
         return data;
       }
@@ -55,7 +62,7 @@ data_ptr enviroment::find(std::string variable_name, bool this_only) const {
   if (defined_variables.find(variable_name) != defined_variables.end())
 	  return defined_variables.find(variable_name)->second;
 
-  if (parent() != nullptr && !this_only) {
+  if (parent() != nullptr) {
     auto data = parent()->find(variable_name);
     return data;
   }
@@ -64,14 +71,17 @@ data_ptr enviroment::find(std::string variable_name, bool this_only) const {
   ;
 }
 
-void enviroment::set(std::string name, data_ptr value, bool force_here) {
-  if (force_here) {
-    defined_variables[name] = value;
-  } else if (my_type == env_type::container || my_type == env_type::function) {
-    defined_variables[name] = value;
-  } else if (my_type == env_type::macro || my_type == env_type::let) {
-    parent()->set(name, value);
-  }
+void enviroment::set(std::string name, data_ptr value) {
+	if (my_type == env_type::container || my_type == env_type::function) {
+		defined_variables[name] = value;
+	}
+	else if (my_type == env_type::macro || my_type == env_type::let) {
+		parent()->set(name, value);
+	}
+}
+
+void enviroment::set_here(std::string name, data_ptr value) {
+	defined_variables[name] = value;
 }
 
 enviroment *enviroment::parent() const {
@@ -99,4 +109,17 @@ void enviroment::print_all_vars() {
   }
   std::cout << " -------------------- " << std::endl;
 }
+
+bool enviroment::operator<(const data &other) const {
+	if (type() == other.type())
+		return defined_variables < other.as_enviroment().defined_variables;
+	return type() < other.type();
+}
+
+bool enviroment::operator==(const data &other) const {
+	if (type() == other.type())
+		return defined_variables == other.as_enviroment().defined_variables;
+	return false;
+}
+
 }
