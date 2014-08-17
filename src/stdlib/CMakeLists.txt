@@ -2,3 +2,4 @@ set(SOURCE_FILES stdlib.cpp utils.cpp utils.hpp tuple.hpp benchmark.hpp core.hpp
 
 include_directories("stdlib")
 add_library(xigua_stdlib ${SOURCE_FILES})
+target_link_libraries(xigua_stdlib xigua_core)

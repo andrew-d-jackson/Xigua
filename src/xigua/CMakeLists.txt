@@ -2,4 +2,4 @@ set(SOURCE_FILES data.cpp boolean.cpp integer.cpp decimal.cpp string.cpp keyword
 
 
 include_directories("stdlib")
-add_library(xigua ${SOURCE_FILES})
+add_library(xigua_core ${SOURCE_FILES})

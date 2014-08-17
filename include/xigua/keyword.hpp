@@ -9,7 +9,7 @@ namespace xig {
 
 class keyword : public base_string {
 public:
-  using base_string::base_string;
+  keyword(std::string value) : base_string(value) {}
   virtual ~keyword() {}
 
   virtual data_type type() const;

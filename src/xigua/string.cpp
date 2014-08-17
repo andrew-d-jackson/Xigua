@@ -6,11 +6,11 @@ base_string::operator std::string() const { return value; }
 
 std::string base_string::as_std_string() const { return value; }
 
-auto base_string::begin() const -> decltype(value.cbegin()) {
+std::string::const_iterator base_string::begin() const {
   return value.cbegin();
 }
 
-auto base_string::end() const -> decltype(value.cend()) { return value.cend(); }
+std::string::const_iterator base_string::end() const { return value.cend(); }
 
 bool base_string::operator<(const data &other) const {
   if (type() == other.type())

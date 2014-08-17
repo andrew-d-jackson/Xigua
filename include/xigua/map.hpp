@@ -18,9 +18,9 @@ public:
   virtual data_type type() const;
   virtual const map &as_map() const;
 
-  auto begin() const -> decltype(value.cbegin());
-  auto end() const -> decltype(value.cend());
-  auto size() const -> decltype(value.size());
+  std::map<data_ptr, data_ptr>::const_iterator begin() const;
+  std::map<data_ptr, data_ptr>::const_iterator end() const;
+  std::size_t size() const;
 
   operator std::map<data_ptr, data_ptr>() const;
   std::map<data_ptr, data_ptr> as_std_map() const;

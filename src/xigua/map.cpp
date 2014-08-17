@@ -6,11 +6,11 @@ data_type map::type() const { return data_type::map; };
 
 const map &map::as_map() const { return *this; }
 
-auto map::begin() const -> decltype(value.cbegin()) { return value.cbegin(); }
+std::map<data_ptr, data_ptr>::const_iterator map::begin() const { return value.cbegin(); }
 
-auto map::end() const -> decltype(value.cend()) { return value.cend(); }
+std::map<data_ptr, data_ptr>::const_iterator map::end() const { return value.cend(); }
 
-auto map::size() const -> decltype(value.size()) { return value.size(); }
+std::size_t map::size() const { return value.size(); }
 
 map::operator std::map<data_ptr, data_ptr>() const { return value; }
 

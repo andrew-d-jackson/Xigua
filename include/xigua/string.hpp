@@ -18,8 +18,8 @@ public:
   operator std::string() const;
   std::string as_std_string() const;
 
-  auto begin() const -> decltype(value.cbegin());
-  auto end() const -> decltype(value.cend());
+  std::string::const_iterator begin() const;
+  std::string::const_iterator end() const;
 
   virtual bool operator<(const data &other) const;
   virtual bool operator==(const data &other) const;
@@ -27,7 +27,7 @@ public:
 
 class string : public base_string {
 public:
-  using base_string::base_string;
+  string(std::string value) : base_string(value) {}
   virtual ~string() {}
 
   virtual data_type type() const;

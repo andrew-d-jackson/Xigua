@@ -9,7 +9,7 @@ namespace xig {
 
 class process : public base_tuple {
 public:
-  using base_tuple::base_tuple;
+  process(std::vector<data_ptr> value) : base_tuple(value) {}
   virtual ~process() {}
 
   virtual data_type type() const;

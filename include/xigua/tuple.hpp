@@ -19,9 +19,9 @@ public:
   operator std::vector<data_ptr>() const;
   std::vector<data_ptr> as_std_vector() const;
 
-  auto begin() const -> decltype(value.cbegin());
-  auto end() const -> decltype(value.cend());
-  auto size() const -> decltype(value.size());
+  std::vector<data_ptr>::const_iterator begin() const;
+  std::vector<data_ptr>::const_iterator end() const;
+  std::size_t size() const;
   const data_ptr &at(std::size_t pos) const;
 
   virtual bool operator<(const data &other) const;
@@ -31,7 +31,7 @@ public:
 
 class tuple : public base_tuple {
 public:
-  using base_tuple::base_tuple;
+  tuple(std::vector<data_ptr> value) : base_tuple(value) {}
   virtual ~tuple() {}
 
   data_type type() const;

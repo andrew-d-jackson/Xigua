@@ -6,15 +6,15 @@ base_tuple::operator std::vector<data_ptr>() const { return value; }
 
 std::vector<data_ptr> base_tuple::as_std_vector() const { return value; }
 
-auto base_tuple::begin() const -> decltype(value.cbegin()) {
+std::vector<data_ptr>::const_iterator base_tuple::begin() const {
   return value.cbegin();
 }
 
-auto base_tuple::end() const -> decltype(value.cend()) { return value.cend(); }
+std::vector<data_ptr>::const_iterator base_tuple::end() const { return value.cend(); }
 
 const data_ptr &base_tuple::at(std::size_t pos) const { return value.at(pos); }
 
-auto base_tuple::size() const -> decltype(value.size()) { return value.size(); }
+std::size_t base_tuple::size() const { return value.size(); }
 
 bool base_tuple::operator<(const data &other) const {
   if (type() == other.type())
