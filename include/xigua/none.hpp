@@ -12,21 +12,12 @@ class none : public data {
 public:
   virtual ~none() {}
 
-  virtual data_type type() const { return data_type::none; };
+  virtual data_type type() const;
 
-  virtual const none &as_none() const { return *this; }
+  virtual const none &as_none() const;
 
-  virtual bool operator<(const data &other) const {
-    if (type() == other.type())
-      return false;
-    return type() < other.type();
-  }
-
-  virtual bool operator==(const data &other) const {
-    if (type() == other.type())
-      return true;
-    return false;
-  }
+  virtual bool operator<(const data &other) const;
+  virtual bool operator==(const data &other) const;
 };
 
 extern data_ptr make_none();

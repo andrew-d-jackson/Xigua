@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <memory>
 
 #include "xigua/data.hpp"
@@ -16,19 +15,14 @@ public:
   integer(long long value) : value(value) {}
   virtual ~integer() {}
 
-  virtual data_type type() const { return data_type::integer; };
+  virtual data_type type() const;
 
-  virtual const integer &as_integer() const { return *this; }
+  virtual const integer &as_integer() const;
 
-  operator int() const { return value; }
-  long long as_int() const { return value; }
+  operator int() const;
+  long long as_int() const;
 
-  virtual bool operator<(const data &other) const {
-    if (type() == other.type())
-      return (value < other.as_integer().value);
-    return type() < other.type();
-  }
-
+  virtual bool operator<(const data &other) const;
   virtual bool operator==(const data &other) const;
 };
 

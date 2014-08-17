@@ -3,6 +3,20 @@
 
 namespace xig {
 
+data_type integer::type() const { return data_type::integer; };
+
+const integer &integer::as_integer() const { return *this; }
+
+integer::operator int() const { return value; }
+
+long long integer::as_int() const { return value; }
+
+bool integer::operator<(const data &other) const {
+  if (type() == other.type())
+    return (value < other.as_integer().value);
+  return type() < other.type();
+}
+
 bool integer::operator==(const data &other) const {
   if (type() == other.type())
     return (value == other.as_integer().value);

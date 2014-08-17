@@ -2,6 +2,32 @@
 
 namespace xig {
 
+data_type map::type() const { return data_type::map; };
+
+const map &map::as_map() const { return *this; }
+
+auto map::begin() const -> decltype(value.cbegin()) { return value.cbegin(); }
+
+auto map::end() const -> decltype(value.cend()) { return value.cend(); }
+
+auto map::size() const -> decltype(value.size()) { return value.size(); }
+
+map::operator std::map<data_ptr, data_ptr>() const { return value; }
+
+std::map<data_ptr, data_ptr> map::as_std_map() const { return value; }
+
+bool map::operator<(const data &other) const {
+  if (type() == other.type())
+    return (value < other.as_map().value);
+  return type() < other.type();
+}
+
+bool map::operator==(const data &other) const {
+  if (type() == other.type())
+    return map_equality(value, other.as_map().value);
+  return false;
+}
+
 bool map_equality(const std::map<data_ptr, data_ptr> &a,
                   const std::map<data_ptr, data_ptr> &b) {
 
