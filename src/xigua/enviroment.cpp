@@ -34,6 +34,20 @@ env_type enviroment::enviroment_type() const {
 
 
 data_ptr enviroment::find_here(std::string variable_name) const {
+	std::string delimiter = "::";
+	size_t pos = 0;
+	if ((pos = variable_name.find(delimiter)) != std::string::npos) {
+		auto var_env = variable_name.substr(0, pos);
+		auto new_var_name = variable_name;
+		new_var_name.erase(0, pos + delimiter.length());
+
+		auto e = find(var_env);
+		if (!e || e->type() != data_type::enviroment) {
+			return data_ptr(nullptr);
+		}
+		return e->as_enviroment().find(new_var_name);
+	}
+
 	auto found_position = defined_variables.find(variable_name);
 	if (found_position != defined_variables.end())
 		return found_position->second;
