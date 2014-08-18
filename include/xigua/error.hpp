@@ -14,7 +14,11 @@ enum class error_type {
   parsing_error,
 };
 
-class debug_info;
+struct debug_info {
+	std::vector<std::string> function_call_list;
+	debug_info() { function_call_list = {}; }
+	debug_info(std::vector<std::string> fcl) { function_call_list = fcl; }
+};
 
 //! Error class that will be thrown as an exception if something goes wrong with
 //! Xigua

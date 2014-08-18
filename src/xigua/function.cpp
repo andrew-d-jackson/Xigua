@@ -4,24 +4,24 @@
 
 namespace xig {
 
-data method::call(call_info fci) {
+data_ptr method::call(call_info fci) {
 
   if (should_evaluate_arguments()) {
     for (auto &item : fci.args) {
-      if (item.type() == data_type::process ||
-          item.type() == data_type::symbol || item.type() == data_type::tuple ||
-          item.type() == data_type::map)
+      if (item->type() == data_type::process ||
+          item->type() == data_type::symbol ||
+          item->type() == data_type::tuple || item->type() == data_type::map)
         item = evaluate(fci.env, item, fci.debug);
     }
   }
 
   if (has_repeating_arguments()) {
-    std::vector<data> new_args(fci.args.begin(),
-                               fci.args.begin() + amount_of_arguments());
-    data repeating_args(
-        data_type::tuple,
-        std::vector<data>(fci.args.begin() + amount_of_arguments(),
-                          fci.args.end()));
+    std::vector<data_ptr> new_args(fci.args.begin(),
+                                   fci.args.begin() + amount_of_arguments());
+
+    auto repeating_args = xig::make_tuple(std::vector<data_ptr>(
+        fci.args.begin() + amount_of_arguments(), fci.args.end()));
+
     new_args.push_back(repeating_args);
 
     fci.args = new_args;
@@ -49,7 +49,50 @@ bool method_set_comparator::operator()(const std::shared_ptr<method> &a,
   return false;
 }
 
-data function::call(call_info fci) {
+
+data_type function::type() const { return data_type::function; }
+
+const function &function::as_function() const { return *this; }
+
+bool function::operator<(const data &other) const {
+	if (type() == other.type())
+		return methods < other.as_function().methods;
+	return type() < other.type();
+}
+
+bool function::operator==(const data &other) const {
+	if (type() == other.type())
+		return methods == other.as_function().methods;
+	return false;
+}
+
+void function::merge_with_function(const function &other) {
+	for (const std::shared_ptr<method> &i : other.methods) {
+		insert_method(i);
+	}
+}
+
+void function::insert_method(std::shared_ptr<method> in_method) {
+
+	auto found = std::find_if(methods.begin(), methods.end(),
+		[&](std::shared_ptr<method> &a) {
+		return (a->amount_of_arguments() == in_method->amount_of_arguments()) &&
+			(a->has_repeating_arguments() ==
+			in_method->has_repeating_arguments()) &&
+			!a->has_process_arguments();
+	});
+
+	if (in_method->has_process_arguments() || found == methods.end()) {
+		methods.push_back(in_method);
+		std::sort(methods.begin(), methods.end(), method_set_comparator());
+	}
+	else {
+		(*found) = in_method;
+	}
+}
+
+
+data_ptr function::call(call_info fci) const {
 
   for (auto iterator = methods.rbegin(); iterator != methods.rend();
        iterator++) {

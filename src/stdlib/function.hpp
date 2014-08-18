@@ -9,7 +9,7 @@
 #include "xigua/enviroment.hpp"
 #include "xigua/error.hpp"
 #include "xigua/evaluate.hpp"
-#include "xigua/stdlib/utils.hpp"
+#include "stdlib/utils.hpp"
 
 namespace xig {
 namespace stdlib {
@@ -19,14 +19,14 @@ class create_lambda : public method {
   bool should_evaluate_arguments() const { return false; }
   bool has_repeating_arguments() const { return true; }
 
-  data run(call_info fci);
+  data_ptr run(call_info fci);
 };
 
 class wrapped_function : public method {
 public:
   wrapped_function(int amount_of_args, bool has_repeating_args,
-                   bool has_proc_args, std::vector<data> parameters, data proc,
-                   enviroment env)
+                   bool has_proc_args, std::vector<data_ptr> parameters,
+                   data_ptr proc, enviroment env)
       : amount_of_args(amount_of_args), has_repeating_args(has_repeating_args),
         has_proc_args(has_proc_args), parameters(parameters), proc(proc),
         env(env) {}
@@ -36,70 +36,75 @@ public:
   bool has_repeating_arguments() const { return has_repeating_args; }
 
   bool process_arguments_pass(call_info fci);
-  data run(call_info fci);
+  data_ptr run(call_info fci);
 
 private:
   int amount_of_args;
   bool has_repeating_args;
   bool has_proc_args;
 
-  std::vector<data> parameters;
-  data proc;
+  std::vector<data_ptr> parameters;
+  data_ptr proc;
   enviroment env;
 };
 
-void traverseProcess(data process, std::function<void(data &)> fn) {
-  if (process.type() != data_type::process)
+void traverseProcess(data_ptr process,
+                     std::function<void(const data_ptr &)> fn) {
+  if (process->type() != data_type::process)
     return;
-  auto p = process.as_process();
+  auto p = process->as_process();
   for (auto &i : p) {
-    if (i.type() == data_type::process)
+    if (i->type() == data_type::process)
       traverseProcess(i, fn);
     else
       fn(i);
   }
 }
 
-void assign_process_to_env(const data &current_param,
-                           std::vector<data>::const_iterator &current_arg,
+void assign_process_to_env(const data_ptr &current_param,
+                           std::vector<data_ptr>::const_iterator &current_arg,
                            enviroment &env, std::set<std::string> vars) {
-  traverseProcess(current_param, [&](data &traversed) {
-    if (traversed.type() == data_type::symbol) {
-      bool found_in_self = (env.find(traversed.as_symbol(), true) != nullptr);
-      bool found_anywhere = (env.find(traversed.as_symbol()) != nullptr);
-      bool in_vars = (vars.find(traversed.as_symbol()) != vars.end());
+  traverseProcess(current_param, [&](const data_ptr &traversed) {
+    if (traversed->type() == data_type::symbol) {
+      bool found_in_self =
+          (env.find_here(traversed->as_symbol().as_std_string()) != nullptr);
+      bool found_anywhere =
+          (env.find(traversed->as_symbol().as_std_string()) != nullptr);
+      bool in_vars =
+          (vars.find(traversed->as_symbol().as_std_string()) != vars.end());
 
       if (((!found_anywhere) || !(found_anywhere && !found_in_self)) &&
           !in_vars) {
-        env.set(traversed.as_symbol(), *current_arg);
-        vars.insert(traversed.as_symbol());
+        env.set(traversed->as_symbol().as_std_string(), *current_arg);
+        vars.insert(traversed->as_symbol().as_std_string());
         ++current_arg;
       }
     }
   });
 }
 
-void assign_symbol_to_env(const data &current_param,
-                          std::vector<data>::const_iterator &current_arg,
+void assign_symbol_to_env(const data_ptr &current_param,
+                          std::vector<data_ptr>::const_iterator &current_arg,
                           enviroment &env, std::set<std::string> vars) {
-  if (current_param.as_symbol() != "&") {
-    bool in_vars = (vars.find(current_param.as_symbol()) != vars.end());
+  if (current_param->as_symbol().as_std_string() != "&") {
+    bool in_vars =
+        (vars.find(current_param->as_symbol().as_std_string()) != vars.end());
     if (!in_vars) {
-      env.set(current_param.as_symbol(), *current_arg);
-      vars.insert(current_param.as_symbol());
+      env.set(current_param->as_symbol().as_std_string(), *current_arg);
+      vars.insert(current_param->as_symbol().as_std_string());
       current_arg++;
     }
   }
 }
 
-void assign_args_to_env(const std::vector<data> &params,
-                        const std::vector<data> &args, enviroment &env) {
+void assign_args_to_env(const std::vector<data_ptr> &params,
+                        const std::vector<data_ptr> &args, enviroment &env) {
   auto current_arg = args.begin();
   auto vars = std::set<std::string>();
 
   for (auto current_param = params.begin(); current_param != params.end();
        ++current_param) {
-    switch (current_param->type()) {
+    switch ((*current_param)->type()) {
     case data_type::process:
       assign_process_to_env(*current_param, current_arg, env, vars);
       break;
@@ -112,19 +117,19 @@ void assign_args_to_env(const std::vector<data> &params,
   }
 }
 
-bool process_args_pass(const std::vector<data> &params,
-                       const std::vector<data> &args, enviroment &env,
+bool process_args_pass(const std::vector<data_ptr> &params,
+                       const std::vector<data_ptr> &args, enviroment &env,
                        debug_info debug) {
   auto current_arg = args.begin();
   auto vars = std::set<std::string>();
 
   for (auto current_param = params.begin(); current_param != params.end();
        ++current_param) {
-    switch (current_param->type()) {
+    switch ((*current_param)->type()) {
     case data_type::process: {
       assign_process_to_env(*current_param, current_arg, env, vars);
       auto result = evaluate(env, *current_param, debug);
-      if (result.type() != data_type::boolean || !result.as_boolean()) {
+      if (result->type() != data_type::boolean || !result->as_boolean()) {
         return false;
       }
       break;
@@ -132,7 +137,7 @@ bool process_args_pass(const std::vector<data> &params,
     case data_type::symbol:
       break;
     default:
-      if (*current_param != evaluate(env, *current_arg))
+      if (*(*current_param) != *evaluate(env, *current_arg))
         return false;
       break;
     }
@@ -140,29 +145,33 @@ bool process_args_pass(const std::vector<data> &params,
   return true;
 }
 
-int get_amount_of_args(std::vector<data> args, enviroment &env) {
+int get_amount_of_args(std::vector<data_ptr> args, enviroment &env) {
   short amount = 0;
   auto vars = std::set<std::string>();
 
   for (unsigned int i(0); i < args.size(); ++i) {
-    if (args.at(i).type() == data_type::process) {
-      traverseProcess(args.at(i), [&](data &traversed) {
-        if (traversed.type() == data_type::symbol) {
-          bool found = (env.find(traversed.as_symbol()) != nullptr);
-          bool in_vars = (vars.find(traversed.as_symbol()) != vars.end());
+    if (args.at(i)->type() == data_type::process) {
+      traverseProcess(args.at(i), [&](const data_ptr &traversed) {
+        if (traversed->type() == data_type::symbol) {
+		  auto var_name = traversed->as_symbol().as_std_string();
+          bool found =
+			  (env.find(var_name) != nullptr);
+          bool in_vars =
+			  (vars.find(var_name) != vars.end());
           if (!found && !in_vars) {
-            vars.insert(traversed.as_symbol());
+			  vars.insert(var_name);
             amount++;
           }
         }
       });
-    } else if (args.at(i).type() == data_type::symbol) {
-      if (args.at(i).as_symbol() != "&") {
-        bool in_vars = (vars.find(args.at(i).as_symbol()) != vars.end());
+    } else if (args.at(i)->type() == data_type::symbol) {
+      if (args.at(i)->as_symbol().as_std_string() != "&") {
+        bool in_vars =
+            (vars.find(args.at(i)->as_symbol().as_std_string()) != vars.end());
         if (!in_vars) {
           amount++;
         } else {
-          vars.insert(args.at(i).as_symbol());
+          vars.insert(args.at(i)->as_symbol().as_std_string());
         }
       }
     } else {
@@ -180,13 +189,13 @@ bool wrapped_function::process_arguments_pass(call_info fci) {
   return process_args_pass(parameters, fci.args, execute_env, fci.debug);
 }
 
-data wrapped_function::run(call_info fci) {
+data_ptr wrapped_function::run(call_info fci) {
   auto execute_env = enviroment(env_type::function, &fci.env);
   assign_args_to_env(parameters, fci.args, execute_env);
   return evaluate(execute_env, proc, fci.debug);
 }
 
-data create_lambda::run(call_info fci) {
+data_ptr create_lambda::run(call_info fci) {
   auto arguments = utils::parse_arguments(fci.args, 2);
   function return_fn;
 
@@ -195,25 +204,26 @@ data create_lambda::run(call_info fci) {
     bool process_args = false;
     enviroment fn_env(env_type::function, &fci.env);
 
-    for (auto arg : arguments.at(argument).as_tuple()) {
-      if (arg.type() == data_type::symbol) {
-        if (arg.as_symbol() == "&")
+    for (auto arg : arguments.at(argument)->as_tuple()) {
+      if (arg->type() == data_type::symbol) {
+        if (arg->as_symbol().as_std_string() == "&")
           repeating = true;
       } else {
         process_args = true;
       }
     }
 
-    int amount_of_args =
-        get_amount_of_args(arguments.at(argument).as_tuple(), fn_env);
+    int amount_of_args = get_amount_of_args(
+        arguments.at(argument)->as_tuple().as_std_vector(), fn_env);
 
-    auto return_function = wrapped_function(
-        amount_of_args, repeating, process_args,
-        arguments.at(argument).as_tuple(), arguments.at(argument + 1), fn_env);
+    auto return_function =
+        wrapped_function(amount_of_args, repeating, process_args,
+                         arguments.at(argument)->as_tuple().as_std_vector(),
+                         arguments.at(argument + 1), fn_env);
 
     return_fn.add_method(return_function);
   }
-  return data(return_fn);
+  return std::make_shared<function>(return_fn);
 }
 }
 }

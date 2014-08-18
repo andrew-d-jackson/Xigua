@@ -25,12 +25,18 @@ option(XIGUA_BUILD_SHELL "Build xigua shell" ON)
 option(XIGUA_BUILD_TESTS "Build all tests" OFF)
 
 ###############
-# Xigua Library
+# Xigua Core Library
 ###############
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/include)
 SET(CMAKE_CXX_FLAGS "${CXX11_FLAGS}")
 add_subdirectory(${PROJECT_SOURCE_DIR}/src/xigua)
+
+###############
+# Xigua Standard Library
+###############
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/src/stdlib)
 
 ###############
 # Xigua Shell

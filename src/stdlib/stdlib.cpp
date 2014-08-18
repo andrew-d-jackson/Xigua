@@ -1,22 +1,24 @@
 #include "xigua/stdlib.hpp"
 
-#include "xigua/stdlib/core.hpp"
-
-#include "xigua/stdlib/math.hpp"
-#include "xigua/stdlib/boolean.hpp"
-#include "xigua/stdlib/string.hpp"
-#include "xigua/stdlib/tuple.hpp"
-#include "xigua/stdlib/containers.hpp"
-#include "xigua/stdlib/benchmark.hpp"
-#include "xigua/stdlib/function.hpp"
-#include "xigua/stdlib/types.hpp"
-#include "xigua/stdlib/test.hpp"
+#include "stdlib/tuple.hpp"
+#include "stdlib/string.hpp"
+#include "stdlib/types.hpp"
+#include "stdlib/test.hpp"
+#include "stdlib/math.hpp"
+#include "stdlib/boolean.hpp"
+#include "stdlib/containers.hpp"
+#include "stdlib/core.hpp"
+#include "stdlib/function.hpp"
+#include "stdlib/benchmark.hpp"
 
 namespace xig {
+namespace stdlib {
+
 enviroment get_global_enviroment() {
   enviroment enviroment(env_type::container);
 
   // core
+
   enviroment.set("=", make_function(stdlib::define()));
 
   enviroment.set("fn", make_function(stdlib::create_lambda()));
@@ -86,7 +88,6 @@ enviroment get_global_enviroment() {
   enviroment.set("and", make_function(stdlib::boolean_and()));
 
   enviroment.set("or", make_function(stdlib::boolean_or()));
-
   // types
 
   enviroment.set("str?", make_function(stdlib::is_string()));
@@ -124,7 +125,6 @@ enviroment get_global_enviroment() {
   enviroment.set("range", make_function(stdlib::range()));
 
   // containers
-
   enviroment.set("at", make_function(stdlib::at()));
 
   enviroment.set("size", make_function(stdlib::size()));
@@ -144,5 +144,6 @@ enviroment get_global_enviroment() {
   enviroment.set("bench", make_function(stdlib::benchmark()));
 
   return enviroment;
+}
 }
 }

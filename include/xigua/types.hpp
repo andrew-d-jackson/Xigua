@@ -1,0 +1,11 @@
+
+#include "xigua/none.hpp"
+#include "xigua/boolean.hpp"
+#include "xigua/integer.hpp"
+#include "xigua/decimal.hpp"
+#include "xigua/tuple.hpp"
+#include "xigua/string.hpp"
+#include "xigua/process.hpp"
+#include "xigua/keyword.hpp"
+#include "xigua/symbol.hpp"
+#include "xigua/map.hpp"

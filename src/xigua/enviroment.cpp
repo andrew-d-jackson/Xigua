@@ -3,17 +3,17 @@
 namespace xig {
 
 enviroment::enviroment(env_type in_type) {
-  type(in_type);
+  my_type = in_type;
   my_relative_path = "";
   my_parent = nullptr;
 }
 
 enviroment::enviroment(env_type in_type, enviroment *parent_enviroment) {
-  type(in_type);
+  my_type = in_type;
   my_relative_path = "";
 
   if (in_type != env_type::container) {
-    if (parent_enviroment->type() != env_type::container) {
+    if (parent_enviroment->enviroment_type() != env_type::container) {
       defined_variables = (*parent_enviroment).defined_variables;
       my_parent = parent_enviroment->parent();
     } else {
@@ -24,53 +24,80 @@ enviroment::enviroment(env_type in_type, enviroment *parent_enviroment) {
   }
 }
 
-void enviroment::type(env_type in_type) {
-  my_type = in_type;
-};
+data_type enviroment::type() const { return data_type::enviroment; }
 
-env_type enviroment::type() const {
+const enviroment &enviroment::as_enviroment() const { return *this; }
+
+env_type enviroment::enviroment_type() const {
   return my_type;
 };
 
-data *enviroment::find(std::string variable_name, bool this_only) {
-  std::string delimiter = "::";
-  size_t pos = 0;
-  if ((pos = variable_name.find(delimiter)) != std::string::npos) {
+static std::string delimiter = "::";
 
-    auto var_env = variable_name.substr(0, pos);
-    auto new_var_name = variable_name;
-    new_var_name.erase(0, pos + delimiter.length());
-
-    auto e = find(var_env);
-    if (e == nullptr || e->type() != data_type::container) {
-      if (parent() != nullptr && !this_only) {
-        auto data = parent()->find(variable_name);
-        return data;
-      }
-      return nullptr;
-    }
-    return e->as_container()->find(new_var_name);
-  }
-
-  if (defined_variables.find(variable_name) != defined_variables.end())
-    return &defined_variables[variable_name];
-
-  if (parent() != nullptr && !this_only) {
-    auto data = parent()->find(variable_name);
-    return data;
-  }
-
-  return nullptr;
+data_ptr find_with_delimiter(const enviroment &me, const std::map<std::string, data_ptr> &defined_variables,  const std::string &variable_name) {
+	auto delimiter_position = variable_name.find(delimiter);
+	if (delimiter_position != std::string::npos) {
+		auto env_name = variable_name.substr(delimiter_position + delimiter.length());
+		auto var_name = variable_name.substr(0, delimiter_position);
+		auto env = me.find(env_name);
+		if (env && env->type() == data_type::enviroment) {
+			return env->as_enviroment().find(var_name);
+		} 
+		return data_ptr(nullptr);
+	}
+	return data_ptr(nullptr);
 }
 
-void enviroment::set(std::string name, data value, bool force_here) {
-  if (force_here) {
-    defined_variables[name] = value;
-  } else if (my_type == env_type::container || my_type == env_type::function) {
-    defined_variables[name] = value;
-  } else if (my_type == env_type::macro || my_type == env_type::let) {
-    parent()->set(name, value);
-  }
+data_ptr find_in_map(const std::map<std::string, data_ptr> &defined_variables, const std::string &variable_name) {
+	auto found = defined_variables.find(variable_name);
+	if (found != defined_variables.end())
+		return found->second;
+	return data_ptr(nullptr);
+}
+
+data_ptr find_in_parent(const enviroment &me, const std::string &variable_name) {
+	if (me.has_parent()) {
+		return me.parent()->find(variable_name);
+	}
+	return data_ptr(nullptr);
+}
+
+data_ptr enviroment::find(std::string variable_name) const {
+	auto found_delimiter = variable_name.find(delimiter);
+	if (found_delimiter != std::string::npos) {
+		auto found_var = find_with_delimiter(*this, defined_variables, variable_name);
+		if (found_var)
+			return found_var;
+		return parent()->find(variable_name);
+	}
+
+	auto found_in_me = find_in_map(defined_variables, variable_name);
+	if (found_in_me)
+		return found_in_me;
+
+	return find_in_parent(*this, variable_name);
+}
+
+data_ptr enviroment::find_here(std::string variable_name) const {
+	auto found_delimiter = variable_name.find(delimiter);
+	if (found_delimiter != std::string::npos) {
+		return find_with_delimiter(*this, defined_variables, variable_name);
+	}
+
+	return find_in_map(defined_variables, variable_name);
+}
+
+void enviroment::set(std::string name, data_ptr value) {
+	if (my_type == env_type::container || my_type == env_type::function) {
+		defined_variables[name] = value;
+	}
+	else if (my_type == env_type::macro || my_type == env_type::let) {
+		parent()->set(name, value);
+	}
+}
+
+void enviroment::set_here(std::string name, data_ptr value) {
+	defined_variables[name] = value;
 }
 
 enviroment *enviroment::parent() const {
@@ -93,9 +120,22 @@ void enviroment::set_relative_path(std::string path) {
 void enviroment::print_all_vars() {
   std::cout << " -------------------- " << std::endl;
   for (auto i : defined_variables) {
-    std::cout << i.first << "  =>  "
-              << string_representation(i.second) << std::endl;
+    std::cout << i.first << "  =>  " << string_representation(i.second)
+              << std::endl;
   }
   std::cout << " -------------------- " << std::endl;
 }
+
+bool enviroment::operator<(const data &other) const {
+	if (type() == other.type())
+		return defined_variables < other.as_enviroment().defined_variables;
+	return type() < other.type();
+}
+
+bool enviroment::operator==(const data &other) const {
+	if (type() == other.type())
+		return defined_variables == other.as_enviroment().defined_variables;
+	return false;
+}
+
 }
