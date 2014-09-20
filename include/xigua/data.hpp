@@ -20,6 +20,8 @@ enum class data_type {
   tuple,
   map,
   process,
+    record_definition,
+    record_object,
   function,
   enviroment
 };
@@ -36,7 +38,9 @@ class map;
 class process;
 class function;
 class enviroment;
-class keyword;
+    class keyword;
+    class record_definition;
+    class record_object;
 
 typedef std::shared_ptr<const data> data_ptr;
 
@@ -64,6 +68,8 @@ public:
   virtual const none &as_none() const { throw; }
   virtual const enviroment &as_enviroment() const { throw; }
   virtual const function &as_function() const { throw; }
+  virtual const record_definition &as_record_definition() const { throw; }
+    virtual const record_object &as_record_object() const { throw; }
 };
 
 extern std::string string_representation(const data_ptr &d);

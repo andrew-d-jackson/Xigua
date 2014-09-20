@@ -9,3 +9,4 @@
 #include "xigua/keyword.hpp"
 #include "xigua/symbol.hpp"
 #include "xigua/map.hpp"
+#include "xigua/record.hpp"

@@ -11,3 +11,5 @@ test.exe
 
 doxygen/html
 doxygen/latex
+
+.idea

@@ -10,6 +10,7 @@
 #include "stdlib/core.hpp"
 #include "stdlib/function.hpp"
 #include "stdlib/benchmark.hpp"
+#include "stdlib/record.hpp"
 
 namespace xig {
 namespace stdlib {
@@ -130,6 +131,11 @@ enviroment get_global_enviroment() {
   enviroment.set("size", make_function(stdlib::size()));
 
   enviroment.set("insert", make_function(stdlib::insert()));
+
+    //record
+
+    enviroment.set("rec", make_function(stdlib::define_record()));
+
 
   // testing
 
