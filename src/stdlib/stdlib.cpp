@@ -134,7 +134,8 @@ enviroment get_global_enviroment() {
 
     //record
 
-    enviroment.set("rec", make_function(stdlib::define_record()));
+  enviroment.set("rec", make_function(stdlib::define_record()));
+  enviroment.set("make", make_function(stdlib::make()));
 
 
   // testing

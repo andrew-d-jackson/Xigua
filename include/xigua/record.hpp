@@ -3,33 +3,51 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "xigua/data.hpp"
 
 namespace xig {
 
-    struct record_variable {
-        std::string name;
-        std::vector<process> guards;
+    struct record_variable_definition {
+      const std::string name;
+      const std::vector<data_ptr> guards;
+      bool operator==(record_variable_definition other) const{
+        return name == other.name && guards == other.guards;
+      }
+      bool operator<(record_variable_definition other) const{
+        return name < other.name && guards < other.guards;
+      }
+    };
+
+    struct record_variable_object {
+      const record_variable_definition* definition;
+      const data_ptr value;
+      bool operator==(record_variable_object other) const{
+        return definition == other.definition && value == other.value;
+      }
+      bool operator<(record_variable_object other) const{
+        return definition < other.definition && value < other.value;
+      }
     };
 
     class record_definition : public data {
     private:
-        std::map<std::string, data_ptr> value;
+        std::vector<record_variable_definition> value;
 
     public:
-        record_definition(std::map<std::string, data_ptr> value) : value(value) {}
+        record_definition(std::vector<record_variable_definition> value) : value(value) {}
         virtual ~record_definition() {}
 
         virtual data_type type() const;
         virtual const record_definition &as_record_definition() const;
 
-        std::map<std::string, data_ptr>::const_iterator begin() const;
-        std::map<std::string, data_ptr>::const_iterator end() const;
+        std::vector<record_variable_definition>::const_iterator begin() const;
+        std::vector<record_variable_definition>::const_iterator end() const;
         std::size_t size() const;
 
-        operator std::map<std::string, data_ptr>() const;
-        std::map<std::string, data_ptr> as_std_map() const;
+        operator std::vector<record_variable_definition>() const;
+        std::vector<record_variable_definition> as_std_vector() const;
 
         virtual bool operator<(const data &other) const;
         virtual bool operator==(const data &other) const;
@@ -38,28 +56,28 @@ namespace xig {
     class record_object : public data {
     private:
         data_ptr definition;
-        std::vector<std::tuple<record_variable*, data_ptr>>;
-        std::map<std::string, data_ptr> value;
+        std::vector<record_variable_object> value;
 
     public:
-        record_object(data_ptr definition, std::map<std::string, data_ptr> value) : definition(definition), value(value) {}
+        record_object(data_ptr definition, std::vector<record_variable_object> value) : definition(definition), value(value) {}
         virtual ~record_object() {}
 
         virtual data_type type() const;
         virtual const record_object &as_record_object() const;
 
-        std::map<std::string, data_ptr>::const_iterator begin() const;
-        std::map<std::string, data_ptr>::const_iterator end() const;
+        std::vector<record_variable_object>::const_iterator begin() const;
+        std::vector<record_variable_object>::const_iterator end() const;
         std::size_t size() const;
 
-        operator std::map<std::string, data_ptr>() const;
-        std::map<std::string, data_ptr> as_std_map() const;
+        operator std::vector<record_variable_object>() const;
+        std::vector<record_variable_object> as_std_vector() const;
 
         virtual bool operator<(const data &other) const;
         virtual bool operator==(const data &other) const;
     };
 
 
-    extern data_ptr make_record_definition(std::map<std::string, data_ptr> val);
-    extern data_ptr make_record_object(data_ptr parent, std::map<std::string, data_ptr> val);
+    extern data_ptr make_record_definition(std::vector<record_variable_definition> value);
+
+    extern data_ptr make_record_object(data_ptr parent, std::vector<record_variable_object> value);
 }

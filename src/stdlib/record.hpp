@@ -9,28 +9,26 @@
 #include "xigua/enviroment.hpp"
 #include "xigua/error.hpp"
 #include "xigua/evaluate.hpp"
+#include "xigua/record.hpp"
 #include "stdlib/utils.hpp"
 
 namespace xig {
 namespace stdlib {
 
     class define_record : public method {
-        int amount_of_arguments() const { return 2; }
+        int amount_of_arguments() const { return 1; }
         bool should_evaluate_arguments() const { return false; }
 
         data_ptr run(call_info fci) {
-            if (fci.args.at(0)->type() != data_type::symbol)
-                throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
-
-            if (fci.args.at(1)->type() != data_type::tuple)
+            if (fci.args.at(0)->type() != data_type::tuple)
                 throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-            auto ret = std::map<std::string, data_ptr>();
-            for (const auto &i : fci.args.at(1)->as_tuple()) {
+            auto ret = std::vector<record_variable_definition>();
+            for (const auto &i : fci.args.at(0)->as_tuple()) {
                 if (i->type() != data_type::symbol)
                     throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
 
-                ret[i->as_symbol().as_std_string()] = make_none();
+                ret.push_back(record_variable_definition{i->as_symbol().as_std_string(), {}});
             }
             return make_record_definition(ret);
         }
@@ -46,14 +44,14 @@ namespace stdlib {
             if (fci.args.at(1)->type() != data_type::tuple)
                 throw error(error_type::invalid_arguments, "Not A Tuple", fci.debug);
 
-            auto ret = std::map<std::string, data_ptr>();
-            for (const auto &i : fci.args.at(1)->as_tuple()) {
-                if (i->type() != data_type::symbol)
-                    throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
+            auto ret = std::vector<record_variable_object>();
 
-                ret[i->as_symbol().as_std_string()] = make_none();
+            auto j = fci.args.at(1)->as_tuple().begin();
+            for (const auto &i: fci.args.at(0)->as_record_definition()) {
+              ret.push_back(record_variable_object{ &i, *(j++) });
             }
-            return make_record_definition(ret);
+
+            return make_record_object(fci.args.at(0), ret);
         }
     };
 
