@@ -132,9 +132,10 @@ enviroment get_global_enviroment() {
 
   enviroment.set("insert", make_function(stdlib::insert()));
 
-    //record
+  //record
 
   enviroment.set("rec", make_function(stdlib::define_record()));
+
   enviroment.set("make", make_function(stdlib::make()));
 
 

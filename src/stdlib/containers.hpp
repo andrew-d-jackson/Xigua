@@ -30,18 +30,32 @@ class at : public method {
           (unsigned int)fci.args.at(0)->as_integer().as_int());
 
     } else if (fci.args.at(1)->type() == data_type::map) {
-      auto map = fci.args.at(1)->as_map().as_std_map();
-      auto location = std::find_if(map.begin(), map.end(),
-                                   [&](const std::pair<data_ptr, data_ptr> &i) {
-        return *(i.first) == *fci.args.at(0);
-      });
-      if (location != map.end()) {
-        return location->second;
-      } else {
-        throw error(error_type::invalid_arguments, "Not In HashMap", fci.debug);
-      }
+        auto map = fci.args.at(1)->as_map().as_std_map();
+        auto location = std::find_if(map.begin(), map.end(),
+                [&](const std::pair<data_ptr, data_ptr> &i) {
+                    return *(i.first) == *fci.args.at(0);
+                });
+        if (location != map.end()) {
+            return location->second;
+        } else {
+            throw error(error_type::invalid_arguments, "Not In HashMap", fci.debug);
+        }
+    } else if (fci.args.at(1)->type() == data_type::record_object) {
+        if (fci.args.at(0)->type() != data_type::keyword)
+            throw error(error_type::invalid_arguments, "Not A Keyword", fci.debug);
+
+        auto map = fci.args.at(1)->as_record_object();
+        auto location = std::find_if(map.begin(), map.end(),
+                [&](const record_variable_object &i) {
+                    return i.definition->name == fci.args.at(0)->as_keyword().as_std_string();
+                });
+        if (location != map.end()) {
+            return location->value;
+        } else {
+            throw error(error_type::invalid_arguments, "Not In Container", fci.debug);
+        }
     } else {
-      throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple",
+      throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple Or A Record",
                   fci.debug);
     }
     return make_none();

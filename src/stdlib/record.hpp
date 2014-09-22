@@ -25,10 +25,10 @@ namespace stdlib {
 
             auto ret = std::vector<record_variable_definition>();
             for (const auto &i : fci.args.at(0)->as_tuple()) {
-                if (i->type() != data_type::symbol)
-                    throw error(error_type::invalid_arguments, "Not A Symbol", fci.debug);
+                if (i->type() != data_type::keyword)
+                    throw error(error_type::invalid_arguments, "Not A Keyword", fci.debug);
 
-                ret.push_back(record_variable_definition{i->as_symbol().as_std_string(), {}});
+                ret.push_back(record_variable_definition{i->as_keyword().as_std_string(), {}});
             }
             return make_record_definition(ret);
         }
