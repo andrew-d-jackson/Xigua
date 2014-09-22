@@ -15,10 +15,14 @@ TEST(Standard_Library_Conatiners, At) {
   EXPECT_EQ(*evaluate(env, parser::from_string("[at 0 (4 4 5 3 4 5)]")),
             *make_integer(4));
 
-  EXPECT_EQ(
-      *evaluate(env, parser::from_string("[at :hello {:hello 1 :bye 3}]")),
-      *make_integer(1));
-}
+    EXPECT_EQ(
+            *evaluate(env, parser::from_string("[at :hello {:hello 1 :bye 3}]")),
+            *make_integer(1));
+
+    EXPECT_EQ(
+            *evaluate(env, parser::from_string("[at :name [make [rec (:name :age)] (22 20)]  ]")),
+            *make_integer(22));
+    }
 
 TEST(Standard_Library_Conatiners, Size) {
   enviroment env = stdlib::get_global_enviroment();
@@ -26,8 +30,11 @@ TEST(Standard_Library_Conatiners, Size) {
   EXPECT_EQ(*evaluate(env, parser::from_string("[size (0 1 2 3 4 5)]")),
             *make_integer(6));
 
-  EXPECT_EQ(*evaluate(env, parser::from_string("[size {:hello 1 :bye 3}]")),
-            *make_integer(2));
+EXPECT_EQ(*evaluate(env, parser::from_string("[size {:hello 1 :bye 3}]")),
+        *make_integer(2));
+
+EXPECT_EQ(*evaluate(env, parser::from_string("[size [rec (:name :age)]]")),
+        *make_integer(2));
 }
 
 TEST(Standard_Library_Conatiners, Insert) {

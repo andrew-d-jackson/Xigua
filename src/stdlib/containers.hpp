@@ -69,11 +69,18 @@ class size : public method {
     if (fci.args.at(0)->type() == data_type::tuple)
       return make_integer((long long)fci.args.at(0)->as_tuple().size());
 
-    if (fci.args.at(0)->type() == data_type::map)
-      return make_integer((long long)fci.args.at(0)->as_map().size());
+      if (fci.args.at(0)->type() == data_type::map)
+          return make_integer((long long)fci.args.at(0)->as_map().size());
+
+      if (fci.args.at(0)->type() == data_type::record_definition)
+          return make_integer((long long)fci.args.at(0)->as_record_definition().size());
+
+      if (fci.args.at(0)->type() == data_type::record_object)
+          return make_integer((long long)fci.args.at(0)->as_record_object().size());
 
     throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple",
                 fci.debug);
+
     return make_none();
   }
 };
