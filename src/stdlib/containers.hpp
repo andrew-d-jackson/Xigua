@@ -99,11 +99,17 @@ class insert : public method {
       return make_tuple(new_tuple);
     }
 
-    if (arguments.at(0)->type() == data_type::map) {
-      auto new_map = arguments.at(0)->as_map().as_std_map();
-      new_map[arguments.at(1)] = arguments.at(2);
-      return make_map(new_map);
-    }
+          if (arguments.at(0)->type() == data_type::map) {
+              auto new_map = arguments.at(0)->as_map().as_std_map();
+              new_map[arguments.at(1)] = arguments.at(2);
+              return make_map(new_map);
+          }
+
+          if (arguments.at(0)->type() == data_type::record_definition) {
+              auto new_vec = arguments.at(0)->as_record_definition().as_std_vector();
+              new_vec.push_back({arguments.at(1)->as_keyword().as_std_string(), {}});
+              return make_record_definition(new_vec);
+          }
 
     throw error(error_type::invalid_arguments, "Not A HashMap Or A Tuple",
                 fci.debug);
