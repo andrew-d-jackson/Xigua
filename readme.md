@@ -18,7 +18,7 @@ Factorial
     [= fac [fn (1) [1]
                (n) [n * [fac [n - 1]]]]]
 
-    [println [factorial 5]]
+    [println [fac 5]]
 
 Macros
 
